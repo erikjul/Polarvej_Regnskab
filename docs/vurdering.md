@@ -1,4 +1,6 @@
-# Vurdering af regnskabets robusthed (sidste side i årsrapporten)
+# Vurdering af regnskabets robusthed (supplerende beretning, sidste side i årsrapporten)
+
+Siden er markeret som supplerende beretning efter årsregnskabslovens § 14: den er tydeligt adskilt fra årsregnskabet og omfattes ikke af bilagskontrollørernes erklæring.
 
 Siden genereres automatisk af `js/vurdering.js` ud fra regnskabets tal og deles i tre kategorier:
 

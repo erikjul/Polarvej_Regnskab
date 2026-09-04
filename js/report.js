@@ -387,8 +387,8 @@ export function byggeRapport(engine, opts = {}) {
     const v = vurdering(engine, opts);
     const kat = (k) => v.punkter.filter(x => x.kategori === k);
     pages.push({ id: 'vurdering', titel: 'Vurdering af regnskabets robusthed', header, blocks: [
-      { type: 'title', text: 'Vurdering af regnskabets robusthed' },
-      { type: 'para', text: `Denne side er en automatisk sammenfatning af regnskabets nøgletal til brug for andelshaverne. Den bygger på tallene i årsrapporten og de grænseværdier, der er beskrevet i programmets dokumentation, og erstatter ikke bestyrelsens eller en revisors vurdering.` },
+      { type: 'title', text: 'Supplerende beretning: Vurdering af regnskabets robusthed' },
+      { type: 'para', text: `Denne side er en supplerende beretning, jf. årsregnskabslovens § 14. Den er ikke en del af årsregnskabet (resultatopgørelse, balance og noter) og er ikke omfattet af bilagskontrollørernes erklæring. Siden er en automatisk sammenfatning af regnskabets nøgletal til brug for andelshaverne, bygger på tallene i årsrapporten og de grænseværdier, der er beskrevet i programmets dokumentation, og erstatter ikke bestyrelsens eller en revisors vurdering.` },
       { type: 'vurdering', niveau: v.niveau, tekst: v.tekst, antal: v.antal },
       { type: 'liste', kategori: 'styrke', titel: 'Styrker', punkter: kat('styrke') },
       { type: 'liste', kategori: 'opmaerksomhed', titel: 'Punkter andelshaverne bør være opmærksomme på', punkter: kat('opmaerksomhed') },
