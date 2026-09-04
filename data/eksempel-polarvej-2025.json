@@ -102,6 +102,11 @@
       "linje": "n2.rente"
     },
     {
+      "nr": 46,
+      "navn": "Negative renter, bank",
+      "linje": "n7.andet"
+    },
+    {
       "nr": 50,
       "navn": "Diverse omkostninger",
       "linje": "n5.diverse"
@@ -110,6 +115,11 @@
       "nr": 80,
       "navn": "Fremlejedepositum modtaget/tilbagebetalt",
       "linje": "ag:depositum"
+    },
+    {
+      "nr": 85,
+      "navn": "Andelsoverdragelser, gennemløb (købesum ind / provenu ud)",
+      "linje": "ag:handel"
     },
     {
       "nr": 90,
@@ -217,12 +227,6 @@
       "konto": 100
     },
     {
-      "moenster": "Aftalenr. 122473449",
-      "retning": "ud",
-      "beloeb": "",
-      "konto": 95
-    },
-    {
       "moenster": "VEJLE KOMMUNE",
       "retning": "ud",
       "beloeb": "",
@@ -241,7 +245,43 @@
       "konto": 50
     },
     {
+      "moenster": "Overdragelsessum",
+      "retning": "ind",
+      "beloeb": "",
+      "konto": 85
+    },
+    {
+      "moenster": "Købesum",
+      "retning": "ind",
+      "beloeb": "",
+      "konto": 85
+    },
+    {
+      "moenster": "Provenu",
+      "retning": "ud",
+      "beloeb": "",
+      "konto": 85
+    },
+    {
+      "moenster": "Transporterklæring",
+      "retning": "ud",
+      "beloeb": "",
+      "konto": 85
+    },
+    {
       "moenster": "Gebyr",
+      "retning": "ud",
+      "beloeb": "",
+      "konto": 170
+    },
+    {
+      "moenster": "Nets",
+      "retning": "ud",
+      "beloeb": "",
+      "konto": 170
+    },
+    {
+      "moenster": "fuldmagt",
       "retning": "ud",
       "beloeb": "",
       "konto": 170
@@ -259,10 +299,40 @@
       "konto": 110
     },
     {
+      "moenster": "Kontingent",
+      "retning": "ud",
+      "beloeb": "",
+      "konto": 110
+    },
+    {
       "moenster": "Madpartner",
       "retning": "ud",
       "beloeb": "",
       "konto": 150
+    },
+    {
+      "moenster": "honorar",
+      "retning": "ud",
+      "beloeb": "",
+      "konto": 140
+    },
+    {
+      "moenster": "Erik jul Nielsen",
+      "retning": "ud",
+      "beloeb": "",
+      "konto": 140
+    },
+    {
+      "moenster": "Heidi Jensen",
+      "retning": "ud",
+      "beloeb": "",
+      "konto": 140
+    },
+    {
+      "moenster": "Tina Qualmann",
+      "retning": "ud",
+      "beloeb": "",
+      "konto": 140
     },
     {
       "moenster": "Totalalgeservice",
@@ -275,6 +345,54 @@
       "retning": "ud",
       "beloeb": "",
       "konto": 105
+    },
+    {
+      "moenster": "Byggesagkyndig",
+      "retning": "ud",
+      "beloeb": "",
+      "konto": 50
+    },
+    {
+      "moenster": "Lasertryk",
+      "retning": "ud",
+      "beloeb": "",
+      "konto": 50
+    },
+    {
+      "moenster": "Intrum",
+      "retning": "ud",
+      "beloeb": "",
+      "konto": 50
+    },
+    {
+      "moenster": "Til 2440",
+      "retning": "ud",
+      "beloeb": "",
+      "konto": 50
+    },
+    {
+      "moenster": "Returnering af overførsel",
+      "retning": "ind",
+      "beloeb": "",
+      "konto": 50
+    },
+    {
+      "moenster": "sumrente",
+      "retning": "ind",
+      "beloeb": "",
+      "konto": 45
+    },
+    {
+      "moenster": "rente",
+      "retning": "ind",
+      "beloeb": "",
+      "konto": 45
+    },
+    {
+      "moenster": "rente",
+      "retning": "ud",
+      "beloeb": "",
+      "konto": 46
     },
     {
       "moenster": "Bonus",
@@ -295,6 +413,12 @@
       "konto": 40
     },
     {
+      "moenster": "For megen betalt",
+      "retning": "ud",
+      "beloeb": "",
+      "konto": 10
+    },
+    {
       "moenster": "Husleje",
       "retning": "ind",
       "beloeb": "",
@@ -307,15 +431,27 @@
       "konto": 10
     },
     {
+      "moenster": "Advis",
+      "retning": "ind",
+      "beloeb": "",
+      "konto": 10
+    },
+    {
       "moenster": "",
       "retning": "ind",
       "beloeb": 2000,
+      "konto": 10
+    },
+    {
+      "moenster": "Polarvej",
+      "retning": "ind",
+      "beloeb": "",
       "konto": 10
     }
   ],
   "posteringer": [
     {
-      "id": "p001_25",
+      "id": "p2025_1",
       "dato": "2025-01-02",
       "bilag": "001.25",
       "tekst": "Police 36751630",
@@ -325,7 +461,7 @@
       "ud": 0
     },
     {
-      "id": "p002_25",
+      "id": "p2025_2",
       "dato": "2025-01-02",
       "bilag": "002.25",
       "tekst": "Advis 122412310150191 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)",
@@ -335,7 +471,7 @@
       "ud": 0
     },
     {
-      "id": "p003_25",
+      "id": "p2025_3",
       "dato": "2025-01-02",
       "bilag": "003.25",
       "tekst": "Betalingsservice ALKA FORSIKRING Aftalenr. 889047160",
@@ -345,7 +481,7 @@
       "ud": 15552.78
     },
     {
-      "id": "p004_25",
+      "id": "p2025_4",
       "dato": "2025-01-02",
       "bilag": "004.25",
       "tekst": "Polarvej 62",
@@ -355,7 +491,7 @@
       "ud": 0
     },
     {
-      "id": "p005_25",
+      "id": "p2025_5",
       "dato": "2025-01-02",
       "bilag": "005.25",
       "tekst": "Husleje Polarvej 49",
@@ -365,7 +501,7 @@
       "ud": 0
     },
     {
-      "id": "p006_25",
+      "id": "p2025_6",
       "dato": "2025-01-03",
       "bilag": "006.25",
       "tekst": "Jette Bruun nr. 43",
@@ -375,7 +511,7 @@
       "ud": 0
     },
     {
-      "id": "p007_25",
+      "id": "p2025_7",
       "dato": "2025-01-03",
       "bilag": "007.25",
       "tekst": "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)",
@@ -385,7 +521,7 @@
       "ud": 0
     },
     {
-      "id": "p008_25",
+      "id": "p2025_8",
       "dato": "2025-01-03",
       "bilag": "008.25",
       "tekst": "Tina Qualmann",
@@ -395,7 +531,7 @@
       "ud": 0
     },
     {
-      "id": "p009_25",
+      "id": "p2025_9",
       "dato": "2025-01-03",
       "bilag": "009.25",
       "tekst": "Polarvej 64",
@@ -405,7 +541,7 @@
       "ud": 0
     },
     {
-      "id": "p010_25",
+      "id": "p2025_10",
       "dato": "2025-01-06",
       "bilag": "010.25",
       "tekst": "Betalingsservice VEJLE KOMMUNE Aftalenr. 122473449",
@@ -415,7 +551,7 @@
       "ud": 1545.12
     },
     {
-      "id": "p011_25",
+      "id": "p2025_11",
       "dato": "2025-01-06",
       "bilag": "011.25",
       "tekst": "Betalingsservice VEJLE KOMMUNE Aftalenr. 011630679",
@@ -425,7 +561,7 @@
       "ud": 34034
     },
     {
-      "id": "p012_25",
+      "id": "p2025_12",
       "dato": "2025-01-31",
       "bilag": "012.25",
       "tekst": "Fra Heidi nr 55",
@@ -435,7 +571,7 @@
       "ud": 0
     },
     {
-      "id": "p013_25",
+      "id": "p2025_13",
       "dato": "2025-02-03",
       "bilag": "013.25",
       "tekst": "Advis 122502010202034 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)",
@@ -445,7 +581,7 @@
       "ud": 0
     },
     {
-      "id": "p014_25",
+      "id": "p2025_14",
       "dato": "2025-02-03",
       "bilag": "014.25",
       "tekst": "Husleje Polarvej 49",
@@ -455,7 +591,7 @@
       "ud": 0
     },
     {
-      "id": "p015_25",
+      "id": "p2025_15",
       "dato": "2025-02-04",
       "bilag": "015.25",
       "tekst": "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)",
@@ -465,7 +601,7 @@
       "ud": 0
     },
     {
-      "id": "p016_25",
+      "id": "p2025_16",
       "dato": "2025-02-04",
       "bilag": "016.25",
       "tekst": "Jette Bruun nr. 43",
@@ -475,7 +611,7 @@
       "ud": 0
     },
     {
-      "id": "p017_25",
+      "id": "p2025_17",
       "dato": "2025-02-04",
       "bilag": "017.25",
       "tekst": "Tina Qualmann",
@@ -485,7 +621,7 @@
       "ud": 0
     },
     {
-      "id": "p018_25",
+      "id": "p2025_18",
       "dato": "2025-02-04",
       "bilag": "018.25",
       "tekst": "Polarvej 64",
@@ -495,7 +631,7 @@
       "ud": 0
     },
     {
-      "id": "p019_25",
+      "id": "p2025_19",
       "dato": "2025-02-06",
       "bilag": "019.25",
       "tekst": "Polarvej 62",
@@ -505,7 +641,7 @@
       "ud": 0
     },
     {
-      "id": "p020_25",
+      "id": "p2025_20",
       "dato": "2025-02-06",
       "bilag": "020.25",
       "tekst": "Betaling (byggesagkyndig.nu)",
@@ -515,7 +651,7 @@
       "ud": 4683.84
     },
     {
-      "id": "p021_25",
+      "id": "p2025_21",
       "dato": "2025-02-06",
       "bilag": "021.25",
       "tekst": "GÆLDST. DMI OCR",
@@ -525,7 +661,7 @@
       "ud": 23952.86
     },
     {
-      "id": "p022_25",
+      "id": "p2025_22",
       "dato": "2025-02-11",
       "bilag": "022.25",
       "tekst": "SKAT Inddrivelse ove",
@@ -535,7 +671,7 @@
       "ud": 0
     },
     {
-      "id": "p023_25",
+      "id": "p2025_23",
       "dato": "2025-02-28",
       "bilag": "023.25",
       "tekst": "Gebyr",
@@ -545,7 +681,7 @@
       "ud": 10
     },
     {
-      "id": "p024_25",
+      "id": "p2025_24",
       "dato": "2025-03-03",
       "bilag": "024.25",
       "tekst": "Advis 122503010143082 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)",
@@ -555,7 +691,7 @@
       "ud": 0
     },
     {
-      "id": "p025_25",
+      "id": "p2025_25",
       "dato": "2025-03-03",
       "bilag": "025.25",
       "tekst": "Polarvej 64",
@@ -565,7 +701,7 @@
       "ud": 0
     },
     {
-      "id": "p026_25",
+      "id": "p2025_26",
       "dato": "2025-03-03",
       "bilag": "026.25",
       "tekst": "Husleje Polarvej 49",
@@ -575,7 +711,7 @@
       "ud": 0
     },
     {
-      "id": "p027_25",
+      "id": "p2025_27",
       "dato": "2025-03-03",
       "bilag": "027.25",
       "tekst": "Fra Heidi nr 55",
@@ -585,7 +721,7 @@
       "ud": 0
     },
     {
-      "id": "p028_25",
+      "id": "p2025_28",
       "dato": "2025-03-03",
       "bilag": "028.25",
       "tekst": "Polarvej 62",
@@ -595,7 +731,7 @@
       "ud": 0
     },
     {
-      "id": "p029_25",
+      "id": "p2025_29",
       "dato": "2025-03-04",
       "bilag": "029.25",
       "tekst": "Tina Qualmann",
@@ -605,7 +741,7 @@
       "ud": 0
     },
     {
-      "id": "p030_25",
+      "id": "p2025_30",
       "dato": "2025-03-04",
       "bilag": "030.25",
       "tekst": "Jette Bruun nr. 43",
@@ -615,7 +751,7 @@
       "ud": 0
     },
     {
-      "id": "p031_25",
+      "id": "p2025_31",
       "dato": "2025-03-04",
       "bilag": "031.25",
       "tekst": "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)",
@@ -625,7 +761,7 @@
       "ud": 0
     },
     {
-      "id": "p032_25",
+      "id": "p2025_32",
       "dato": "2025-03-28",
       "bilag": "032.25",
       "tekst": "Gebyr",
@@ -635,7 +771,7 @@
       "ud": 500
     },
     {
-      "id": "p033_25",
+      "id": "p2025_33",
       "dato": "2025-03-31",
       "bilag": "033.25",
       "tekst": "Betalingsservice DLR KREDIT A/S Aftalenr. 937826031",
@@ -645,7 +781,7 @@
       "ud": 15178.54
     },
     {
-      "id": "p034_25",
+      "id": "p2025_34",
       "dato": "2025-04-01",
       "bilag": "034.25",
       "tekst": "Husleje Polarvej 49",
@@ -655,7 +791,7 @@
       "ud": 0
     },
     {
-      "id": "p035_25",
+      "id": "p2025_35",
       "dato": "2025-04-01",
       "bilag": "035.25",
       "tekst": "Fra Heidi nr 55",
@@ -665,7 +801,7 @@
       "ud": 0
     },
     {
-      "id": "p036_25",
+      "id": "p2025_36",
       "dato": "2025-04-02",
       "bilag": "036.25",
       "tekst": "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)",
@@ -675,7 +811,7 @@
       "ud": 0
     },
     {
-      "id": "p037_25",
+      "id": "p2025_37",
       "dato": "2025-04-02",
       "bilag": "037.25",
       "tekst": "Advis 122504020141148 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)",
@@ -685,7 +821,7 @@
       "ud": 0
     },
     {
-      "id": "p038_25",
+      "id": "p2025_38",
       "dato": "2025-04-02",
       "bilag": "038.25",
       "tekst": "Tina Qualmann",
@@ -695,7 +831,7 @@
       "ud": 0
     },
     {
-      "id": "p039_25",
+      "id": "p2025_39",
       "dato": "2025-04-02",
       "bilag": "039.25",
       "tekst": "Polarvej 64",
@@ -705,7 +841,7 @@
       "ud": 0
     },
     {
-      "id": "p040_25",
+      "id": "p2025_40",
       "dato": "2025-04-11",
       "bilag": "040.25",
       "tekst": "Bestyrelseshonorar Erik jul Nielsen",
@@ -715,7 +851,7 @@
       "ud": 1000
     },
     {
-      "id": "p041_25",
+      "id": "p2025_41",
       "dato": "2025-04-11",
       "bilag": "041.25",
       "tekst": "Bestyrelseshonorar Heidi Jensen",
@@ -725,7 +861,7 @@
       "ud": 1500
     },
     {
-      "id": "p042_25",
+      "id": "p2025_42",
       "dato": "2025-04-11",
       "bilag": "042.25",
       "tekst": "Bestyrelseshonorar Tina Qualmann",
@@ -735,7 +871,7 @@
       "ud": 1000
     },
     {
-      "id": "p043_25",
+      "id": "p2025_43",
       "dato": "2025-04-11",
       "bilag": "043.25",
       "tekst": "Din Madpartner",
@@ -745,7 +881,7 @@
       "ud": 3000
     },
     {
-      "id": "p044_25",
+      "id": "p2025_44",
       "dato": "2025-04-23",
       "bilag": "044.25",
       "tekst": "Polarvej 43",
@@ -755,7 +891,7 @@
       "ud": 0
     },
     {
-      "id": "p045_25",
+      "id": "p2025_45",
       "dato": "2025-04-30",
       "bilag": "045.25",
       "tekst": "Gebyr",
@@ -765,7 +901,7 @@
       "ud": 40
     },
     {
-      "id": "p046_25",
+      "id": "p2025_46",
       "dato": "2025-05-01",
       "bilag": "046.25",
       "tekst": "Husleje Polarvej 49",
@@ -775,7 +911,7 @@
       "ud": 0
     },
     {
-      "id": "p047_25",
+      "id": "p2025_47",
       "dato": "2025-05-01",
       "bilag": "047.25",
       "tekst": "Fra Heidi nr 55",
@@ -785,7 +921,7 @@
       "ud": 0
     },
     {
-      "id": "p048_25",
+      "id": "p2025_48",
       "dato": "2025-05-01",
       "bilag": "048.25",
       "tekst": "Polarvej 62",
@@ -795,7 +931,7 @@
       "ud": 0
     },
     {
-      "id": "p049_25",
+      "id": "p2025_49",
       "dato": "2025-05-02",
       "bilag": "049.25",
       "tekst": "Advis 122505020150504 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)",
@@ -805,7 +941,7 @@
       "ud": 0
     },
     {
-      "id": "p050_25",
+      "id": "p2025_50",
       "dato": "2025-05-02",
       "bilag": "050.25",
       "tekst": "Polarvej 43",
@@ -815,7 +951,7 @@
       "ud": 0
     },
     {
-      "id": "p051_25",
+      "id": "p2025_51",
       "dato": "2025-05-02",
       "bilag": "051.25",
       "tekst": "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)",
@@ -825,7 +961,7 @@
       "ud": 0
     },
     {
-      "id": "p052_25",
+      "id": "p2025_52",
       "dato": "2025-05-02",
       "bilag": "052.25",
       "tekst": "Tina Qualmann",
@@ -835,7 +971,7 @@
       "ud": 0
     },
     {
-      "id": "p053_25",
+      "id": "p2025_53",
       "dato": "2025-05-02",
       "bilag": "053.25",
       "tekst": "Polarvej 64",
@@ -845,7 +981,7 @@
       "ud": 0
     },
     {
-      "id": "p054_25",
+      "id": "p2025_54",
       "dato": "2025-05-21",
       "bilag": "054.25",
       "tekst": "SKATTEKONTOEN",
@@ -855,7 +991,7 @@
       "ud": 23505.38
     },
     {
-      "id": "p055_25",
+      "id": "p2025_55",
       "dato": "2025-06-02",
       "bilag": "055.25",
       "tekst": "Advis 122505290156180 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)",
@@ -865,7 +1001,7 @@
       "ud": 0
     },
     {
-      "id": "p056_25",
+      "id": "p2025_56",
       "dato": "2025-06-02",
       "bilag": "056.25",
       "tekst": "Polarvej 62",
@@ -875,7 +1011,7 @@
       "ud": 0
     },
     {
-      "id": "p057_25",
+      "id": "p2025_57",
       "dato": "2025-06-02",
       "bilag": "057.25",
       "tekst": "Fra Heidi nr 55",
@@ -885,7 +1021,7 @@
       "ud": 0
     },
     {
-      "id": "p058_25",
+      "id": "p2025_58",
       "dato": "2025-06-02",
       "bilag": "058.25",
       "tekst": "Husleje Polarvej 49",
@@ -895,7 +1031,7 @@
       "ud": 0
     },
     {
-      "id": "p059_25",
+      "id": "p2025_59",
       "dato": "2025-06-02",
       "bilag": "059.25",
       "tekst": "Polarvej 62",
@@ -905,7 +1041,7 @@
       "ud": 0
     },
     {
-      "id": "p060_25",
+      "id": "p2025_60",
       "dato": "2025-06-03",
       "bilag": "060.25",
       "tekst": "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)",
@@ -915,7 +1051,7 @@
       "ud": 0
     },
     {
-      "id": "p061_25",
+      "id": "p2025_61",
       "dato": "2025-06-03",
       "bilag": "061.25",
       "tekst": "Tina Qualmann",
@@ -925,7 +1061,7 @@
       "ud": 0
     },
     {
-      "id": "p062_25",
+      "id": "p2025_62",
       "dato": "2025-06-03",
       "bilag": "062.25",
       "tekst": "Polarvej 43",
@@ -935,7 +1071,7 @@
       "ud": 0
     },
     {
-      "id": "p063_25",
+      "id": "p2025_63",
       "dato": "2025-06-03",
       "bilag": "063.25",
       "tekst": "Polarvej 64",
@@ -945,7 +1081,7 @@
       "ud": 0
     },
     {
-      "id": "p064_25",
+      "id": "p2025_64",
       "dato": "2025-06-10",
       "bilag": "064.25",
       "tekst": "Totalalgeservice",
@@ -955,7 +1091,7 @@
       "ud": 5500
     },
     {
-      "id": "p065_25",
+      "id": "p2025_65",
       "dato": "2025-06-10",
       "bilag": "065.25",
       "tekst": "Dansk Tagbearbejdning A/S",
@@ -965,7 +1101,7 @@
       "ud": 4850
     },
     {
-      "id": "p066_25",
+      "id": "p2025_66",
       "dato": "2025-06-10",
       "bilag": "066.25",
       "tekst": "Kontingent Grundejerforeningen",
@@ -975,7 +1111,7 @@
       "ud": 4000
     },
     {
-      "id": "p067_25",
+      "id": "p2025_67",
       "dato": "2025-06-30",
       "bilag": "067.25",
       "tekst": "Betalingsservice DLR KREDIT A/S Aftalenr. 937826031",
@@ -985,7 +1121,7 @@
       "ud": 15152.86
     },
     {
-      "id": "p068_25",
+      "id": "p2025_68",
       "dato": "2025-06-30",
       "bilag": "068.25",
       "tekst": "Gebyr",
@@ -995,7 +1131,7 @@
       "ud": 520
     },
     {
-      "id": "p069_25",
+      "id": "p2025_69",
       "dato": "2025-07-01",
       "bilag": "069.25",
       "tekst": "Fra Heidi nr 55",
@@ -1005,7 +1141,7 @@
       "ud": 0
     },
     {
-      "id": "p070_25",
+      "id": "p2025_70",
       "dato": "2025-07-01",
       "bilag": "070.25",
       "tekst": "Polarvej 62",
@@ -1015,7 +1151,7 @@
       "ud": 0
     },
     {
-      "id": "p071_25",
+      "id": "p2025_71",
       "dato": "2025-07-01",
       "bilag": "071.25",
       "tekst": "Husleje Polarvej 49",
@@ -1025,7 +1161,7 @@
       "ud": 0
     },
     {
-      "id": "p072_25",
+      "id": "p2025_72",
       "dato": "2025-07-01",
       "bilag": "072.25",
       "tekst": "Polarvej 64",
@@ -1035,7 +1171,7 @@
       "ud": 0
     },
     {
-      "id": "p073_25",
+      "id": "p2025_73",
       "dato": "2025-07-02",
       "bilag": "073.25",
       "tekst": "Tina Qualmann",
@@ -1045,7 +1181,7 @@
       "ud": 0
     },
     {
-      "id": "p074_25",
+      "id": "p2025_74",
       "dato": "2025-07-02",
       "bilag": "074.25",
       "tekst": "Polarvej 43",
@@ -1055,7 +1191,7 @@
       "ud": 0
     },
     {
-      "id": "p075_25",
+      "id": "p2025_75",
       "dato": "2025-07-02",
       "bilag": "075.25",
       "tekst": "Advis 122507020148491 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)",
@@ -1065,7 +1201,7 @@
       "ud": 0
     },
     {
-      "id": "p076_25",
+      "id": "p2025_76",
       "dato": "2025-07-02",
       "bilag": "076.25",
       "tekst": "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)",
@@ -1075,7 +1211,7 @@
       "ud": 0
     },
     {
-      "id": "p077_25",
+      "id": "p2025_77",
       "dato": "2025-08-01",
       "bilag": "077.25",
       "tekst": "Polarvej 62",
@@ -1085,7 +1221,7 @@
       "ud": 0
     },
     {
-      "id": "p078_25",
+      "id": "p2025_78",
       "dato": "2025-08-01",
       "bilag": "078.25",
       "tekst": "Husleje Polarvej 49",
@@ -1095,7 +1231,7 @@
       "ud": 0
     },
     {
-      "id": "p079_25",
+      "id": "p2025_79",
       "dato": "2025-08-01",
       "bilag": "079.25",
       "tekst": "Fra Heidi nr 55",
@@ -1105,7 +1241,7 @@
       "ud": 0
     },
     {
-      "id": "p080_25",
+      "id": "p2025_80",
       "dato": "2025-08-01",
       "bilag": "080.25",
       "tekst": "Polarvej 64",
@@ -1115,7 +1251,7 @@
       "ud": 0
     },
     {
-      "id": "p081_25",
+      "id": "p2025_81",
       "dato": "2025-08-04",
       "bilag": "081.25",
       "tekst": "Advis 122508020142511 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)",
@@ -1125,7 +1261,7 @@
       "ud": 0
     },
     {
-      "id": "p082_25",
+      "id": "p2025_82",
       "dato": "2025-08-04",
       "bilag": "082.25",
       "tekst": "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)",
@@ -1135,7 +1271,7 @@
       "ud": 0
     },
     {
-      "id": "p083_25",
+      "id": "p2025_83",
       "dato": "2025-08-04",
       "bilag": "083.25",
       "tekst": "Tina Qualmann",
@@ -1145,7 +1281,7 @@
       "ud": 0
     },
     {
-      "id": "p084_25",
+      "id": "p2025_84",
       "dato": "2025-08-04",
       "bilag": "084.25",
       "tekst": "Polarvej 43",
@@ -1155,7 +1291,7 @@
       "ud": 0
     },
     {
-      "id": "p085_25",
+      "id": "p2025_85",
       "dato": "2025-09-01",
       "bilag": "085.25",
       "tekst": "Husleje Polarvej 49",
@@ -1165,7 +1301,7 @@
       "ud": 0
     },
     {
-      "id": "p086_25",
+      "id": "p2025_86",
       "dato": "2025-09-01",
       "bilag": "086.25",
       "tekst": "Fra Heidi nr 55",
@@ -1175,7 +1311,7 @@
       "ud": 0
     },
     {
-      "id": "p087_25",
+      "id": "p2025_87",
       "dato": "2025-09-01",
       "bilag": "087.25",
       "tekst": "Polarvej 62",
@@ -1185,7 +1321,7 @@
       "ud": 0
     },
     {
-      "id": "p088_25",
+      "id": "p2025_88",
       "dato": "2025-09-02",
       "bilag": "088.25",
       "tekst": "Polarvej 43",
@@ -1195,7 +1331,7 @@
       "ud": 0
     },
     {
-      "id": "p089_25",
+      "id": "p2025_89",
       "dato": "2025-09-02",
       "bilag": "089.25",
       "tekst": "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)",
@@ -1205,7 +1341,7 @@
       "ud": 0
     },
     {
-      "id": "p090_25",
+      "id": "p2025_90",
       "dato": "2025-09-02",
       "bilag": "090.25",
       "tekst": "Advis 122509020150583 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)",
@@ -1215,7 +1351,7 @@
       "ud": 0
     },
     {
-      "id": "p091_25",
+      "id": "p2025_91",
       "dato": "2025-09-02",
       "bilag": "091.25",
       "tekst": "Tina Qualmann",
@@ -1225,7 +1361,7 @@
       "ud": 0
     },
     {
-      "id": "p092_25",
+      "id": "p2025_92",
       "dato": "2025-09-02",
       "bilag": "092.25",
       "tekst": "Polarvej 64",
@@ -1235,7 +1371,7 @@
       "ud": 0
     },
     {
-      "id": "p093_25",
+      "id": "p2025_93",
       "dato": "2025-09-24",
       "bilag": "093.25",
       "tekst": "BonusTryghedsGruppen (TRYGHEDSGRUPPEN SMBA, HUMMELTOFTEVEJ 49, 2830 VIRUM)",
@@ -1245,7 +1381,7 @@
       "ud": 0
     },
     {
-      "id": "p094_25",
+      "id": "p2025_94",
       "dato": "2025-09-30",
       "bilag": "094.25",
       "tekst": "Betalingsservice DLR KREDIT A/S Aftalenr. 937826031",
@@ -1255,7 +1391,7 @@
       "ud": 15127.08
     },
     {
-      "id": "p095_25",
+      "id": "p2025_95",
       "dato": "2025-09-30",
       "bilag": "095.25",
       "tekst": "Gebyr",
@@ -1265,7 +1401,7 @@
       "ud": 500
     },
     {
-      "id": "p096_25",
+      "id": "p2025_96",
       "dato": "2025-10-01",
       "bilag": "096.25",
       "tekst": "Betalingsservice ABF Aftalenr. 683197963",
@@ -1275,7 +1411,7 @@
       "ud": 2016
     },
     {
-      "id": "p097_25",
+      "id": "p2025_97",
       "dato": "2025-10-01",
       "bilag": "097.25",
       "tekst": "Husleje Polarvej 49",
@@ -1285,7 +1421,7 @@
       "ud": 0
     },
     {
-      "id": "p098_25",
+      "id": "p2025_98",
       "dato": "2025-10-01",
       "bilag": "098.25",
       "tekst": "Fra Heidi nr 55",
@@ -1295,7 +1431,7 @@
       "ud": 0
     },
     {
-      "id": "p099_25",
+      "id": "p2025_99",
       "dato": "2025-10-01",
       "bilag": "099.25",
       "tekst": "Polarvej 62",
@@ -1305,7 +1441,7 @@
       "ud": 0
     },
     {
-      "id": "p100_25",
+      "id": "p2025_100",
       "dato": "2025-10-02",
       "bilag": "100.25",
       "tekst": "Polarvej 43",
@@ -1315,7 +1451,7 @@
       "ud": 0
     },
     {
-      "id": "p101_25",
+      "id": "p2025_101",
       "dato": "2025-10-02",
       "bilag": "101.25",
       "tekst": "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)",
@@ -1325,7 +1461,7 @@
       "ud": 0
     },
     {
-      "id": "p102_25",
+      "id": "p2025_102",
       "dato": "2025-10-02",
       "bilag": "102.25",
       "tekst": "Tina Qualmann",
@@ -1335,7 +1471,7 @@
       "ud": 0
     },
     {
-      "id": "p103_25",
+      "id": "p2025_103",
       "dato": "2025-10-03",
       "bilag": "103.25",
       "tekst": "Advis 122510030138275 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)",
@@ -1345,7 +1481,7 @@
       "ud": 0
     },
     {
-      "id": "p104_25",
+      "id": "p2025_104",
       "dato": "2025-10-03",
       "bilag": "104.25",
       "tekst": "Polarvej 64",
@@ -1355,7 +1491,7 @@
       "ud": 0
     },
     {
-      "id": "p105_25",
+      "id": "p2025_105",
       "dato": "2025-11-03",
       "bilag": "105.25",
       "tekst": "Advis 122511010157449 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)",
@@ -1365,7 +1501,7 @@
       "ud": 0
     },
     {
-      "id": "p106_25",
+      "id": "p2025_106",
       "dato": "2025-11-03",
       "bilag": "106.25",
       "tekst": "Husleje Polarvej 49",
@@ -1375,7 +1511,7 @@
       "ud": 0
     },
     {
-      "id": "p107_25",
+      "id": "p2025_107",
       "dato": "2025-11-03",
       "bilag": "107.25",
       "tekst": "Fra Heidi nr 55",
@@ -1385,7 +1521,7 @@
       "ud": 0
     },
     {
-      "id": "p108_25",
+      "id": "p2025_108",
       "dato": "2025-11-04",
       "bilag": "108.25",
       "tekst": "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)",
@@ -1395,7 +1531,7 @@
       "ud": 0
     },
     {
-      "id": "p109_25",
+      "id": "p2025_109",
       "dato": "2025-11-04",
       "bilag": "109.25",
       "tekst": "Polarvej 43",
@@ -1405,7 +1541,7 @@
       "ud": 0
     },
     {
-      "id": "p110_25",
+      "id": "p2025_110",
       "dato": "2025-11-04",
       "bilag": "110.25",
       "tekst": "Tina Qualmann",
@@ -1415,7 +1551,7 @@
       "ud": 0
     },
     {
-      "id": "p111_25",
+      "id": "p2025_111",
       "dato": "2025-11-04",
       "bilag": "111.25",
       "tekst": "Polarvej 64",
@@ -1425,7 +1561,7 @@
       "ud": 0
     },
     {
-      "id": "p112_25",
+      "id": "p2025_112",
       "dato": "2025-11-04",
       "bilag": "112.25",
       "tekst": "Polarvej 62",
@@ -1435,7 +1571,7 @@
       "ud": 0
     },
     {
-      "id": "p113_25",
+      "id": "p2025_113",
       "dato": "2025-11-26",
       "bilag": "113.25",
       "tekst": "SKATTEKONTOEN",
@@ -1445,7 +1581,7 @@
       "ud": 273.84
     },
     {
-      "id": "p114_25",
+      "id": "p2025_114",
       "dato": "2025-11-26",
       "bilag": "114.25",
       "tekst": "SKATTEKONTOEN",
@@ -1455,7 +1591,7 @@
       "ud": 23499
     },
     {
-      "id": "p115_25",
+      "id": "p2025_115",
       "dato": "2025-12-01",
       "bilag": "115.25",
       "tekst": "Husleje Polarvej 49",
@@ -1465,7 +1601,7 @@
       "ud": 0
     },
     {
-      "id": "p116_25",
+      "id": "p2025_116",
       "dato": "2025-12-01",
       "bilag": "116.25",
       "tekst": "Fra Heidi nr 55",
@@ -1475,7 +1611,7 @@
       "ud": 0
     },
     {
-      "id": "p117_25",
+      "id": "p2025_117",
       "dato": "2025-12-02",
       "bilag": "117.25",
       "tekst": "Polarvej 43",
@@ -1485,7 +1621,7 @@
       "ud": 0
     },
     {
-      "id": "p118_25",
+      "id": "p2025_118",
       "dato": "2025-12-02",
       "bilag": "118.25",
       "tekst": "Tina Qualmann",
@@ -1495,7 +1631,7 @@
       "ud": 0
     },
     {
-      "id": "p119_25",
+      "id": "p2025_119",
       "dato": "2025-12-02",
       "bilag": "119.25",
       "tekst": "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)",
@@ -1505,7 +1641,7 @@
       "ud": 0
     },
     {
-      "id": "p120_25",
+      "id": "p2025_120",
       "dato": "2025-12-02",
       "bilag": "120.25",
       "tekst": "Advis 122512020150357 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)",
@@ -1515,7 +1651,7 @@
       "ud": 0
     },
     {
-      "id": "p121_25",
+      "id": "p2025_121",
       "dato": "2025-12-02",
       "bilag": "121.25",
       "tekst": "Polarvej 64",
@@ -1525,7 +1661,7 @@
       "ud": 0
     },
     {
-      "id": "p122_25",
+      "id": "p2025_122",
       "dato": "2025-12-02",
       "bilag": "122.25",
       "tekst": "Polarvej 62",
@@ -1535,7 +1671,7 @@
       "ud": 0
     },
     {
-      "id": "p123_25",
+      "id": "p2025_123",
       "dato": "2025-12-30",
       "bilag": "123.25",
       "tekst": "Betalingsservice DLR KREDIT A/S Aftalenr. 937826031",
@@ -1545,7 +1681,7 @@
       "ud": 15101.2
     },
     {
-      "id": "p124_25",
+      "id": "p2025_124",
       "dato": "2025-12-30",
       "bilag": "124.25",
       "tekst": "Gebyr",
@@ -2019,6 +2155,11 @@
       "id": "depositum",
       "tekst": "Depositum fra fremlejer, Polarvej 64 (hensat på deponeringskonto)",
       "primo": 20000
+    },
+    {
+      "id": "handel",
+      "tekst": "Mellemregning, andelsoverdragelser (købesum modtaget, endnu ikke afregnet)",
+      "primo": 0
     }
   ],
   "tilgodehavender": [],

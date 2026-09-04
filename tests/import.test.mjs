@@ -33,11 +33,14 @@ test('konteringsregler: mønster, retning, beløb, historik', () => {
   assert.equal(foreslaaKonto({ tekst: 'Betalingsservice DLR KREDIT A/S Aftalenr. 937826031', beloeb: -15178.54 }, R, {}).konto, 120);
   assert.equal(foreslaaKonto({ tekst: 'Advis 122504020141148', modpart: 'Mette Agerskov', beloeb: 2000 }, R, {}).konto, 10);
   assert.equal(foreslaaKonto({ tekst: 'Tina Qualmann', beloeb: 2000 }, R, {}).konto, 10);
-  assert.equal(foreslaaKonto({ tekst: 'Tina Qualmann', beloeb: -1000 }, R, {}).konto, '');
-  assert.equal(foreslaaKonto({ tekst: 'Betalingsservice VEJLE KOMMUNE Aftalenr. 122473449', beloeb: -1545.12 }, R, {}).konto, 95);
+  assert.equal(foreslaaKonto({ tekst: 'Tina Qualmann', beloeb: -1000 }, R, {}).konto, 140);
+  assert.equal(foreslaaKonto({ tekst: 'Betaling', beloeb: -4683.84 }, R, {}).konto, '');
+  assert.equal(foreslaaKonto({ tekst: 'Betalingsservice VEJLE KOMMUNE Aftalenr. 122473449', beloeb: -56850.62 }, R, {}).konto, 90);
+  assert.equal(foreslaaKonto({ tekst: 'Købesum', beloeb: 950000 }, R, {}).konto, 85);
+  assert.equal(foreslaaKonto({ tekst: 'Indlånssumrente', beloeb: -138.46 }, R, {}).konto, 46);
   assert.equal(foreslaaKonto({ tekst: 'Betalingsservice VEJLE KOMMUNE Aftalenr. 011630679', beloeb: -34034 }, R, {}).konto, 90);
-  const hist = byggeHistorik([{ tekst: 'Tina Qualmann', konto: 140 }]);
-  assert.equal(foreslaaKonto({ tekst: 'Tina Qualmann', beloeb: -1000 }, R, hist).konto, 140);
+  const hist = byggeHistorik([{ tekst: 'Betaling', konto: 50 }]);
+  assert.equal(foreslaaKonto({ tekst: 'Betaling', beloeb: -4683.84 }, R, hist).konto, 50);
 });
 
 test('dubletter genkendes og markeres', () => {

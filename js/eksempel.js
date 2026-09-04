@@ -2,9 +2,8 @@
 // Tallene stammer fra foreningens kasserapport og årsrapport for 2025.
 import { tomState, STANDARD_TEKSTER } from './model.js';
 import { DLR_BETALINGSPLAN } from './data-dlr-betalingsplan.js';
+import { POSTERINGER, BANK_ULTIMO } from './data-historik.js';
 
-const P = (dato, bilag, tekst, konto, likvid, ind, ud) => ({ id: 'p' + bilag.replace('.', '_'), dato, bilag, tekst, konto, likvid, ind: ind || 0, ud: ud || 0 });
-const _ = P;
 
 export function eksempelPolarvej2025() {
   const s = tomState(2025);
@@ -40,135 +39,11 @@ export function eksempelPolarvej2025() {
   // Kontoplan: standard + lånekonto
   s.kontoplan.push({ nr: 120, navn: 'DLR Kredit, låneydelse (renter + afdrag)', linje: 'laan:dlr' });
   s.kontoplan.push({ nr: 80, navn: 'Fremlejedepositum modtaget/tilbagebetalt', linje: 'ag:depositum' });
+  s.kontoplan.push({ nr: 85, navn: 'Andelsoverdragelser, gennemløb (købesum ind / provenu ud)', linje: 'ag:handel' });
   s.kontoplan.sort((a, b) => a.nr - b.nr);
 
-  // Alle 124 posteringer på forretningskontoen i 2025, importeret fra Middelfart Sparekasses CSV-eksport (data/bank-eksport-2025.csv)
-  s.posteringer = [
-    P('2025-01-02', '001.25', "Police 36751630", 40, 'bank', 2184.28, 0),
-    P('2025-01-02', '002.25', "Advis 122412310150191 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)", 10, 'bank', 2000, 0),
-    P('2025-01-02', '003.25', "Betalingsservice ALKA FORSIKRING Aftalenr. 889047160", 100, 'bank', 0, 15552.78),
-    P('2025-01-02', '004.25', "Polarvej 62", 10, 'bank', 2000, 0),
-    P('2025-01-02', '005.25', "Husleje Polarvej 49", 10, 'bank', 2000, 0),
-    P('2025-01-03', '006.25', "Jette Bruun nr. 43", 10, 'bank', 2000, 0),
-    P('2025-01-03', '007.25', "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)", 10, 'bank', 2000, 0),
-    P('2025-01-03', '008.25', "Tina Qualmann", 10, 'bank', 2000, 0),
-    P('2025-01-03', '009.25', "Polarvej 64", 10, 'bank', 2000, 0),
-    P('2025-01-06', '010.25', "Betalingsservice VEJLE KOMMUNE Aftalenr. 122473449", 95, 'bank', 0, 1545.12),
-    P('2025-01-06', '011.25', "Betalingsservice VEJLE KOMMUNE Aftalenr. 011630679", 90, 'bank', 0, 34034),
-    P('2025-01-31', '012.25', "Fra Heidi nr 55", 10, 'bank', 2000, 0),
-    P('2025-02-03', '013.25', "Advis 122502010202034 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)", 10, 'bank', 2000, 0),
-    P('2025-02-03', '014.25', "Husleje Polarvej 49", 10, 'bank', 2000, 0),
-    P('2025-02-04', '015.25', "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)", 10, 'bank', 2000, 0),
-    P('2025-02-04', '016.25', "Jette Bruun nr. 43", 10, 'bank', 2000, 0),
-    P('2025-02-04', '017.25', "Tina Qualmann", 10, 'bank', 2000, 0),
-    P('2025-02-04', '018.25', "Polarvej 64", 10, 'bank', 2000, 0),
-    P('2025-02-06', '019.25', "Polarvej 62", 10, 'bank', 2000, 0),
-    P('2025-02-06', '020.25', "Betaling (byggesagkyndig.nu)", 50, 'bank', 0, 4683.84),
-    P('2025-02-06', '021.25', "GÆLDST. DMI OCR", 50, 'bank', 0, 23952.86),
-    P('2025-02-11', '022.25', "SKAT Inddrivelse ove", 40, 'bank', 23698.09, 0),
-    P('2025-02-28', '023.25', "Gebyr", 170, 'bank', 0, 10),
-    P('2025-03-03', '024.25', "Advis 122503010143082 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)", 10, 'bank', 2000, 0),
-    P('2025-03-03', '025.25', "Polarvej 64", 10, 'bank', 2000, 0),
-    P('2025-03-03', '026.25', "Husleje Polarvej 49", 10, 'bank', 2000, 0),
-    P('2025-03-03', '027.25', "Fra Heidi nr 55", 10, 'bank', 2000, 0),
-    P('2025-03-03', '028.25', "Polarvej 62", 10, 'bank', 2000, 0),
-    P('2025-03-04', '029.25', "Tina Qualmann", 10, 'bank', 2000, 0),
-    P('2025-03-04', '030.25', "Jette Bruun nr. 43", 10, 'bank', 2000, 0),
-    P('2025-03-04', '031.25', "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)", 10, 'bank', 2000, 0),
-    P('2025-03-28', '032.25', "Gebyr", 170, 'bank', 0, 500),
-    P('2025-03-31', '033.25', "Betalingsservice DLR KREDIT A/S Aftalenr. 937826031", 120, 'bank', 0, 15178.54),
-    P('2025-04-01', '034.25', "Husleje Polarvej 49", 10, 'bank', 2000, 0),
-    P('2025-04-01', '035.25', "Fra Heidi nr 55", 10, 'bank', 2000, 0),
-    P('2025-04-02', '036.25', "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)", 10, 'bank', 2000, 0),
-    P('2025-04-02', '037.25', "Advis 122504020141148 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)", 10, 'bank', 2000, 0),
-    P('2025-04-02', '038.25', "Tina Qualmann", 10, 'bank', 2000, 0),
-    P('2025-04-02', '039.25', "Polarvej 64", 10, 'bank', 2000, 0),
-    P('2025-04-11', '040.25', "Bestyrelseshonorar Erik jul Nielsen", 140, 'bank', 0, 1000),
-    P('2025-04-11', '041.25', "Bestyrelseshonorar Heidi Jensen", 140, 'bank', 0, 1500),
-    P('2025-04-11', '042.25', "Bestyrelseshonorar Tina Qualmann", 140, 'bank', 0, 1000),
-    P('2025-04-11', '043.25', "Din Madpartner", 150, 'bank', 0, 3000),
-    P('2025-04-23', '044.25', "Polarvej 43", 10, 'bank', 2000, 0),
-    P('2025-04-30', '045.25', "Gebyr", 170, 'bank', 0, 40),
-    P('2025-05-01', '046.25', "Husleje Polarvej 49", 10, 'bank', 2000, 0),
-    P('2025-05-01', '047.25', "Fra Heidi nr 55", 10, 'bank', 2000, 0),
-    P('2025-05-01', '048.25', "Polarvej 62", 10, 'bank', 2000, 0),
-    P('2025-05-02', '049.25', "Advis 122505020150504 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)", 10, 'bank', 2000, 0),
-    P('2025-05-02', '050.25', "Polarvej 43", 10, 'bank', 2000, 0),
-    P('2025-05-02', '051.25', "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)", 10, 'bank', 2000, 0),
-    P('2025-05-02', '052.25', "Tina Qualmann", 10, 'bank', 2000, 0),
-    P('2025-05-02', '053.25', "Polarvej 64", 10, 'bank', 2000, 0),
-    P('2025-05-21', '054.25', "SKATTEKONTOEN", 90, 'bank', 0, 23505.38),
-    P('2025-06-02', '055.25', "Advis 122505290156180 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)", 10, 'bank', 2000, 0),
-    P('2025-06-02', '056.25', "Polarvej 62", 10, 'bank', 2000, 0),
-    P('2025-06-02', '057.25', "Fra Heidi nr 55", 10, 'bank', 2000, 0),
-    P('2025-06-02', '058.25', "Husleje Polarvej 49", 10, 'bank', 2000, 0),
-    P('2025-06-02', '059.25', "Polarvej 62", 10, 'bank', 2000, 0),
-    P('2025-06-03', '060.25', "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)", 10, 'bank', 2000, 0),
-    P('2025-06-03', '061.25', "Tina Qualmann", 10, 'bank', 2000, 0),
-    P('2025-06-03', '062.25', "Polarvej 43", 10, 'bank', 2000, 0),
-    P('2025-06-03', '063.25', "Polarvej 64", 10, 'bank', 2000, 0),
-    P('2025-06-10', '064.25', "Totalalgeservice", 105, 'bank', 0, 5500),
-    P('2025-06-10', '065.25', "Dansk Tagbearbejdning A/S", 105, 'bank', 0, 4850),
-    P('2025-06-10', '066.25', "Kontingent Grundejerforeningen", 110, 'bank', 0, 4000),
-    P('2025-06-30', '067.25', "Betalingsservice DLR KREDIT A/S Aftalenr. 937826031", 120, 'bank', 0, 15152.86),
-    P('2025-06-30', '068.25', "Gebyr", 170, 'bank', 0, 520),
-    P('2025-07-01', '069.25', "Fra Heidi nr 55", 10, 'bank', 2000, 0),
-    P('2025-07-01', '070.25', "Polarvej 62", 10, 'bank', 2000, 0),
-    P('2025-07-01', '071.25', "Husleje Polarvej 49", 10, 'bank', 2000, 0),
-    P('2025-07-01', '072.25', "Polarvej 64", 10, 'bank', 2000, 0),
-    P('2025-07-02', '073.25', "Tina Qualmann", 10, 'bank', 2000, 0),
-    P('2025-07-02', '074.25', "Polarvej 43", 10, 'bank', 2000, 0),
-    P('2025-07-02', '075.25', "Advis 122507020148491 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)", 10, 'bank', 2000, 0),
-    P('2025-07-02', '076.25', "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)", 10, 'bank', 2000, 0),
-    P('2025-08-01', '077.25', "Polarvej 62", 10, 'bank', 2000, 0),
-    P('2025-08-01', '078.25', "Husleje Polarvej 49", 10, 'bank', 2000, 0),
-    P('2025-08-01', '079.25', "Fra Heidi nr 55", 10, 'bank', 2000, 0),
-    P('2025-08-01', '080.25', "Polarvej 64", 10, 'bank', 2000, 0),
-    P('2025-08-04', '081.25', "Advis 122508020142511 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)", 10, 'bank', 2000, 0),
-    P('2025-08-04', '082.25', "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)", 10, 'bank', 2000, 0),
-    P('2025-08-04', '083.25', "Tina Qualmann", 10, 'bank', 2000, 0),
-    P('2025-08-04', '084.25', "Polarvej 43", 10, 'bank', 2000, 0),
-    P('2025-09-01', '085.25', "Husleje Polarvej 49", 10, 'bank', 2000, 0),
-    P('2025-09-01', '086.25', "Fra Heidi nr 55", 10, 'bank', 2000, 0),
-    P('2025-09-01', '087.25', "Polarvej 62", 10, 'bank', 2000, 0),
-    P('2025-09-02', '088.25', "Polarvej 43", 10, 'bank', 2000, 0),
-    P('2025-09-02', '089.25', "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)", 10, 'bank', 2000, 0),
-    P('2025-09-02', '090.25', "Advis 122509020150583 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)", 10, 'bank', 2000, 0),
-    P('2025-09-02', '091.25', "Tina Qualmann", 10, 'bank', 2000, 0),
-    P('2025-09-02', '092.25', "Polarvej 64", 10, 'bank', 2000, 0),
-    P('2025-09-24', '093.25', "BonusTryghedsGruppen (TRYGHEDSGRUPPEN SMBA, HUMMELTOFTEVEJ 49, 2830 VIRUM)", 20, 'bank', 894.71, 0),
-    P('2025-09-30', '094.25', "Betalingsservice DLR KREDIT A/S Aftalenr. 937826031", 120, 'bank', 0, 15127.08),
-    P('2025-09-30', '095.25', "Gebyr", 170, 'bank', 0, 500),
-    P('2025-10-01', '096.25', "Betalingsservice ABF Aftalenr. 683197963", 130, 'bank', 0, 2016),
-    P('2025-10-01', '097.25', "Husleje Polarvej 49", 10, 'bank', 2000, 0),
-    P('2025-10-01', '098.25', "Fra Heidi nr 55", 10, 'bank', 2000, 0),
-    P('2025-10-01', '099.25', "Polarvej 62", 10, 'bank', 2000, 0),
-    P('2025-10-02', '100.25', "Polarvej 43", 10, 'bank', 2000, 0),
-    P('2025-10-02', '101.25', "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)", 10, 'bank', 2000, 0),
-    P('2025-10-02', '102.25', "Tina Qualmann", 10, 'bank', 2000, 0),
-    P('2025-10-03', '103.25', "Advis 122510030138275 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)", 10, 'bank', 2000, 0),
-    P('2025-10-03', '104.25', "Polarvej 64", 10, 'bank', 2000, 0),
-    P('2025-11-03', '105.25', "Advis 122511010157449 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)", 10, 'bank', 2000, 0),
-    P('2025-11-03', '106.25', "Husleje Polarvej 49", 10, 'bank', 2000, 0),
-    P('2025-11-03', '107.25', "Fra Heidi nr 55", 10, 'bank', 2000, 0),
-    P('2025-11-04', '108.25', "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)", 10, 'bank', 2000, 0),
-    P('2025-11-04', '109.25', "Polarvej 43", 10, 'bank', 2000, 0),
-    P('2025-11-04', '110.25', "Tina Qualmann", 10, 'bank', 2000, 0),
-    P('2025-11-04', '111.25', "Polarvej 64", 10, 'bank', 2000, 0),
-    P('2025-11-04', '112.25', "Polarvej 62", 10, 'bank', 2000, 0),
-    P('2025-11-26', '113.25', "SKATTEKONTOEN", 90, 'bank', 0, 273.84),
-    P('2025-11-26', '114.25', "SKATTEKONTOEN", 90, 'bank', 0, 23499),
-    P('2025-12-01', '115.25', "Husleje Polarvej 49", 10, 'bank', 2000, 0),
-    P('2025-12-01', '116.25', "Fra Heidi nr 55", 10, 'bank', 2000, 0),
-    P('2025-12-02', '117.25', "Polarvej 43", 10, 'bank', 2000, 0),
-    P('2025-12-02', '118.25', "Tina Qualmann", 10, 'bank', 2000, 0),
-    P('2025-12-02', '119.25', "Jan Iversen (Jan Iversen, Bøgomvej 26, 7100  Vejle)", 10, 'bank', 2000, 0),
-    P('2025-12-02', '120.25', "Advis 122512020150357 (Mette Agerskov, Bjerreager 95, 7120 Vejle Øst)", 10, 'bank', 2000, 0),
-    P('2025-12-02', '121.25', "Polarvej 64", 10, 'bank', 2000, 0),
-    P('2025-12-02', '122.25', "Polarvej 62", 10, 'bank', 2000, 0),
-    P('2025-12-30', '123.25', "Betalingsservice DLR KREDIT A/S Aftalenr. 937826031", 120, 'bank', 0, 15101.2),
-    P('2025-12-30', '124.25', "Gebyr", 170, 'bank', 0, 500),
-  ];
+  // Alle posteringer på forretningskontoen i 2025 fra Middelfart Sparekasses CSV-eksport (data/bank-eksport-2025.csv), konteret af scripts/byg-historik.mjs
+  s.posteringer = POSTERINGER[2025].map(p => ({ ...p }));
   s.reguleringer = [];
   s.ejendom = {
     kostprisPrimo: 3000000,
@@ -208,7 +83,10 @@ export function eksempelPolarvej2025() {
     kursvaerdiTekst: '',
     beskrivelse: 'Lånet er et konverterbart obligationslån (annuitetslån, 20 år, 81 kvartårlige terminer) med en nominel rente på 1,5 % p.a. og administrationsbidrag på 0,9 % p.a. af obligationsrestgælden. Obligationsserie 42.s.A 2037, fondskode DK000633801-7.',
   }];
-  s.andenGaeld = [{ id: 'depositum', tekst: 'Depositum fra fremlejer, Polarvej 64 (hensat på deponeringskonto)', primo: 20000 }];
+  s.andenGaeld = [
+    { id: 'depositum', tekst: 'Depositum fra fremlejer, Polarvej 64 (hensat på deponeringskonto)', primo: 20000 },
+    { id: 'handel', tekst: 'Mellemregning, andelsoverdragelser (købesum modtaget, endnu ikke afregnet)', primo: 0 },
+  ];
   s.tilgodehavender = [];
   s.forudmodtaget = { primo: 0 };
   s.budget = {
@@ -240,4 +118,37 @@ export function eksempelPolarvej2025() {
     visP: false,
   };
   return s;
+}
+
+// Samling med alle regnskabsår 2021–2025: bankens posteringer for hvert år, kædede primotal fra 2022.
+// Egenkapital primo 2021 og andre primotal for 2021 kendes ikke endnu (udfyldes fra årsrapporten for 2021/2022).
+export function eksempelSamling() {
+  const regnskaber = {};
+  for (const y of [2021, 2022, 2023, 2024, 2025]) {
+    const st = eksempelPolarvej2025();
+    st.aar = y;
+    st.posteringer = POSTERINGER[y].map(p => ({ ...p }));
+    st.likvidkonti.find(k => k.id === 'bank').primo = BANK_ULTIMO[y - 1];
+    st.likvidkonti.find(k => k.id === 'bank').kontoudtog = BANK_ULTIMO[y];
+    const depo = st.likvidkonti.find(k => k.id === 'depo');
+    depo.primo = y <= 2022 ? 0 : 20000; depo.kontoudtog = y <= 2021 ? 0 : 20000;
+    st.andenGaeld.find(a => a.id === 'depositum').primo = y <= 2021 ? 0 : 20000;
+    if (y < 2025) {
+      st.budget = {};
+      st.ledelse.datoPaategning = ''; st.ledelse.datoBilagskontrol = ''; st.ledelse.datoGeneralforsamling = '';
+      st.noegle.resultatPrM2 = { y2: 0, y1: 0 }; st.noegle.afdragPrM2 = { y2: 0, y1: 0 };
+    }
+    if (y === 2021) {
+      // Primotal 2021 kendes ikke endnu – sættes fra årsrapporten
+      st.primoKilde = 'manuel';
+      st.egenkapitalPrimo = { overfoertResultat: 0, genopretning: 0, vedligehold: 0, andreReserver: 0 };
+      st.primoBemaerkning = 'Egenkapital primo 2021 mangler – udfyldes fra årsrapporten for 2020/2021.';
+    } else if (y === 2025) {
+      st.primoKilde = 'manuel'; // beholder primotallene fra årsrapporten 2024, indtil 2021–2024 er afstemt
+    } else {
+      st.primoKilde = 'forrigeAar';
+    }
+    regnskaber[y] = st;
+  }
+  return { version: 2, aktivAar: 2025, regnskaber };
 }

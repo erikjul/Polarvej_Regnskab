@@ -58,10 +58,12 @@ js/eksempel.js        – eksempeldata (Polarvej I, 2025)
 js/samling.js         – flere regnskabsår med koblede primotal
 js/betalingsplan.js   – betalingsplan for lån (parser, årssummer, restløbetid)
 js/data-dlr-betalingsplan.js – DLR-lånets terminer 2017–2037 (fra låneafregningen)
+js/data-historik.js   – konterede bankposteringer 2021–2025 (genereres af scripts/byg-historik.mjs)
+scripts/              – byggescript til historikken
 js/import.js          – bankimport (CSV-parser, konteringsregler, dubletkontrol)
 js/storage.js         – autosave og filer
 lib/exceljs.min.js    – ExcelJS 4.4.0 (MIT)
-data/                 – eksempeldata som JSON og bankens CSV-eksport for 2025
+data/                 – bankens CSV-eksporter 2021–2025 og eksempeldata som JSON
 docs/                 – regelgrundlag og kontrolbeskrivelse
 tests/                – motortests (node --test tests/*.test.mjs)
 ```
@@ -74,16 +76,29 @@ node --test tests/*.test.mjs
 
 Testene kontrollerer formelsproget, at eksempeldataene giver samme resultatopgørelse som årsrapporten for 2025, at balancen altid balancerer, når primobalancen gør, og at kontrolsiden opdager fejl.
 
-## Eksempeldata og fund i årsrapporten for 2025
+## Eksempeldata: Polarvej I 2021–2025
 
-Eksempeldataene er foreningens egne tal for 2025. Resultatopgørelsen svarer krone for krone til den udarbejdede årsrapport (indtægter 218.777,08, omkostninger −151.882,82, årets resultat 51.160,91). Kontrolsiden viser samtidig tre reelle uoverensstemmelser i grundlaget for 2025-rapporten:
+Programmet starter med foreningens egne tal. Alle posteringer på forretningskontoen i Middelfart Sparekasse for 2021–2025 er importeret fra bankens CSV-eksporter (`data/bank-eksport-ÅÅÅÅ.csv`) og konteret af `scripts/byg-historik.mjs` efter konteringsreglerne (resultatet ligger i `js/data-historik.js`). Bankens saldo pr. 31/12 er regnet baglæns fra den kendte saldo ultimo 2024 (208.611,97 kr.), og bankafstemningen stemmer for alle fem år:
 
-1. **Bankafstemning**: Kasserapporten i rapporten gav 214.946,55 kr. ultimo mod bankens 212.846,55 kr. Bankens CSV-eksport (data/bank-eksport-2025.csv) forklarer de 2.100 kr.: Totalalgeservice kostede 5.500 kr. (rapporten: 5.400) og der kom kun 95 boligafgiftsindbetalinger à 2.000 kr. (190.000 kr., rapporten: 192.000). Én andelshaver mangler én måned. Eksempeldataene bygger nu på bankens 124 posteringer, og bankafstemningen stemmer.
-3. **Prioritetslånet**: Ifølge DLR's betalingsplan er 2025-tallene: ydelser 60.559,68 kr. = renter og bidrag 14.641,58 kr. + afdrag 45.918,10 kr.; restgæld 627.230,91 kr. primo og 581.312,81 kr. ultimo; afdrag i 2026 (kortfristet del) 46.610,76 kr. 2025-rapporten brugte 2024-tallene for renter (15.733,35 kr.) og afdrag (60.969,09 kr., som reelt er 2024-ydelserne). Med betalingsplanen indlagt beregner programmet lånet korrekt, og årets resultat bliver 52.252,68 kr. Lånet er desuden et obligationslån (kurs 98,30 ved udbetaling), ikke et kontantlån som noten angav, og restløbetiden pr. 31/12 2025 er 11,75 år.
+| År | Saldo 31/12 | Boligafgift | DLR-ydelser | Bemærkning |
+|---|---|---|---|---|
+| 2020 | 212.736,17 | | | udledt |
+| 2021 | 200.997,98 | 172.000 | 62.161,19 | 20.000 kr. fremlejedepositum modtaget 22.11.2021 |
+| 2022 | 191.734,10 | 190.000 | 61.769,76 | to andelsoverdragelser (Polarvej 62 og 43), depositum flyttet til deponeringskonto 19.04.2022 |
+| 2023 | 183.659,50 | 192.000 | 61.372,42 | |
+| 2024 | 208.611,97 | 196.000 | 60.969,09 | andelsoverdragelse Polarvej 31 |
+| 2025 | 212.846,55 | 190.000 | 60.559,68 | |
 
-**Fremlejedepositum**: Depositummet på 20.000 kr. for fremlejen af Polarvej 64 står på en særskilt deponeringskonto i Middelfart Sparekasse (seneste bevægelse 19. april 2022). Det indgår som likvid beholdning (aktiv) og som anden gæld (passiv), fordi beløbet tilhører fremlejeren og skal tilbagebetales. Når fremlejen ophører, bogføres tilbagebetalingen på konto 80 med deponeringskontoen som likvid konto, hvorefter begge poster går i nul.
+DLR-ydelserne stemmer krone for krone med betalingsplanen i alle årene. Andelsoverdragelser bogføres som gennemløb på konto 85 (mellemregning under anden gæld): købesummen ind, provenuet til sælger ud. Restbeløbene (24.000 kr. i 2022 og 6.400 kr. i 2024) er ikke afklaret endnu og afventer årsrapporterne for 2022–2024, ligesom egenkapitalen primo 2021. Indtil da er 2025's primotal taget fra årsrapporten for 2024 (koblingen fra 2024 er slået fra), og 2021–2024 viser en balancedifference.
 
-Når primotallene rettes (så sidste års balance balancerer) og kursværdien pr. 31/12 indtastes, bliver kontrolsiden grøn. Bemærk også, at algebehandling og tagarbejde (10.350 kr.) nu vises som vedligeholdelse (note 4, nøgletal M1) i stedet for diverse omkostninger.
+### Fund i årsrapporten for 2025
+
+1. **Bankafstemning**: Rapportens kasserapport gav 214.946,55 kr. ultimo mod bankens 212.846,55 kr. Differencen på 2.100 kr. er Totalalgeservice 5.500 kr. (rapporten: 5.400) og 95 boligafgiftsindbetalinger à 2.000 kr. (190.000 kr., rapporten: 192.000). Én andelshaver mangler én måned.
+2. **Primobalancen (31/12 2024) balancerer ikke**: Balancen for 2024 viser gæld i alt 628.734,34 kr., mens posterne giver 646.548,55 kr., og lånenoten viser en restgæld på 627.230,91 kr. Differencen på 18.496,57 kr. er i 2025-rapporten udlignet med en uforklaret post på −19.504,80 kr. i overført resultat.
+3. **Prioritetslånet**: Ifølge DLR's betalingsplan er 2025-tallene: ydelser 60.559,68 kr. = renter og bidrag 14.641,58 kr. + afdrag 45.918,10 kr.; restgæld 627.230,91 kr. primo og 581.312,81 kr. ultimo; afdrag i 2026 (kortfristet del) 46.610,76 kr. Rapporten brugte 2024-tallene for renter (15.733,35 kr.) og afdrag (60.969,09 kr.). Lånet er et obligationslån, ikke et kontantlån, med restløbetid 11,75 år pr. 31/12 2025.
+4. **Vedligeholdelse**: Algebehandling og tagarbejde (10.350 kr.) vises som vedligeholdelse (note 4, nøgletal M1) i stedet for diverse omkostninger.
+
+**Fremlejedepositum**: Depositummet på 20.000 kr. for fremlejen af Polarvej 64 står på en særskilt deponeringskonto (modtaget 22.11.2021, overført 19.04.2022). Det indgår som likvid beholdning (aktiv) og som anden gæld (passiv). Når fremlejen ophører, bogføres tilbagebetalingen på konto 80 med deponeringskontoen som likvid konto.
 
 ## Licens
 

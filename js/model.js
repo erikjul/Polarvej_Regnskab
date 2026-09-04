@@ -85,6 +85,7 @@ export const STANDARD_KONTOPLAN = [
   { nr: 30, navn: 'Gebyr ved andelshandel (indtægt)', linje: 'n2.andelshandel' },
   { nr: 40, navn: 'Uforudsete indtægter', linje: 'n2.uforudset' },
   { nr: 45, navn: 'Renteindtægter, bank', linje: 'n2.rente' },
+  { nr: 46, navn: 'Negative renter, bank', linje: 'n7.andet' },
   { nr: 50, navn: 'Diverse omkostninger', linje: 'n5.diverse' },
   { nr: 90, navn: 'Ejendomsskat', linje: 'n3.ejendomsskat' },
   { nr: 95, navn: 'Renovation og rottebekæmpelse', linje: 'n3.renovation' },
@@ -106,25 +107,51 @@ export const STANDARD_KONTOPLAN = [
 
 // Standardregler for automatisk kontering ved bankimport (første match vinder; mest specifikke først)
 export const STANDARD_IMPORTREGLER = [
+  // Lån, forsikring, skat
   { moenster: 'DLR KREDIT', retning: 'ud', beloeb: '', konto: 120 },
   { moenster: 'ALKA', retning: 'ud', beloeb: '', konto: 100 },
   { moenster: 'FORSIKRING', retning: 'ud', beloeb: '', konto: 100 },
-  { moenster: 'Aftalenr. 122473449', retning: 'ud', beloeb: '', konto: 95 },
   { moenster: 'VEJLE KOMMUNE', retning: 'ud', beloeb: '', konto: 90 },
   { moenster: 'SKATTEKONTOEN', retning: 'ud', beloeb: '', konto: 90 },
   { moenster: 'GÆLDST', retning: 'ud', beloeb: '', konto: 50 },
+  // Andelsoverdragelser (gennemløb: købesum ind, provenu ud)
+  { moenster: 'Overdragelsessum', retning: 'ind', beloeb: '', konto: 85 },
+  { moenster: 'Købesum', retning: 'ind', beloeb: '', konto: 85 },
+  { moenster: 'Provenu', retning: 'ud', beloeb: '', konto: 85 },
+  { moenster: 'Transporterklæring', retning: 'ud', beloeb: '', konto: 85 },
+  // Gebyrer og administration
   { moenster: 'Gebyr', retning: 'ud', beloeb: '', konto: 170 },
+  { moenster: 'Nets', retning: 'ud', beloeb: '', konto: 170 },
+  { moenster: 'fuldmagt', retning: 'ud', beloeb: '', konto: 170 },
   { moenster: 'ABF', retning: 'ud', beloeb: '', konto: 130 },
   { moenster: 'Grundejerforening', retning: 'ud', beloeb: '', konto: 110 },
+  { moenster: 'Kontingent', retning: 'ud', beloeb: '', konto: 110 },
   { moenster: 'Madpartner', retning: 'ud', beloeb: '', konto: 150 },
+  { moenster: 'honorar', retning: 'ud', beloeb: '', konto: 140 },
+  { moenster: 'Erik jul Nielsen', retning: 'ud', beloeb: '', konto: 140 },
+  { moenster: 'Heidi Jensen', retning: 'ud', beloeb: '', konto: 140 },
+  { moenster: 'Tina Qualmann', retning: 'ud', beloeb: '', konto: 140 },
   { moenster: 'Totalalgeservice', retning: 'ud', beloeb: '', konto: 105 },
   { moenster: 'Tagbearbejdning', retning: 'ud', beloeb: '', konto: 105 },
+  { moenster: 'Byggesagkyndig', retning: 'ud', beloeb: '', konto: 50 },
+  { moenster: 'Lasertryk', retning: 'ud', beloeb: '', konto: 50 },
+  { moenster: 'Intrum', retning: 'ud', beloeb: '', konto: 50 },
+  { moenster: 'Til 2440', retning: 'ud', beloeb: '', konto: 50 },
+  { moenster: 'Returnering af overførsel', retning: 'ind', beloeb: '', konto: 50 },
+  // Renter
+  { moenster: 'sumrente', retning: 'ind', beloeb: '', konto: 45 },
+  { moenster: 'rente', retning: 'ind', beloeb: '', konto: 45 },
+  { moenster: 'rente', retning: 'ud', beloeb: '', konto: 46 },
+  // Indtægter
   { moenster: 'Bonus', retning: 'ind', beloeb: '', konto: 20 },
   { moenster: 'Police', retning: 'ind', beloeb: '', konto: 40 },
   { moenster: 'SKAT Inddrivelse', retning: 'ind', beloeb: '', konto: 40 },
+  { moenster: 'For megen betalt', retning: 'ud', beloeb: '', konto: 10 },
   { moenster: 'Husleje', retning: 'ind', beloeb: '', konto: 10 },
   { moenster: 'Boligafgift', retning: 'ind', beloeb: '', konto: 10 },
+  { moenster: 'Advis', retning: 'ind', beloeb: '', konto: 10 },
   { moenster: '', retning: 'ind', beloeb: 2000, konto: 10 },
+  { moenster: 'Polarvej', retning: 'ind', beloeb: '', konto: 10 },
 ];
 
 export const STANDARD_TEKSTER = {

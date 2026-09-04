@@ -3,7 +3,7 @@ import { Engine } from './engine.js';
 import { byggeRapport } from './report.js';
 import { kontroller } from './controls.js';
 import { NOTER_RESULTAT, ALLE_LINJER, alleMappings, STANDARD_KONTOPLAN, STANDARD_TEKSTER, VURDERINGSPRINCIPPER, FORDELINGSTAL, tomState, normaliser, nyId } from './model.js';
-import { eksempelPolarvej2025 } from './eksempel.js';
+import { eksempelPolarvej2025, eksempelSamling } from './eksempel.js';
 import { fmtKr, fmtInt, fmtBy, parseTal, num } from './format.js';
 import { gemLokalt, hentLokalt, gemSomFil, laesFil } from './storage.js';
 import { nySamling, migrer, aarListe, erKoblet, engineFor, opretNytAar, PRIMO_STI } from './samling.js';
@@ -25,7 +25,7 @@ export class App {
 
   init() {
     const gemt = migrer(hentLokalt());
-    this.setSamling(gemt || nySamling(eksempelPolarvej2025()), !gemt);
+    this.setSamling(gemt || eksempelSamling(), !gemt);
     document.querySelectorAll('#tabs button').forEach(b => b.addEventListener('click', () => this.visTab(b.dataset.tab)));
     document.getElementById('aar-valg').addEventListener('change', (e) => this.skiftAar(Number(e.target.value)));
     document.getElementById('btn-nyt-aar').addEventListener('click', () => this.nytAar());
@@ -36,7 +36,7 @@ export class App {
       }
     });
     document.getElementById('btn-eksempel').addEventListener('click', () => {
-      if (confirm('Erstat alle regnskabsår i programmet med eksempeldata (Polarvej I, 2025)?')) { this.setSamling(nySamling(eksempelPolarvej2025())); this.visTab('stamdata'); }
+      if (confirm('Erstat alle regnskabsår i programmet med eksempeldata (Polarvej I, 2021–2025 fra bankens eksporter)?')) { this.setSamling(eksempelSamling()); this.visTab('stamdata'); }
     });
     document.getElementById('btn-gem').addEventListener('click', () => gemSomFil(this.samling));
     document.getElementById('btn-aabn').addEventListener('click', () => document.getElementById('fil-input').click());
