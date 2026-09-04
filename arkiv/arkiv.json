@@ -1,0 +1,40 @@
+{
+  "grupper": [
+    {
+      "titel": "Årsrapporter (aflagte)",
+      "filer": [
+        { "titel": "Årsrapport 2025", "fil": "aarsrapport-2025.pdf", "note": "Aflagt marts 2026. Balancen er korrekt; resultatopgørelsens linjer og sammenligningstal er korrigeret i programmet (se docs/afvigelser.md)." },
+        { "titel": "Årsrapport 2025 – revisors regneark", "fil": "aarsrapport-2025-regneark.xlsx", "note": "Regnearket bag årsrapporten 2025 (kasserapport, kontokort, noter)." },
+        { "titel": "Årsrapport 2024", "fil": "aarsrapport-2024.pdf", "note": "Aflagt 2025. Andelshandel Polarvej 31 vist som indtægt/omkostning; gæld i alt 18.496,57 kr. for lav i balancen." },
+        { "titel": "Årsrapport 2023", "fil": "aarsrapport-2023.pdf", "note": "Scannet. Restgæld på DLR-lånet 18.496,57 kr. for lav." },
+        { "titel": "Årsrapport 2022", "fil": "aarsrapport-2022.pdf", "note": "Scannet. Andelshandler Polarvej 23 og 43 vist som indtægt/omkostning." }
+      ]
+    },
+    {
+      "titel": "Lån",
+      "filer": [
+        { "titel": "DLR Kredit – låneafregning 6. juli 2017", "fil": "dlr-laaneafregning-2017.pdf", "note": "Obligationslån 950.000 kr., 1,5 %, 81 kvartårlige terminer. Betalingsplanen er indlæst på lånet i programmet." }
+      ]
+    },
+    {
+      "titel": "Bankens kontoudtog (CSV)",
+      "filer": [
+        { "titel": "Forretningskonto 2021", "fil": "../data/bank-eksport-2021.csv" },
+        { "titel": "Forretningskonto 2022", "fil": "../data/bank-eksport-2022.csv" },
+        { "titel": "Forretningskonto 2023", "fil": "../data/bank-eksport-2023.csv" },
+        { "titel": "Forretningskonto 2024", "fil": "../data/bank-eksport-2024.csv" },
+        { "titel": "Forretningskonto 2025", "fil": "../data/bank-eksport-2025.csv" },
+        { "titel": "Forretningskonto 1/1–4/9 2026", "fil": "../data/bank-eksport-2026.csv" }
+      ]
+    },
+    {
+      "titel": "Dokumentation",
+      "filer": [
+        { "titel": "Fejl i årsrapporterne 2021–2025 og rettelser", "fil": "../docs/afvigelser.md" },
+        { "titel": "Programmets tal mod årsrapporterne (tabel)", "fil": "../docs/afvigelser-tabel.md" },
+        { "titel": "Regelgrundlag 2026", "fil": "../docs/regelgrundlag.md" },
+        { "titel": "Kontrolsidens afstemninger", "fil": "../docs/kontroller.md" }
+      ]
+    }
+  ]
+}

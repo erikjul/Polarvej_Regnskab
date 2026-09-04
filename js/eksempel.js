@@ -4,6 +4,7 @@ import { tomState, STANDARD_TEKSTER } from './model.js';
 import { DLR_BETALINGSPLAN } from './data-dlr-betalingsplan.js';
 import { POSTERINGER, BANK_ULTIMO } from './data-historik.js';
 import { opretNytAar } from './samling.js';
+import { STANDARD_ANDELSHAVERE } from './boligafgift.js';
 
 
 export function eksempelPolarvej2025() {
@@ -46,6 +47,7 @@ export function eksempelPolarvej2025() {
   // Alle posteringer på forretningskontoen i 2025 fra Middelfart Sparekasses CSV-eksport (data/bank-eksport-2025.csv), konteret af scripts/byg-historik.mjs
   s.posteringer = POSTERINGER[2025].map(p => ({ ...p }));
   s.reguleringer = [];
+  s.andelshavere = STANDARD_ANDELSHAVERE.map(a => ({ ...a }));
   s.ejendom = {
     kostprisPrimo: 3000000,
     opskrivningPrimo: 7300000,
@@ -149,9 +151,9 @@ export function eksempelSamling() {
     st.likvidkonti.find(k => k.id === 'bank').kontoudtog = BANK_ULTIMO[y];
     const depo = st.likvidkonti.find(k => k.id === 'depo');
     depo.primo = y <= 2022 ? 0 : 20000; depo.kontoudtog = y <= 2021 ? 0 : 20000;
-    st.andenGaeld.find(a => a.id === 'depositum').primo = y <= 2021 ? 0 : 20000;
+    st.andenGaeld.find(a => a.id === 'depositum').primo = 20000; // depositum modtaget før 2021; hensat på deponeringskonto fra april 2022
     st.reguleringer = [];
-    if (y === 2022) st.reguleringer.push({ id: 'r2022handel', tekst: 'Foreningens andel af overdragelsessummer (Polarvej 62 og 43) indtægtsføres', beloeb: -24000, linje: 'n2.andelshandel', balancepost: 'ag:handel' });
+    if (y === 2022) st.reguleringer.push({ id: 'r2022handel', tekst: 'Foreningens andel af overdragelsessummer (Polarvej 23 og 43) indtægtsføres', beloeb: -24000, linje: 'n2.andelshandel', balancepost: 'ag:handel' });
     if (y === 2024) st.reguleringer.push({ id: 'r2024handel', tekst: 'Foreningens andel af overdragelsessum (Polarvej 31) indtægtsføres', beloeb: -6400, linje: 'n2.andelshandel', balancepost: 'ag:handel' });
     if (y < 2025) {
       st.budget = {};
@@ -159,10 +161,10 @@ export function eksempelSamling() {
       st.noegle.resultatPrM2 = { y2: 0, y1: 0 }; st.noegle.afdragPrM2 = { y2: 0, y1: 0 };
     }
     if (y === 2021) {
-      // Primo 2021 (= 31/12 2020): bank 212.736,17 + kontanter 174 + ejendom 10.300.000 − DLR-restgæld 804.180,33 − indskud − opskrivning
+      // Primo 2021 (= 31/12 2020): bank 212.736,17 + kontanter 174 + ejendom 10.300.000 − DLR-restgæld 804.180,33 − depositum 20.000 − indskud − opskrivning
       st.primoKilde = 'manuel';
-      const overfoert = Math.round((BANK_ULTIMO[2020] + 174 + 10300000 - 804180.33 - 686400 - 7300000) * 100) / 100;
-      st.egenkapitalPrimo = { overfoertResultat: overfoert, genopretning: 0, vedligehold: 0, andreReserver: 0, overfoertIflgRapport: RAPPORTERET.overfoert[2020], korrektionTekst: 'Primo 2021 er opgjort ud fra bankens saldo pr. 31. december 2020 og DLR Kredits betalingsplan (restgæld 804.180,33 kr.). Differencen til den aflagte årsrapport skyldes forkert opgjort restgæld på prioritetsgælden i tidligere år.' };
+      const overfoert = Math.round((BANK_ULTIMO[2020] + 174 + 10300000 - 804180.33 - 20000 - 686400 - 7300000) * 100) / 100;
+      st.egenkapitalPrimo = { overfoertResultat: overfoert, genopretning: 0, vedligehold: 0, andreReserver: 0, overfoertIflgRapport: RAPPORTERET.overfoert[2020], korrektionTekst: 'Primo 2021 er opgjort ud fra bankens saldo pr. 31. december 2020, DLR Kredits betalingsplan (restgæld 804.180,33 kr.) og fremlejedepositum 20.000 kr. Differencen til den aflagte årsrapport er 11,00 kr.' };
     } else {
       st.primoKilde = 'forrigeAar';
       st.egenkapitalPrimo.overfoertIflgRapport = ''; st.egenkapitalPrimo.korrektionTekst = '';

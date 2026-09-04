@@ -6,10 +6,10 @@ Genereret af `scripts/afvigelser.mjs`. "Program" er beregnet ud fra bankens kont
 
 | Post | Program | Rapport | Difference |
 |---|---:|---:|---:|
-| Boligafgift (note 1) | 172.000,00 | – |  |
+| Boligafgift (note 1) | 192.000,00 | – |  |
 | Renter og bidrag, DLR (note 7) | 18.912,31 | – |  |
 | Betalte prioritetsafdrag (resultatdisponering) | 43.248,88 | 62.161,19 | -18.912,31 |
-| Årets resultat | 11.510,69 | 34.194,32 | -22.683,63 |
+| Årets resultat | 31.510,69 | 34.194,32 | -2.683,63 |
 | Prioritetsgæld, restgæld ultimo | 760.931,45 | 796.127,30 | -35.195,85 |
 | Kortfristet del (næste års afdrag) | 43.901,28 | 61.769,76 | -17.868,48 |
 | Likvide beholdninger ultimo | 201.171,98 | 221.171,98 | -20.000,00 |

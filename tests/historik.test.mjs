@@ -68,7 +68,7 @@ test('kæden 2021–2026 balancerer, og egenkapitalen ultimo 2025 svarer til den
 test('boligafgift pr. år fra banken', () => {
   const sam = eksempelSamling();
   const memo = {};
-  const forventet = { 2021: 172000, 2022: 190000, 2023: 192000, 2024: 196000, 2025: 190000 };
+  const forventet = { 2021: 192000, 2022: 190000, 2023: 192000, 2024: 196000, 2025: 190000 };
   for (const y of Object.keys(forventet)) naer(engineFor(sam, Number(y), memo).get('n1.total'), forventet[y], `boligafgift ${y}`);
   assert.equal(POSTERINGER[2022].length, 129); // 128 banklinjer + overførsel til deponeringskonto
 });

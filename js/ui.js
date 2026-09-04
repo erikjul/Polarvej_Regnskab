@@ -9,6 +9,7 @@ import { gemLokalt, hentLokalt, gemSomFil, laesFil } from './storage.js';
 import { nySamling, migrer, aarListe, erKoblet, engineFor, opretNytAar, PRIMO_STI } from './samling.js';
 import { parseBetalingsplan, planAar, aarAf, sorter, sidsteTermin, restloebetid } from './betalingsplan.js';
 import { parseBankCsv, forberedImport } from './import.js';
+import { boligafgiftOversigt, MAANEDER, STANDARD_ANDELSHAVERE } from './boligafgift.js';
 import { STANDARD_IMPORTREGLER } from './model.js';
 import { eksporterExcel } from './excel.js';
 
@@ -135,6 +136,7 @@ export class App {
     switch (id) {
       case 'stamdata': el.innerHTML = this.htmlStamdata(); break;
       case 'kasserapport': el.innerHTML = this.htmlKasserapport(); this.bindImport(el); break;
+      case 'boligafgift': el.innerHTML = this.htmlBoligafgift(); break;
       case 'kontoplan': el.innerHTML = this.htmlKontoplan(); break;
       case 'balance': el.innerHTML = this.htmlBalance(); break;
       case 'budget': el.innerHTML = this.htmlBudget(); break;
@@ -142,6 +144,7 @@ export class App {
       case 'tekster': el.innerHTML = this.htmlTekster(); break;
       case 'rapport': this.renderRapport(); return;
       case 'kontrol': this.renderKontrol(); return;
+      case 'arkiv': this.renderArkiv(el); return;
       case 'hjaelp': el.innerHTML = this.htmlHjaelp(); return;
     }
     this.bind(el);
@@ -262,6 +265,7 @@ export class App {
       case 'ledelse.bestyrelse': arr.push({ navn: '', titel: 'Bestyrelsesmedlem' }); break;
       case 'ledelse.bilagskontrolloerer': arr.push({ navn: '' }); break;
       case 'importRegler': arr.push({ moenster: '', retning: '', beloeb: '', konto: '' }); break;
+      case 'andelshavere': arr.push({ id: nyId('a'), adresse: '', navn: '', afgift: 2000, moenstre: '', fra: `${S.aar}-01`, primoSaldo: 0 }); break;
       default:
         if (/^laan\.\d+\.betalingsplan$/.test(basePath)) { const sidste = arr[arr.length - 1]; arr.push({ dato: sidste ? sidste.dato : '', rente: 0, afdrag: 0 }); }
         else arr.push({});
@@ -306,6 +310,7 @@ export class App {
     }
     if (name === 'import-annuller') { this.import = null; this.renderTab(this.tab); }
     if (name === 'standard-importregler') { if (confirm('Erstat konteringsreglerne med standardreglerne?')) { S.importRegler = STANDARD_IMPORTREGLER.map(r => ({ ...r })); this.recompute(); this.renderTab(this.tab); } }
+    if (name === 'standard-andelshavere') { if (confirm('Erstat andelslisten med standardlisten for Polarvej I?')) { S.andelshavere = STANDARD_ANDELSHAVERE.map(a => ({ ...a })); this.recompute(); this.renderTab(this.tab); } }
     if (name === 'slet-aar') this.sletAar();
     if (name === 'nyt-aar') this.nytAar();
     if (name === 'kobling-fra') { if (confirm(`Afbryd koblingen til ${S.aar - 1}? Primotallene beholdes som de er nu, men følger ikke længere med, hvis ${S.aar - 1} rettes.`)) { S.primoKilde = 'manuel'; this.recompute(); this.renderTab(this.tab); } }
@@ -441,6 +446,56 @@ export class App {
       if (btn) { btn.disabled = mangler > 0; btn.textContent = `Importér ${valgte.length} posteringer${mangler ? ` (${mangler} mangler konto)` : ''}`; }
       if (inp.dataset.imp === 'konto') inp.style.borderColor = inp.value === '' ? 'var(--fejl)' : '';
     }));
+  }
+
+  htmlBoligafgift() {
+    const S = this.state;
+    const andele = S.andelshavere || [];
+    const ov = andele.length ? boligafgiftOversigt(this.samling, andele) : null;
+    const aar = aarListe(this.samling);
+    let matrix = '';
+    if (ov) {
+      matrix = aar.map(y => {
+        const rows = ov.andele.map(r => {
+          const cells = MAANEDER.map((_, mi) => {
+            const m = r.maaneder.find(x => x.aar === y && x.md === mi);
+            if (!m) return '<td class="udenfor">·</td>';
+            const tip = `${m.ym}: forfald ${fmtKr(m.forfald, 0)}, betalt ${fmtKr(m.betalt, 0)}, saldo ${fmtKr(m.saldo, 0)}${m.betalinger.length ? ' – ' + m.betalinger.map(b => b.dato + ' ' + fmtKr(b.beloeb, 0)).join(', ') : ''}`;
+            return `<td class="${m.status}" title="${esc(tip)}">${m.status === 'ok' ? '✓' : m.status === 'delvis' ? '½' : '✕'}${m.betalt && Math.abs(m.betalt - m.forfald) > 0.5 ? `<div class="kontoplan-hint">${fmtKr(m.betalt, 0)}</div>` : ''}</td>`;
+          }).join('');
+          const sidste = r.maaneder.filter(x => x.aar === y).pop();
+          const betaltAar = r.maaneder.filter(x => x.aar === y).reduce((s, x) => s + x.betalt, 0);
+          return `<tr><td><b>${esc(r.andel.adresse)}</b><div class="kontoplan-hint">${esc(r.andel.navn)}</div></td>${cells}<td class="saldo">${fmtKr(betaltAar, 0)}</td><td class="saldo" style="color:${sidste && sidste.saldo < -0.5 ? 'var(--fejl)' : 'var(--ok)'}">${sidste ? fmtKr(sidste.saldo, 0) : ''}</td></tr>`;
+        }).join('');
+        const sum = ov.andele.reduce((s, r) => s + r.maaneder.filter(x => x.aar === y).reduce((t, x) => t + x.betalt, 0), 0);
+        return `<h3>${y}</h3><div style="overflow-x:auto"><table class="matrix"><thead><tr><th>Andel</th>${MAANEDER.map(m => `<th>${m}</th>`).join('')}<th>Betalt ${y}</th><th>Saldo ultimo</th></tr></thead><tbody>${rows}<tr><td><b>I alt</b></td><td colspan="12"></td><td class="saldo">${fmtKr(sum, 0)}</td><td></td></tr></tbody></table></div>`;
+      }).join('');
+    }
+    const status = ov ? `<table class="edit" style="max-width:760px"><thead><tr><th>Andel</th><th>Andelshaver</th><th class="num">Forfaldent ${ov.start}–${ov.slut}</th><th class="num">Betalt</th><th class="num">Saldo (− = restance)</th></tr></thead><tbody>${ov.andele.map(r => `<tr><td>${esc(r.andel.adresse)}</td><td>${esc(r.andel.navn)}</td><td style="text-align:right">${fmtKr(r.forfaldIalt, 0)}</td><td style="text-align:right">${fmtKr(r.betaltIalt, 0)}</td><td style="text-align:right;font-weight:600;color:${r.saldo < -0.5 ? 'var(--fejl)' : r.saldo > 0.5 ? 'var(--accent)' : 'var(--ok)'}">${fmtKr(r.saldo, 0)}</td></tr>`).join('')}<tr class="sum"><td colspan="2" style="text-align:left">I alt</td><td>${fmtKr(ov.andele.reduce((s, r) => s + r.forfaldIalt, 0), 0)}</td><td>${fmtKr(ov.andele.reduce((s, r) => s + r.betaltIalt, 0), 0)}</td><td>${fmtKr(ov.andele.reduce((s, r) => s + r.saldo, 0), 0)}</td></tr></tbody></table>` : '';
+    const uafstemt = ov && ov.uafstemt.length ? `<div class="panel"><h3>Boligafgiftsposteringer uden andel (${ov.uafstemt.length})</h3><p class="hjaelp">Tilføj et mønster på den rette andel, så posteringen tælles med.</p><table class="edit"><tbody>${ov.uafstemt.map(p => `<tr><td>${esc(p.dato)}</td><td>${esc(p.tekst)}</td><td style="text-align:right">${fmtKr(p.beloeb)}</td></tr>`).join('')}</tbody></table></div>` : '';
+    return `<h2>Boligafgift pr. andel</h2>
+    <p class="hjaelp">Oversigten bygger på alle boligafgiftsposteringer (konti knyttet til note 1, boligafgift) i alle regnskabsår. Hver måned forfalder afgiften, og indbetalingerne fyldes kronologisk på de ældste forfaldne måneder. ✓ = dækket, ✕ = mangler, ½ = delvist dækket. Saldo er forudbetalt (+) eller restance (−). Hold musen over en celle for detaljer.</p>
+    ${ov ? `<div class="panel"><h3>Status pr. ${ov.slut}</h3>${status}</div>` : ''}
+    ${uafstemt}
+    <div class="panel"><h3>Måned for måned</h3>${matrix || '<p class="hjaelp">Opret andelene nedenfor.</p>'}</div>
+    <div class="panel"><h3>Andele og genkendelse af indbetalinger</h3>
+      <p class="hjaelp">Mønstre adskilles med semikolon og matches mod posteringsteksten (inkl. modpart fra banken). Første andel, hvis mønster passer, får betalingen. "Fra" er første måned, der regnes som forfalden; "primosaldo" er evt. forudbetaling (+) eller restance (−) før den måned.</p>
+      ${this.tabel('andelshavere', [{ key: 'adresse', label: 'Andel' }, { key: 'navn', label: 'Andelshaver' }, { key: 'afgift', label: 'Afgift pr. md.', type: 'num', width: 'w-beloeb' }, { key: 'moenstre', label: 'Mønstre (tekst indeholder; adskil med ;)' }, { key: 'fra', label: 'Fra (ÅÅÅÅ-MM)', width: 'w-bilag' }, { key: 'primoSaldo', label: 'Primosaldo', type: 'num', width: 'w-beloeb' }], { tilfoejLabel: 'Tilføj andel', ekstraKnapper: '<button class="knap" data-action="standard-andelshavere">Standardliste (Polarvej I)</button>' })}
+    </div>`;
+  }
+
+  async renderArkiv(el) {
+    el.innerHTML = '<h2>Arkiv</h2><p class="hjaelp">Henter arkivlisten …</p>';
+    try {
+      const r = await fetch('arkiv/arkiv.json', { cache: 'no-cache' });
+      if (!r.ok) throw new Error('arkiv/arkiv.json kunne ikke hentes (' + r.status + ')');
+      const data = await r.json();
+      el.innerHTML = `<h2>Arkiv</h2>
+      <p class="hjaelp">Årsrapporter, lånedokumenter, bankens kontoudtog og dokumentation samlet ét sted. Filerne ligger i mappen <code>arkiv/</code> i programmets repo. Nye filer tilføjes ved at lægge dem i mappen og skrive en linje i <code>arkiv/arkiv.json</code>.</p>
+      ${(data.grupper || []).map(g => `<div class="panel"><h3>${esc(g.titel)}</h3><ul class="arkiv-liste">${(g.filer || []).map(f => `<li><a href="arkiv/${esc(f.fil)}" target="_blank" rel="noopener">${esc(f.titel)}</a> <span class="kontoplan-hint">(${esc(f.fil.replace(/^\.\.\//, ''))})</span>${f.note ? `<div class="note">${esc(f.note)}</div>` : ''}</li>`).join('')}</ul></div>`).join('')}`;
+    } catch (e) {
+      el.innerHTML = `<h2>Arkiv</h2><p class="hjaelp" style="color:var(--fejl)">${esc(e.message)}. Arkivet kræver, at programmet køres fra en webserver (fx GitHub Pages), ikke som lokal fil.</p>`;
+    }
   }
 
   htmlKontoplan() {
@@ -657,6 +712,7 @@ export class App {
     <ol>
       <li><b>Stamdata</b>: foreningens navn, CVR, bestyrelse, bilagskontrollører og datoer.</li>
       <li><b>Kasserapport</b>: importér bankens CSV-eksport (posteringerne konteres automatisk efter reglerne under Kontoplan) eller indtast ind- og udbetalinger manuelt med dato, bilagsnummer, tekst, konto og likvid konto. Kontokortet nederst viser posteringerne pr. konto.</li>
+      <li><b>Boligafgift</b>: måned for måned pr. andel med restancer og forudbetalinger, på tværs af alle år.</li>
       <li><b>Kontoplan</b>: knyt hver konto til en linje i regnskabet. Standardkontoplanen dækker de fleste behov.</li>
       <li><b>Primo &amp; lån</b>: sidste års balancetal, ejendommens værdi, andele, resultatdisponering, lån, anden gæld og reguleringer. For lån kan kreditforeningens betalingsplan indsættes (kopieret fra låneafregningen eller årsopgørelsen); så beregnes renter, afdrag, kortfristet del og restgæld automatisk for hvert år, og de bogførte ydelser afstemmes mod planen.</li>
       <li><b>Budget &amp; sidste år</b>: budget for næste år (vises i resultatopgørelsen) og evt. sidste års tal.</li>
@@ -665,6 +721,7 @@ export class App {
       <li><b>Kontrolside</b>: alle afstemninger. Regnskabet er klar, når alle kontroller er grønne (advarsler bør gennemgås).</li>
       <li><b>Excel</b>: eksporterer hele regnskabet som projektmappe med rigtige formler på tværs af arkene (Grunddata og Kasserapport er kilderne). <b>Udskriv / PDF</b>: åbner browserens udskrift, hvor du vælger "Gem som PDF".</li>
     </ol>
+    <p><b>Arkiv</b>: fanen Arkiv viser de aflagte årsrapporter, lånedokumenter og kontoudtog, som ligger i mappen arkiv/ i repoet.</p>
     <p><b>Flere regnskabsår</b>: Når 2025 er indtastet, klikker du <b>+ Nyt år</b> i topbjælken. 2026 oprettes med 2025's ultimotal som primotal, 2025's resultat i sammenligningskolonnen og nøgletallene forskudt. Koblingen er levende: retter du noget i 2025, følger 2026's primotal med. Skift mellem årene i topbjælkens årsvælger; regnskab, kontrolside, Excel og PDF gælder altid det valgte år.</p>
     <p>Data gemmes automatisk i browseren. Brug <b>Gem fil</b> for at gemme en kopi (.json) med alle regnskabsår, som kan åbnes igen på en anden computer.</p>
     </div>

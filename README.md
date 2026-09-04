@@ -6,6 +6,8 @@ Programmet er en ren webapplikation (HTML/JavaScript) uden server. Det kan køre
 
 ## Funktioner
 
+* **Boligafgift pr. andel**: måned-for-måned-oversigt på tværs af alle år med restancer og forudbetalinger; indbetalinger genkendes på mønstre pr. andel.
+* **Arkiv**: de aflagte årsrapporter, DLR's låneafregning, bankens kontoudtog og dokumentationen ligger i mappen `arkiv/` og vises i fanen Arkiv.
 * **Bankimport**: Bankens CSV-eksport (fx Middelfart Sparekasse: `dato;tekst;beløb;valuta;modpart`) læses direkte ind i kasserapporten. Posteringerne konteres automatisk efter redigerbare konteringsregler (tekst indeholder, retning, beløb) og tidligere posteringer; dubletter og posteringer uden for regnskabsåret springes over. Linjer uden regel markeres, så kontoen vælges før import.
 * **Indtastning**: stamdata, kasserapport (dato, bilag, tekst, konto, likvid konto, indsat/hævet), kontoplan, primotal, ejendom, andele, lån, anden gæld, tilgodehavender, reguleringer, budget, nøgleoplysninger og alle tekster.
 * **Årsrapport** med forside, bestyrelsespåtegning, bilagskontrollørernes erklæring, anvendt regnskabspraksis, resultatopgørelse (med budget og evt. sidste år), resultatdisponering, balance, noter til resultatopgørelse og balance, pantsætninger, eventualforpligtelser, beregning af andelsværdi og nøgleoplysninger (bek. nr. 336/2025, bilag 1).

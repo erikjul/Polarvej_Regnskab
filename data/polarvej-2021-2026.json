@@ -465,6 +465,80 @@
      "konto": 10
     }
    ],
+   "andelshavere": [
+    {
+     "id": "a23",
+     "adresse": "Polarvej 23",
+     "navn": "Jan Iversen (fra 2022; før: Jørgen Pedersen)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 23; Jan Iversen; Jørgen Pedersen",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a31",
+     "adresse": "Polarvej 31",
+     "navn": "Mette Agerskov (fra okt. 2024; før: Jonna Frandsen)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 31; Jonna Frands; Mette Agerskov; Advis",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a37",
+     "adresse": "Polarvej 37",
+     "navn": "Tina Qualmann",
+     "afgift": 2000,
+     "moenstre": "Polarvej 37; Tina Qualmann",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a43",
+     "adresse": "Polarvej 43",
+     "navn": "Jette Bruun (fra juni 2022; før: Ahmad Ziad Hussein)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 43; Jette Bruun; Ahmad",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a49",
+     "adresse": "Polarvej 49",
+     "navn": "Anni Karna Bak (fra juli 2023; før: John Visti Bak)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 49",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a55",
+     "adresse": "Polarvej 55",
+     "navn": "Heidi Jensen",
+     "afgift": 2000,
+     "moenstre": "Polarvej 55; Heidi; nr 55",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a62",
+     "adresse": "Polarvej 62",
+     "navn": "Muhanad Al Mubare / Amal Mehdi",
+     "afgift": 2000,
+     "moenstre": "Polarvej 62; MUBARE; Mehdi",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a64",
+     "adresse": "Polarvej 64",
+     "navn": "Lone Møller / Erik Jul Nielsen",
+     "afgift": 2000,
+     "moenstre": "Polarvej 64",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    }
+   ],
    "posteringer": [
     {
      "id": "p2021_1",
@@ -1430,8 +1504,8 @@
      "id": "p2021_97",
      "dato": "2021-11-22",
      "bilag": "097.21",
-     "tekst": "Modtaget fremlejedepositum (Polarvej 23)",
-     "konto": 80,
+     "tekst": "Boligafgift, efterbetaling februar–november 2021 (Polarvej 23, Jørgen Pedersen)",
+     "konto": 10,
      "likvid": "bank",
      "ind": 20000,
      "ud": 0
@@ -1567,12 +1641,12 @@
     "andreReguleringer": 0
    },
    "egenkapitalPrimo": {
-    "overfoertResultat": 1722329.84,
+    "overfoertResultat": 1702329.84,
     "genopretning": 0,
     "vedligehold": 0,
     "andreReserver": 0,
     "overfoertIflgRapport": 1702318.84,
-    "korrektionTekst": "Primo 2021 er opgjort ud fra bankens saldo pr. 31. december 2020 og DLR Kredits betalingsplan (restgæld 804.180,33 kr.). Differencen til den aflagte årsrapport skyldes forkert opgjort restgæld på prioritetsgælden i tidligere år."
+    "korrektionTekst": "Primo 2021 er opgjort ud fra bankens saldo pr. 31. december 2020, DLR Kredits betalingsplan (restgæld 804.180,33 kr.) og fremlejedepositum 20.000 kr. Differencen til den aflagte årsrapport er 11,00 kr."
    },
    "disponering": {
     "tilVedligehold": 0,
@@ -2013,7 +2087,7 @@
     {
      "id": "depositum",
      "tekst": "Depositum fra fremlejer, Polarvej 64 (hensat på deponeringskonto)",
-     "primo": 0
+     "primo": 20000
     },
     {
      "id": "handel",
@@ -2557,6 +2631,80 @@
      "konto": 10
     }
    ],
+   "andelshavere": [
+    {
+     "id": "a23",
+     "adresse": "Polarvej 23",
+     "navn": "Jan Iversen (fra 2022; før: Jørgen Pedersen)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 23; Jan Iversen; Jørgen Pedersen",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a31",
+     "adresse": "Polarvej 31",
+     "navn": "Mette Agerskov (fra okt. 2024; før: Jonna Frandsen)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 31; Jonna Frands; Mette Agerskov; Advis",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a37",
+     "adresse": "Polarvej 37",
+     "navn": "Tina Qualmann",
+     "afgift": 2000,
+     "moenstre": "Polarvej 37; Tina Qualmann",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a43",
+     "adresse": "Polarvej 43",
+     "navn": "Jette Bruun (fra juni 2022; før: Ahmad Ziad Hussein)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 43; Jette Bruun; Ahmad",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a49",
+     "adresse": "Polarvej 49",
+     "navn": "Anni Karna Bak (fra juli 2023; før: John Visti Bak)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 49",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a55",
+     "adresse": "Polarvej 55",
+     "navn": "Heidi Jensen",
+     "afgift": 2000,
+     "moenstre": "Polarvej 55; Heidi; nr 55",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a62",
+     "adresse": "Polarvej 62",
+     "navn": "Muhanad Al Mubare / Amal Mehdi",
+     "afgift": 2000,
+     "moenstre": "Polarvej 62; MUBARE; Mehdi",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a64",
+     "adresse": "Polarvej 64",
+     "navn": "Lone Møller / Erik Jul Nielsen",
+     "afgift": 2000,
+     "moenstre": "Polarvej 64",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    }
+   ],
    "posteringer": [
     {
      "id": "p2022_1",
@@ -2732,7 +2880,7 @@
      "id": "p2022_18",
      "dato": "2022-02-15",
      "bilag": "018.22",
-     "tekst": "Overdragelsessum Polarvej 62 (køber Jan Iversen)",
+     "tekst": "Overdragelsessum Polarvej 23 (køber Jan Iversen)",
      "konto": 85,
      "likvid": "bank",
      "ind": 1200000,
@@ -2742,7 +2890,7 @@
      "id": "p2022_19",
      "dato": "2022-02-21",
      "bilag": "019.22",
-     "tekst": "Provenu Polarvej 62 til sælger (overdragelse til Jan Iversen)",
+     "tekst": "Provenu Polarvej 23 til sælger (Jørgen Pedersen)",
      "konto": 85,
      "likvid": "bank",
      "ind": 0,
@@ -3852,7 +4000,7 @@
    "reguleringer": [
     {
      "id": "r2022handel",
-     "tekst": "Foreningens andel af overdragelsessummer (Polarvej 62 og 43) indtægtsføres",
+     "tekst": "Foreningens andel af overdragelsessummer (Polarvej 23 og 43) indtægtsføres",
      "beloeb": -24000,
      "linje": "n2.andelshandel",
      "balancepost": "ag:handel"
@@ -4339,7 +4487,7 @@
    "sidsteAar": {
     "vis": false,
     "linjer": {
-     "n1.boligafgift": 172000,
+     "n1.boligafgift": 192000,
      "n1.boligleje": 0,
      "n1.erhvervsleje": 0,
      "n1.oevrig": 0,
@@ -4419,7 +4567,7 @@
     "boliglejeDecember": 0,
     "resultatPrM2": {
      "y2": 0,
-     "y1": 13
+     "y1": 35
     },
     "vedligeholdLoebende": {
      "y2": 0,
@@ -4897,6 +5045,80 @@
      "retning": "ind",
      "beloeb": "",
      "konto": 10
+    }
+   ],
+   "andelshavere": [
+    {
+     "id": "a23",
+     "adresse": "Polarvej 23",
+     "navn": "Jan Iversen (fra 2022; før: Jørgen Pedersen)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 23; Jan Iversen; Jørgen Pedersen",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a31",
+     "adresse": "Polarvej 31",
+     "navn": "Mette Agerskov (fra okt. 2024; før: Jonna Frandsen)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 31; Jonna Frands; Mette Agerskov; Advis",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a37",
+     "adresse": "Polarvej 37",
+     "navn": "Tina Qualmann",
+     "afgift": 2000,
+     "moenstre": "Polarvej 37; Tina Qualmann",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a43",
+     "adresse": "Polarvej 43",
+     "navn": "Jette Bruun (fra juni 2022; før: Ahmad Ziad Hussein)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 43; Jette Bruun; Ahmad",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a49",
+     "adresse": "Polarvej 49",
+     "navn": "Anni Karna Bak (fra juli 2023; før: John Visti Bak)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 49",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a55",
+     "adresse": "Polarvej 55",
+     "navn": "Heidi Jensen",
+     "afgift": 2000,
+     "moenstre": "Polarvej 55; Heidi; nr 55",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a62",
+     "adresse": "Polarvej 62",
+     "navn": "Muhanad Al Mubare / Amal Mehdi",
+     "afgift": 2000,
+     "moenstre": "Polarvej 62; MUBARE; Mehdi",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a64",
+     "adresse": "Polarvej 64",
+     "navn": "Lone Møller / Erik Jul Nielsen",
+     "afgift": 2000,
+     "moenstre": "Polarvej 64",
+     "fra": "2021-01",
+     "primoSaldo": 0
     }
    ],
    "posteringer": [
@@ -6672,7 +6894,7 @@
     "erhvervslejeDecember": 0,
     "boliglejeDecember": 0,
     "resultatPrM2": {
-     "y2": 13,
+     "y2": 35,
      "y1": 61
     },
     "vedligeholdLoebende": {
@@ -7151,6 +7373,80 @@
      "retning": "ind",
      "beloeb": "",
      "konto": 10
+    }
+   ],
+   "andelshavere": [
+    {
+     "id": "a23",
+     "adresse": "Polarvej 23",
+     "navn": "Jan Iversen (fra 2022; før: Jørgen Pedersen)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 23; Jan Iversen; Jørgen Pedersen",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a31",
+     "adresse": "Polarvej 31",
+     "navn": "Mette Agerskov (fra okt. 2024; før: Jonna Frandsen)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 31; Jonna Frands; Mette Agerskov; Advis",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a37",
+     "adresse": "Polarvej 37",
+     "navn": "Tina Qualmann",
+     "afgift": 2000,
+     "moenstre": "Polarvej 37; Tina Qualmann",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a43",
+     "adresse": "Polarvej 43",
+     "navn": "Jette Bruun (fra juni 2022; før: Ahmad Ziad Hussein)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 43; Jette Bruun; Ahmad",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a49",
+     "adresse": "Polarvej 49",
+     "navn": "Anni Karna Bak (fra juli 2023; før: John Visti Bak)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 49",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a55",
+     "adresse": "Polarvej 55",
+     "navn": "Heidi Jensen",
+     "afgift": 2000,
+     "moenstre": "Polarvej 55; Heidi; nr 55",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a62",
+     "adresse": "Polarvej 62",
+     "navn": "Muhanad Al Mubare / Amal Mehdi",
+     "afgift": 2000,
+     "moenstre": "Polarvej 62; MUBARE; Mehdi",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a64",
+     "adresse": "Polarvej 64",
+     "navn": "Lone Møller / Erik Jul Nielsen",
+     "afgift": 2000,
+     "moenstre": "Polarvej 64",
+     "fra": "2021-01",
+     "primoSaldo": 0
     }
    ],
    "posteringer": [
@@ -8348,7 +8644,7 @@
      "id": "p2024_120",
      "dato": "2024-12-02",
      "bilag": "120.24",
-     "tekst": "For megen betalt husleje",
+     "tekst": "For megen betalt boligafgift, tilbagebetalt (Polarvej 31, Jonna Frandsen)",
      "konto": 10,
      "likvid": "bank",
      "ind": 0,
@@ -9493,6 +9789,80 @@
      "retning": "ind",
      "beloeb": "",
      "konto": 10
+    }
+   ],
+   "andelshavere": [
+    {
+     "id": "a23",
+     "adresse": "Polarvej 23",
+     "navn": "Jan Iversen (fra 2022; før: Jørgen Pedersen)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 23; Jan Iversen; Jørgen Pedersen",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a31",
+     "adresse": "Polarvej 31",
+     "navn": "Mette Agerskov (fra okt. 2024; før: Jonna Frandsen)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 31; Jonna Frands; Mette Agerskov; Advis",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a37",
+     "adresse": "Polarvej 37",
+     "navn": "Tina Qualmann",
+     "afgift": 2000,
+     "moenstre": "Polarvej 37; Tina Qualmann",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a43",
+     "adresse": "Polarvej 43",
+     "navn": "Jette Bruun (fra juni 2022; før: Ahmad Ziad Hussein)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 43; Jette Bruun; Ahmad",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a49",
+     "adresse": "Polarvej 49",
+     "navn": "Anni Karna Bak (fra juli 2023; før: John Visti Bak)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 49",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a55",
+     "adresse": "Polarvej 55",
+     "navn": "Heidi Jensen",
+     "afgift": 2000,
+     "moenstre": "Polarvej 55; Heidi; nr 55",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a62",
+     "adresse": "Polarvej 62",
+     "navn": "Muhanad Al Mubare / Amal Mehdi",
+     "afgift": 2000,
+     "moenstre": "Polarvej 62; MUBARE; Mehdi",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a64",
+     "adresse": "Polarvej 64",
+     "navn": "Lone Møller / Erik Jul Nielsen",
+     "afgift": 2000,
+     "moenstre": "Polarvej 64",
+     "fra": "2021-01",
+     "primoSaldo": 0
     }
    ],
    "posteringer": [
@@ -11790,6 +12160,80 @@
      "retning": "ind",
      "beloeb": "",
      "konto": 10
+    }
+   ],
+   "andelshavere": [
+    {
+     "id": "a23",
+     "adresse": "Polarvej 23",
+     "navn": "Jan Iversen (fra 2022; før: Jørgen Pedersen)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 23; Jan Iversen; Jørgen Pedersen",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a31",
+     "adresse": "Polarvej 31",
+     "navn": "Mette Agerskov (fra okt. 2024; før: Jonna Frandsen)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 31; Jonna Frands; Mette Agerskov; Advis",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a37",
+     "adresse": "Polarvej 37",
+     "navn": "Tina Qualmann",
+     "afgift": 2000,
+     "moenstre": "Polarvej 37; Tina Qualmann",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a43",
+     "adresse": "Polarvej 43",
+     "navn": "Jette Bruun (fra juni 2022; før: Ahmad Ziad Hussein)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 43; Jette Bruun; Ahmad",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a49",
+     "adresse": "Polarvej 49",
+     "navn": "Anni Karna Bak (fra juli 2023; før: John Visti Bak)",
+     "afgift": 2000,
+     "moenstre": "Polarvej 49",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a55",
+     "adresse": "Polarvej 55",
+     "navn": "Heidi Jensen",
+     "afgift": 2000,
+     "moenstre": "Polarvej 55; Heidi; nr 55",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a62",
+     "adresse": "Polarvej 62",
+     "navn": "Muhanad Al Mubare / Amal Mehdi",
+     "afgift": 2000,
+     "moenstre": "Polarvej 62; MUBARE; Mehdi",
+     "fra": "2021-01",
+     "primoSaldo": 0
+    },
+    {
+     "id": "a64",
+     "adresse": "Polarvej 64",
+     "navn": "Lone Møller / Erik Jul Nielsen",
+     "afgift": 2000,
+     "moenstre": "Polarvej 64",
+     "fra": "2021-01",
+     "primoSaldo": 0
     }
    ],
    "posteringer": [

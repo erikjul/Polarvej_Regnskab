@@ -284,6 +284,7 @@ export function tomState(aar = new Date().getFullYear() - 1) {
     ],
     kontoplan: STANDARD_KONTOPLAN.map(k => ({ ...k })),
     importRegler: STANDARD_IMPORTREGLER.map(r => ({ ...r })),
+    andelshavere: [],
     posteringer: [],
     reguleringer: [],
     ejendom: { kostprisPrimo: 0, opskrivningPrimo: 0, opskrivningAaret: 0, vurderingsprincip: 'offentlig', vurdering: 0, vurderingTekst: '', fastholdt: false },
