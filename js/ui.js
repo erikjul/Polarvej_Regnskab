@@ -154,7 +154,7 @@ export class App {
     const v = getPath(this.state, path);
     const id = 'f_' + path.replace(/[^a-zA-Z0-9]/g, '_');
     let input;
-    if (type === 'num' || type === 'int') input = `<input type="text" inputmode="decimal" class="num" id="${id}" data-path="${path}" data-type="${type}" ${/IflgRapport|kontoudtog|Iflg$/.test(path) ? 'data-allow-empty="1"' : ''} value="${v === null || v === undefined || v === '' ? '' : (type === 'int' ? fmtInt(v) : fmtKr(v))}" ${opts.placeholder ? `placeholder="${esc(opts.placeholder)}"` : ''}>`;
+    if (type === 'num' || type === 'int') input = `<input type="text" inputmode="decimal" class="num" id="${id}" data-path="${path}" data-type="${type}" ${/IflgRapport|kontoudtog|Iflg$|\.kurs$/.test(path) ? 'data-allow-empty="1"' : ''} ${opts.rerender ? 'data-rerender="1"' : ''} value="${v === null || v === undefined || v === '' ? '' : (type === 'int' ? fmtInt(v) : fmtKr(v))}" ${opts.placeholder ? `placeholder="${esc(opts.placeholder)}"` : ''}>`;
     else if (type === 'bool') input = `<label class="check"><input type="checkbox" id="${id}" data-path="${path}" data-type="bool" ${v ? 'checked' : ''}> ${esc(opts.checkLabel || '')}</label>`;
     else if (type === 'date') input = `<input type="date" id="${id}" data-path="${path}" data-type="text" value="${esc(v || '')}">`;
     else if (type === 'select') input = `<select id="${id}" data-path="${path}" data-type="${opts.numeric ? 'numsel' : 'text'}" ${opts.rerender ? 'data-rerender="1"' : ''}>${opts.options.map(o => `<option value="${esc(o.id)}" ${String(o.id) === String(v) ? 'selected' : ''}>${esc(o.label)}</option>`).join('')}</select>`;
@@ -193,6 +193,8 @@ export class App {
     el.querySelectorAll('[data-path^="laan."]').forEach(inp => {
       const m = /^laan\.(\d+)\.(restgaeldPrimo|kortfristetPrimo|renter|kortfristet|afdragIflg|restgaeldUltimoIflg)$/.exec(inp.dataset.path);
       if (m && this.engine && this.engine.harPlan(this.state.laan[Number(m[1])] || {})) { inp.disabled = true; inp.title = 'Hentes fra betalingsplanen'; }
+      const mk = /^laan\.(\d+)\.kursvaerdi$/.exec(inp.dataset.path);
+      if (mk && this.engine) { const l = this.state.laan[Number(mk[1])]; if (l && !this.engine.node(`laan.${l.id}.kursvaerdi`).input) { inp.disabled = true; inp.value = fmtKr(this.engine.get(`laan.${l.id}.kursvaerdi`)); inp.title = 'Beregnet som restgæld × kurs'; } }
     });
     el.querySelectorAll('[data-path]').forEach(inp => {
       const type = inp.dataset.type;
@@ -247,7 +249,7 @@ export class App {
       case 'likvidkonti': arr.push({ id: nyId('lk'), navn: '', primo: 0, kontoudtog: '' }); break;
       case 'laan': {
         const id = nyId('l');
-        arr.push({ id, navn: 'Nyt lån', kreditor: '', hovedstol: 0, optagetTekst: '', kilde: 'manuel', betalingsplan: [], restgaeldPrimo: 0, kortfristetPrimo: 0, renter: 0, afdragIflg: '', restgaeldUltimoIflg: '', kortfristet: 0, kursvaerdi: 0, kursvaerdiTekst: '', beskrivelse: '' });
+        arr.push({ id, navn: 'Nyt lån', kreditor: '', hovedstol: 0, optagetTekst: '', kilde: 'manuel', betalingsplan: [], kurs: '', restgaeldPrimo: 0, kortfristetPrimo: 0, renter: 0, afdragIflg: '', restgaeldUltimoIflg: '', kortfristet: 0, kursvaerdi: 0, kursvaerdiTekst: '', beskrivelse: '' });
         const brugt = new Set(S.kontoplan.map(k => Number(k.nr)));
         let nr = 120; while (brugt.has(nr)) nr++;
         S.kontoplan.push({ nr, navn: 'Låneydelse, nyt lån', linje: 'laan:' + id });
@@ -474,7 +476,8 @@ export class App {
         ${this.felt('Hovedstol', `${p}.hovedstol`, 'num')}
         ${this.felt('Optaget (tekst, fx "udbetalt 5. juli 2017")', `${p}.optagetTekst`)}
         ${this.felt('Kilde til renter, afdrag og restgæld', `${p}.kilde`, 'select', { rerender: true, options: [{ id: 'manuel', label: 'Manuel indtastning (fra årsopgørelsen)' }, { id: 'plan', label: 'Kreditforeningens betalingsplan (terminer nedenfor)' }], hint: plan ? 'Renter, kortfristet del og restgæld hentes fra betalingsplanen' : ((l.betalingsplan || []).length ? 'Betalingsplan findes, men bruges ikke' : 'Indsæt en betalingsplan nedenfor for automatisk opgørelse') })}
-        ${this.felt(`Kursværdi af restgæld pr. 31/12 ${S.aar}`, `${p}.kursvaerdi`, 'num', { hint: 'Fra kreditforeningens årsopgørelse – bruges i andelsværdiberegningen' })}
+        ${this.felt(`Obligationskurs pr. 31/12 ${S.aar} (%)`, `${p}.kurs`, 'num', { hint: 'Udfyldes kursen, beregnes kursværdien som restgæld × kurs. Tomt = indtast kursværdien direkte.', rerender: true })}
+        ${this.felt(`Kursværdi af restgæld pr. 31/12 ${S.aar}`, `${p}.kursvaerdi`, 'num', { hint: e.node(`${n}.kursvaerdi`).input ? 'Fra kreditforeningens årsopgørelse – bruges i andelsværdiberegningen' : `Beregnet: ${fmtKr(e.get(n + '.kursvaerdi'))} kr. (restgæld × kurs)` })}
         ${this.felt('Kursværdi, tekst (fx "pr. 31. december 2025")', `${p}.kursvaerdiTekst`)}
       </div>
       <h3 style="margin-top:14px">Manuelle tal ${plan ? '<span class="kontoplan-hint">(låst – hentes fra betalingsplanen)</span>' : ''}</h3><div class="grid">

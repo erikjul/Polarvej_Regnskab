@@ -2145,8 +2145,9 @@
       "afdragIflg": "",
       "restgaeldUltimoIflg": "",
       "kortfristet": 46610.76,
+      "kurs": 98.3,
       "kursvaerdi": 0,
-      "kursvaerdiTekst": "",
+      "kursvaerdiTekst": "Kursen er uændret 98,30 siden udbetalingen i 2017.",
       "beskrivelse": "Lånet er et konverterbart obligationslån (annuitetslån, 20 år, 81 kvartårlige terminer) med en nominel rente på 1,5 % p.a. og administrationsbidrag på 0,9 % p.a. af obligationsrestgælden. Obligationsserie 42.s.A 2037, fondskode DK000633801-7."
     }
   ],

@@ -1,6 +1,6 @@
 # Programmets tal mod de aflagte årsrapporter 2021–2025
 
-Genereret af `scripts/afvigelser.mjs`. "Program" er beregnet ud fra bankens kontoudtog og DLR Kredits betalingsplan; "Rapport" er tallet i den aflagte årsrapport (2021-tallene er sammenligningstal i 2022-rapporten; boligafgift og renter for 2021 er ikke oplyst). Andelsværdien i programmet bruger foreløbig kursværdi 0, da rapporternes 846.786,53 kr. er DLR-restgælden ultimo 2019 og ikke en kursværdi.
+Genereret af `scripts/afvigelser.mjs`. "Program" er beregnet ud fra bankens kontoudtog og DLR Kredits betalingsplan; "Rapport" er tallet i den aflagte årsrapport (2021-tallene er sammenligningstal i 2022-rapporten; boligafgift og renter for 2021 er ikke oplyst). Kursværdien er restgæld × kurs 98,30 (kursen har været uændret siden udbetalingen); rapporterne bruger 846.786,53 kr., som er DLR-restgælden ultimo 2019.
 
 ## 2021
 
@@ -14,7 +14,8 @@ Genereret af `scripts/afvigelser.mjs`. "Program" er beregnet ud fra bankens kont
 | Kortfristet del (næste års afdrag) | 43.901,28 | 61.769,76 | -17.868,48 |
 | Likvide beholdninger ultimo | 201.171,98 | 221.171,98 | -20.000,00 |
 | Overført resultat ultimo (note 12) | 1.733.840,53 | 1.736.513,16 | -2.672,63 |
-| Andelsværdi pr. andelskrone (uden korrekt kursværdi) | 15,27 | – |  |
+| Kursværdi af prioritetsgæld (restgæld × 98,30) | 747.995,62 | 846.786,53 | -98.790,91 |
+| Andelsværdi pr. andelskrone | 14,18 | – |  |
 
 ## 2022
 
@@ -28,7 +29,8 @@ Genereret af `scripts/afvigelser.mjs`. "Program" er beregnet ud fra bankens kont
 | Kortfristet del (næste års afdrag) | 44.563,52 | 44.563,52 | 0,00 |
 | Likvide beholdninger ultimo | 211.908,10 | 211.908,10 | 0,00 |
 | Overført resultat ultimo (note 12) | 1.788.477,93 | 1.793.650,64 | -5.172,71 |
-| Andelsværdi pr. andelskrone (uden korrekt kursværdi) | 15,29 | 14,05 | 1,24 |
+| Kursværdi af prioritetsgæld (restgæld × 98,30) | 704.840,66 | 846.786,53 | -141.945,87 |
+| Andelsværdi pr. andelskrone | 14,26 | 14,05 | 0,21 |
 
 ## 2023
 
@@ -42,7 +44,8 @@ Genereret af `scripts/afvigelser.mjs`. "Program" er beregnet ud fra bankens kont
 | Kortfristet del (næste års afdrag) | 45.235,74 | 45.235,74 | 0,00 |
 | Likvide beholdninger ultimo | 203.833,50 | 203.833,50 | 0,00 |
 | Overført resultat ultimo (note 12) | 1.824.966,85 | 1.843.463,42 | -18.496,57 |
-| Andelsværdi pr. andelskrone (uden korrekt kursværdi) | 15,27 | 14,04 | 1,23 |
+| Kursværdi af prioritetsgæld (restgæld × 98,30) | 661.034,72 | 846.786,53 | -185.751,81 |
+| Andelsværdi pr. andelskrone | 14,31 | 14,04 | 0,27 |
 
 ## 2024
 
@@ -56,7 +59,8 @@ Genereret af `scripts/afvigelser.mjs`. "Program" er beregnet ud fra bankens kont
 | Kortfristet del (næste års afdrag) | 45.918,10 | 45.918,10 | 0,00 |
 | Likvide beholdninger ultimo | 228.785,97 | 228.785,97 | 0,00 |
 | Overført resultat ultimo (note 12) | 1.895.155,06 | 1.913.651,63 | -18.496,57 |
-| Andelsværdi pr. andelskrone (uden korrekt kursværdi) | 15,31 | 14,10 | 1,21 |
+| Kursværdi af prioritetsgæld (restgæld × 98,30) | 616.567,98 | 846.786,53 | -230.218,55 |
+| Andelsværdi pr. andelskrone | 14,41 | 14,10 | 0,31 |
 
 ## 2025
 
@@ -70,5 +74,6 @@ Genereret af `scripts/afvigelser.mjs`. "Program" er beregnet ud fra bankens kont
 | Kortfristet del (næste års afdrag) | 46.610,76 | 46.610,76 | 0,00 |
 | Likvide beholdninger ultimo | 233.020,55 | 233.020,55 | 0,00 |
 | Overført resultat ultimo (note 12) | 1.945.307,74 | 1.945.307,74 | 0,00 |
-| Andelsværdi pr. andelskrone (uden korrekt kursværdi) | 15,32 | 14,08 | 1,24 |
+| Kursværdi af prioritetsgæld (restgæld × 98,30) | 571.430,49 | 846.786,53 | -275.356,04 |
+| Andelsværdi pr. andelskrone | 14,48 | 14,08 | 0,40 |
 

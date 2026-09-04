@@ -263,7 +263,7 @@ export function byggeRapport(engine) {
     nb.push(row('total', 'Langfristet del', [N(`${p}.langfristet`), N(`${p}.langfristetPrimo`)]));
     if (l.beskrivelse) nb.push(row('text', l.beskrivelse));
     if (engine.harPlan(l)) nb.push(row('text', `Restløbetid pr. 31. december ${y}: ${fmtKr(restloebetid(l.betalingsplan, y))} år (sidste termin ${fmtDato(sidsteTermin(l.betalingsplan))}). Renter, bidrag og afdrag er opgjort efter kreditforeningens betalingsplan.`));
-    nb.push(row('text', `Kursværdien af restgælden udgør ${fmtKr(engine.get(`${p}.kursvaerdi`))} kr.${l.kursvaerdiTekst ? ' ' + l.kursvaerdiTekst : ''}`));
+    nb.push(row('text', `Kursværdien af restgælden udgør ${fmtKr(engine.get(`${p}.kursvaerdi`))} kr.${engine.has(`${p}.kurs`) ? ` (kurs ${fmtKr(engine.get(`${p}.kurs`))} pr. 31. december ${y})` : ''}${l.kursvaerdiTekst ? ' ' + l.kursvaerdiTekst : ''}`));
     nb.push(row('blank'));
   });
   if ((S.laan || []).length > 1) {

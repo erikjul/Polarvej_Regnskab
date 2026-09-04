@@ -142,7 +142,10 @@ export class Engine {
       this.def(`${p}.afdragAkk`, `${l.navn}, betalte afdrag i alt`, `${p}.hovedstol - ${p}.restgaeldUltimo`);
       this.def(`${p}.langfristet`, `${l.navn}, langfristet del`, `${p}.restgaeldUltimo - ${p}.kortfristet`);
       this.def(`${p}.langfristetPrimo`, `${l.navn}, langfristet del primo`, `${p}.restgaeldPrimo - ${p}.kortfristetPrimo`);
-      this.input(`${p}.kursvaerdi`, `${l.navn}, kursværdi`, l.kursvaerdi, { group: g });
+      if (l.kurs !== '' && l.kurs !== null && l.kurs !== undefined && Number(l.kurs) > 0) {
+        this.input(`${p}.kurs`, `${l.navn}, kurs pr. balancedagen (%)`, l.kurs, { fmt: 'dec2', group: g });
+        this.def(`${p}.kursvaerdi`, `${l.navn}, kursværdi (restgæld × kurs)`, `ROUND(${p}.restgaeldUltimo * ${p}.kurs / 100, 2)`);
+      } else this.input(`${p}.kursvaerdi`, `${l.navn}, kursværdi`, l.kursvaerdi, { group: g });
     });
     const ll = (S.laan || []).map(l => l.id);
     const lsum = (f) => `SUM(${K(ll.map(i => `laan.${i}.${f}`))})`;

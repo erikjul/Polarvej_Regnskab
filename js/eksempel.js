@@ -80,8 +80,9 @@ export function eksempelPolarvej2025() {
     afdragIflg: '',
     restgaeldUltimoIflg: '',
     kortfristet: 46610.76,
+    kurs: 98.30,
     kursvaerdi: 0,
-    kursvaerdiTekst: '',
+    kursvaerdiTekst: 'Kursen er uændret 98,30 siden udbetalingen i 2017.',
     beskrivelse: 'Lånet er et konverterbart obligationslån (annuitetslån, 20 år, 81 kvartårlige terminer) med en nominel rente på 1,5 % p.a. og administrationsbidrag på 0,9 % p.a. af obligationsrestgælden. Obligationsserie 42.s.A 2037, fondskode DK000633801-7.',
   }];
   s.andenGaeld = [
@@ -135,6 +136,7 @@ export const RAPPORTERET = {
   boligafgift: { 2021: 0, 2022: 190000, 2023: 190000, 2024: 197000, 2025: 192000 },
   likvider: { 2021: 221171.98, 2022: 211908.10, 2023: 203833.50, 2024: 228785.97, 2025: 233020.55 },
   andelskrone: { 2022: 14.05, 2023: 14.04, 2024: 14.10, 2025: 14.08 },
+  kursvaerdi: { 2021: 846786.53, 2022: 846786.53, 2023: 846786.53, 2024: 846786.53, 2025: 846786.53 },
 };
 
 export function eksempelSamling() {

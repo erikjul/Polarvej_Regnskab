@@ -16,9 +16,10 @@ const rk = [
   ['Kortfristet del (næste års afdrag)', 'laan.dlr.kortfristet', 'kortfristet'],
   ['Likvide beholdninger ultimo', 'likvid.total.ultimo', 'likvider'],
   ['Overført resultat ultimo (note 12)', 'ek.overfoert.ultimo', 'overfoert'],
-  ['Andelsværdi pr. andelskrone (uden korrekt kursværdi)', 'av.prKrone', 'andelskrone'],
+  ['Kursværdi af prioritetsgæld (restgæld × 98,30)', 'laan.dlr.kursvaerdi', 'kursvaerdi'],
+  ['Andelsværdi pr. andelskrone', 'av.prKrone', 'andelskrone'],
 ];
-let md = '# Programmets tal mod de aflagte årsrapporter 2021–2025\n\nGenereret af `scripts/afvigelser.mjs`. "Program" er beregnet ud fra bankens kontoudtog og DLR Kredits betalingsplan; "Rapport" er tallet i den aflagte årsrapport (2021-tallene er sammenligningstal i 2022-rapporten; boligafgift og renter for 2021 er ikke oplyst). Andelsværdien i programmet bruger foreløbig kursværdi 0, da rapporternes 846.786,53 kr. er DLR-restgælden ultimo 2019 og ikke en kursværdi.\n\n';
+let md = '# Programmets tal mod de aflagte årsrapporter 2021–2025\n\nGenereret af `scripts/afvigelser.mjs`. "Program" er beregnet ud fra bankens kontoudtog og DLR Kredits betalingsplan; "Rapport" er tallet i den aflagte årsrapport (2021-tallene er sammenligningstal i 2022-rapporten; boligafgift og renter for 2021 er ikke oplyst). Kursværdien er restgæld × kurs 98,30 (kursen har været uændret siden udbetalingen); rapporterne bruger 846.786,53 kr., som er DLR-restgælden ultimo 2019.\n\n';
 for (const y of AAR) {
   const e = engineFor(sam, y, memo);
   md += `## ${y}\n\n| Post | Program | Rapport | Difference |\n|---|---:|---:|---:|\n`;
