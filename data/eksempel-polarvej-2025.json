@@ -293,7 +293,7 @@
       "konto": 130
     },
     {
-      "moenster": "Grundejerforening",
+      "moenster": "Grundejerfor",
       "retning": "ud",
       "beloeb": "",
       "konto": 110
@@ -309,6 +309,18 @@
       "retning": "ud",
       "beloeb": "",
       "konto": 150
+    },
+    {
+      "moenster": "Kroen",
+      "retning": "ud",
+      "beloeb": "",
+      "konto": 150
+    },
+    {
+      "moenster": "Vejle Kommune",
+      "retning": "ind",
+      "beloeb": "",
+      "konto": 90
     },
     {
       "moenster": "honorar",

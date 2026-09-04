@@ -78,7 +78,7 @@ Testene kontrollerer formelsproget, at eksempeldataene giver samme resultatopgø
 
 ## Eksempeldata: Polarvej I 2021–2026
 
-Programmet starter med foreningens egne tal for 2021–2026. Alle posteringer på forretningskontoen 2021–2025 er importeret fra bankens CSV-eksporter (`data/bank-eksport-ÅÅÅÅ.csv`) og konteret af `scripts/byg-historik.mjs`; DLR-lånet følger betalingsplanen fra låneafregningen; primo 2021 er udledt af bankens saldo pr. 31. december 2020. Årene er kædet, så alle primotal er beregnede, og 2026 er oprettet med korrigeret primo og korrigerede sammenligningstal.
+Programmet starter med foreningens egne tal for 2021–2026. Alle posteringer på forretningskontoen 2021–2025 samt 1. januar–4. september 2026 er importeret fra bankens CSV-eksporter (`data/bank-eksport-ÅÅÅÅ.csv`) og konteret af `scripts/byg-historik.mjs`; DLR-lånet følger betalingsplanen fra låneafregningen; primo 2021 er udledt af bankens saldo pr. 31. december 2020. Årene er kædet, så alle primotal er beregnede, og 2026 er oprettet med korrigeret primo og korrigerede sammenligningstal.
 
 Resultatet stemmer med de aflagte årsrapporter, hvor de er rigtige (resultat 2023 og 2024, likvider 2022–2025, restgæld 2024–2025, egenkapital ultimo 2025), og afviger, hvor rapporterne har fejl. Fejlene, deres årsag og rettelsen er beskrevet i [docs/afvigelser.md](docs/afvigelser.md) med tal år for år i [docs/afvigelser-tabel.md](docs/afvigelser-tabel.md). Kort: balancen pr. 31. december 2025 er korrekt, men prioritetsafdrag, renter, restgæld i tidligere år, boligafgift 2025 og andelshandlernes præsentation var forkerte, og en uforklaret primopost på −19.504,80 kr. udlignede det i 2025. Der er ingen egenkapitalkorrektion i 2026.
 

@@ -88,7 +88,7 @@ export function kontroller(engine) {
   // 8. Lån
   (S.laan || []).forEach(l => {
     const p = `laan.${l.id}`;
-    const ingenYdelser = g(`${p}.ydelser`) === 0; // året er ikke bogført endnu → advarsel i stedet for fejl
+    const ingenYdelser = g(`${p}.ydelser`) === 0 || y >= new Date().getFullYear(); // året er ikke afsluttet/bogført → advarsel i stedet for fejl
     if (engine.has(`${p}.afdragIflg`)) afstem(`laan.${l.id}.afdrag`, `${l.navn}: afdrag stemmer med årsopgørelsen/betalingsplanen`, `${p}.afdrag`, `${p}.afdragIflg`, 'Beregnet afdrag (betalte ydelser − renter og bidrag) skal svare til afdraget på kreditforeningens årsopgørelse eller betalingsplan.', { advarsel: ingenYdelser });
     if (engine.has(`${p}.restgaeldUltimoIflg`)) afstem(`laan.${l.id}.restgaeld`, `${l.navn}: restgæld ultimo stemmer med årsopgørelsen/betalingsplanen`, `${p}.restgaeldUltimo`, `${p}.restgaeldUltimoIflg`, 'Restgæld primo − årets afdrag skal svare til restgælden på årsopgørelsen eller betalingsplanen.', { advarsel: ingenYdelser });
     if (engine.harPlan(l)) afstem(`laan.${l.id}.ydelser`, `${l.navn}: bogførte ydelser stemmer med betalingsplanen for ${y}`, `${p}.ydelser`, `${p}.ydelserIflg`, 'Summen af låneydelser i kasserapporten skal svare til årets terminer (renter + bidrag + afdrag) i kreditforeningens betalingsplan. En difference betyder en manglende, dobbelt eller forkert bogført ydelse – eller at planen er ændret (rentetilpasning, bidragsændring).', { advarsel: ingenYdelser, detaljer: ingenYdelser ? ['Der er endnu ikke bogført ydelser i året.'] : [] });

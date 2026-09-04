@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import { parseBankCsv, foreslaaKonto } from '../js/import.js';
 import { STANDARD_IMPORTREGLER } from '../js/model.js';
 
-const AAR = [2021, 2022, 2023, 2024, 2025];
+const AAR = [2021, 2022, 2023, 2024, 2025, 2026]; // 2026: til og med 4. september 2026
 const BANK_ULTIMO_2024 = 208611.97; // iflg. årsrapport 2024 og bankafstemning 2025
 
 // Manuelle konteringer (anvendes før reglerne). match: { aar?, tekst (indeholder), beloeb? } → konto, evt. ny tekst/likvid
@@ -54,6 +54,7 @@ for (const y of AAR) {
 ud.bankUltimo[2024] = BANK_ULTIMO_2024;
 for (const y of [2023, 2022, 2021, 2020]) ud.bankUltimo[y] = Math.round((ud.bankUltimo[y + 1] - netto[y + 1]) * 100) / 100;
 ud.bankUltimo[2025] = Math.round((BANK_ULTIMO_2024 + netto[2025]) * 100) / 100;
+ud.bankUltimo[2026] = Math.round((ud.bankUltimo[2025] + netto[2026]) * 100) / 100; // saldo pr. 4. september 2026 (foreløbig)
 
 let js = `// GENERERET af scripts/byg-historik.mjs – ret ikke i hånden.\n// Posteringer på forretningskontoen 2021–2025 fra Middelfart Sparekasses CSV-eksporter (data/bank-eksport-ÅÅÅÅ.csv), konteret efter konteringsreglerne.\n`;
 js += `export const BANK_ULTIMO = ${JSON.stringify(ud.bankUltimo)};\n`;

@@ -172,6 +172,9 @@ export function eksempelSamling() {
   const samling = { version: 2, aktivAar: 2025, regnskaber };
   // 2026: nyt år med korrigeret primo; den aflagte årsrapport for 2025 viser overført resultat 1.945.307,74
   const st26 = opretNytAar(samling, 2025);
+  st26.posteringer = POSTERINGER[2026].map(p => ({ ...p })); // bankens posteringer 1/1–4/9 2026
+  st26.likvidkonti.find(k => k.id === 'bank').kontoudtog = BANK_ULTIMO[2026];
+  st26.budget = { ...regnskaber[2025].budget };
   st26.egenkapitalPrimo.overfoertIflgRapport = RAPPORTERET.overfoert[2025];
   st26.egenkapitalPrimo.korrektionTekst = 'Egenkapitalen pr. 31. december 2025 er afstemt til bankens kontoudtog og DLR Kredits betalingsplan og svarer til den aflagte årsrapport for 2025. Sammenligningstallene for 2025 er dog korrigeret i forhold til den aflagte årsrapport: boligafgift 190.000 kr. (aflagt 192.000), renter og bidrag 14.641,58 kr. (aflagt 15.733,35), betalte afdrag 45.918,10 kr. (aflagt 60.969,09), vedligeholdelse 10.350 kr. (aflagt under diverse omkostninger) og årets resultat 50.152,68 kr. (aflagt 51.160,91). Korrektionerne påvirker ikke egenkapitalen.';
   st26.andele.senestVedtagetAar = '2026';
