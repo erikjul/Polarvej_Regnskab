@@ -80,6 +80,8 @@ Eksempeldataene er foreningens egne tal for 2025. Resultatopgørelsen svarer kro
 2. **Primobalancen (31/12 2024) balancerer ikke**: Balancen for 2024 viser gæld i alt 628.734,34 kr., mens posterne (langfristet 581.312,81 + kortfristet 45.235,74 + anden gæld 20.000,00) giver 646.548,55 kr., og lånenoten viser en restgæld på 627.230,91 kr. Differencen på 18.496,57 kr. er i 2025-rapporten udlignet med en uforklaret post på −19.504,80 kr. i overført resultat.
 3. **Prioritetslånet**: Ifølge DLR's betalingsplan er 2025-tallene: ydelser 60.559,68 kr. = renter og bidrag 14.641,58 kr. + afdrag 45.918,10 kr.; restgæld 627.230,91 kr. primo og 581.312,81 kr. ultimo; afdrag i 2026 (kortfristet del) 46.610,76 kr. 2025-rapporten brugte 2024-tallene for renter (15.733,35 kr.) og afdrag (60.969,09 kr., som reelt er 2024-ydelserne). Med betalingsplanen indlagt beregner programmet lånet korrekt, og årets resultat bliver 52.252,68 kr. Lånet er desuden et obligationslån (kurs 98,30 ved udbetaling), ikke et kontantlån som noten angav, og restløbetiden pr. 31/12 2025 er 11,75 år.
 
+**Fremlejedepositum**: Depositummet på 20.000 kr. for fremlejen af Polarvej 64 står på en særskilt deponeringskonto i Middelfart Sparekasse (seneste bevægelse 19. april 2022). Det indgår som likvid beholdning (aktiv) og som anden gæld (passiv), fordi beløbet tilhører fremlejeren og skal tilbagebetales. Når fremlejen ophører, bogføres tilbagebetalingen på konto 80 med deponeringskontoen som likvid konto, hvorefter begge poster går i nul.
+
 Når primotallene rettes (så sidste års balance balancerer), bankafstemningen går op, og kursværdien pr. 31/12 indtastes, bliver kontrolsiden grøn.
 
 ## Licens

@@ -58,7 +58,7 @@
     },
     {
       "id": "depo",
-      "navn": "Middelfart Sparekasse, deponeringskonto",
+      "navn": "Middelfart Sparekasse, deponeringskonto (hensat fremlejedepositum)",
       "primo": 20000,
       "kontoudtog": 20000
     },
@@ -108,7 +108,7 @@
     },
     {
       "nr": 80,
-      "navn": "Depositum fra andelshaver der udlejer",
+      "navn": "Fremlejedepositum modtaget/tilbagebetalt",
       "linje": "ag:depositum"
     },
     {
@@ -1071,7 +1071,7 @@
   "andenGaeld": [
     {
       "id": "depositum",
-      "tekst": "Modtaget depositum fra andelshaver der udlejer",
+      "tekst": "Depositum fra fremlejer, Polarvej 64 (hensat på deponeringskonto)",
       "primo": 20000
     }
   ],

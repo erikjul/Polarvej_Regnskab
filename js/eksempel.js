@@ -32,13 +32,13 @@ export function eksempelPolarvej2025() {
   s.tekster = { ...STANDARD_TEKSTER };
   s.likvidkonti = [
     { id: 'bank', navn: 'Middelfart Sparekasse, forretningskonto', primo: 208611.97, kontoudtog: 212846.55 },
-    { id: 'depo', navn: 'Middelfart Sparekasse, deponeringskonto', primo: 20000, kontoudtog: 20000 },
+    { id: 'depo', navn: 'Middelfart Sparekasse, deponeringskonto (hensat fremlejedepositum)', primo: 20000, kontoudtog: 20000 },
     { id: 'henl', navn: 'Middelfart Sparekasse, henlæggelseskonto', primo: 0, kontoudtog: 0 },
     { id: 'kasse', navn: 'Kontanter', primo: 174, kontoudtog: 174 },
   ];
   // Kontoplan: standard + lånekonto
   s.kontoplan.push({ nr: 120, navn: 'DLR Kredit, låneydelse (renter + afdrag)', linje: 'laan:dlr' });
-  s.kontoplan.push({ nr: 80, navn: 'Depositum fra andelshaver der udlejer', linje: 'ag:depositum' });
+  s.kontoplan.push({ nr: 80, navn: 'Fremlejedepositum modtaget/tilbagebetalt', linje: 'ag:depositum' });
   s.kontoplan.sort((a, b) => a.nr - b.nr);
 
   s.posteringer = [
@@ -123,7 +123,7 @@ export function eksempelPolarvej2025() {
     kursvaerdiTekst: '',
     beskrivelse: 'Lånet er et konverterbart obligationslån (annuitetslån, 20 år, 81 kvartårlige terminer) med en nominel rente på 1,5 % p.a. og administrationsbidrag på 0,9 % p.a. af obligationsrestgælden. Obligationsserie 42.s.A 2037, fondskode DK000633801-7.',
   }];
-  s.andenGaeld = [{ id: 'depositum', tekst: 'Modtaget depositum fra andelshaver der udlejer', primo: 20000 }];
+  s.andenGaeld = [{ id: 'depositum', tekst: 'Depositum fra fremlejer, Polarvej 64 (hensat på deponeringskonto)', primo: 20000 }];
   s.tilgodehavender = [];
   s.forudmodtaget = { primo: 0 };
   s.budget = {
