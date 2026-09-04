@@ -33,7 +33,7 @@ test('dansk talparsing', () => {
   assert.equal(parseTal('10.300'), 10300);
   assert.equal(parseTal('0,5'), 0.5);
   assert.equal(fmtKr(1234.5), '1.234,50');
-  assert.equal(fmtKr(-0.004), '-0,00'.replace('-', '-'));
+  assert.equal(fmtKr(-0.004), '0,00'); // afrundes til nul, ikke "-0,00"
 });
 
 test('eksempel 2025: resultatopgørelsen svarer til årsrapporten', () => {
