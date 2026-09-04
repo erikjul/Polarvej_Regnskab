@@ -1,7 +1,8 @@
 // format.js – dansk talformatering og parsing
 export function fmtKr(n, decimals = 2) {
   if (n === null || n === undefined || n === '' || Number.isNaN(Number(n))) return '';
-  const v = Number(n);
+  let v = Number(n);
+  if (Math.abs(v) < Math.pow(10, -(decimals + 1)) / 2) v = 0; // undgå "-0,00"
   const s = Math.abs(v).toLocaleString('da-DK', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
   return (v < 0 ? '-' : '') + s;
 }
