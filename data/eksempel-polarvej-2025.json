@@ -485,7 +485,7 @@
       "moenstre": "Polarvej 23; Jan Iversen; Jørgen Pedersen",
       "fra": "2021-01",
       "primoSaldo": 0,
-      "areal": ""
+      "areal": 100
     },
     {
       "id": "a31",
@@ -495,7 +495,7 @@
       "moenstre": "Polarvej 31; Jonna Frands; Mette Agerskov; Advis",
       "fra": "2021-01",
       "primoSaldo": 0,
-      "areal": ""
+      "areal": 100
     },
     {
       "id": "a37",
@@ -505,7 +505,7 @@
       "moenstre": "Polarvej 37; Tina Qualmann",
       "fra": "2021-01",
       "primoSaldo": 0,
-      "areal": ""
+      "areal": 100
     },
     {
       "id": "a43",
@@ -515,7 +515,7 @@
       "moenstre": "Polarvej 43; Jette Bruun; Ahmad",
       "fra": "2021-01",
       "primoSaldo": 0,
-      "areal": ""
+      "areal": 100
     },
     {
       "id": "a49",
@@ -525,7 +525,7 @@
       "moenstre": "Polarvej 49",
       "fra": "2021-01",
       "primoSaldo": 0,
-      "areal": ""
+      "areal": 100
     },
     {
       "id": "a55",
@@ -535,7 +535,7 @@
       "moenstre": "Polarvej 55; Heidi; nr 55",
       "fra": "2021-01",
       "primoSaldo": 0,
-      "areal": ""
+      "areal": 100
     },
     {
       "id": "a62",
@@ -545,7 +545,7 @@
       "moenstre": "Polarvej 62; MUBARE; Mehdi",
       "fra": "2021-01",
       "primoSaldo": 0,
-      "areal": ""
+      "areal": 100
     },
     {
       "id": "a64",
@@ -555,7 +555,7 @@
       "moenstre": "Polarvej 64",
       "fra": "2021-01",
       "primoSaldo": 0,
-      "areal": ""
+      "areal": 100
     }
   ],
   "posteringer": [
