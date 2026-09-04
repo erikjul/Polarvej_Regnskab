@@ -125,11 +125,12 @@ export function kontroller(engine) {
   const nkd = [];
   if (g('nk.areal.y0.b6') <= 0) nkd.push('Arealer (BBR) mangler – nøgletal pr. m² kan ikke beregnes.');
   const sumAreal = (S.andelshavere || []).reduce((t, a) => t + (Number(a.areal) || 0), 0);
-  if (sumAreal > 0 && Math.abs(sumAreal - g('nk.areal.y0.b1')) > 0.5) nkd.push(`Boligernes arealer i andelslisten summerer til ${fmtKr(sumAreal, 0)} m², men nøgleoplysning B1 (andelsboliger) er ${fmtKr(g('nk.areal.y0.b1'), 0)} m². Nøgletallene pr. m² (F2, H1, J, K1–K3, M, R) beregnes ud fra B1 – afklar hvilket tal der er rigtigt iflg. BBR.`);
+  const arealInfo = [];
+  if (sumAreal > 0 && Math.abs(sumAreal - g('nk.areal.y0.b1')) > 0.5) arealInfo.push(`Boligernes arealer i andelslisten summerer til ${fmtKr(sumAreal, 0)} m², mens nøgleoplysning B1 (andelsboliger iflg. BBR) er ${fmtKr(g('nk.areal.y0.b1'), 0)} m². Nøgletallene pr. m² beregnes ud fra B1; handelsværdien pr. bolig beregnes ud fra boligens eget areal.`);
   if (g('nk.h1.maaned') <= 0) nkd.push('Boligafgift for december måned mangler (felt H1).');
   if (g('nk.j.y1') === 0 && g('nk.j.y2') === 0) nkd.push('Tidligere års nøgletal (J, M, R) er ikke udfyldt – tag dem fra de to foregående årsrapporter.');
   if (!(S.forening || {}).stiftelsesaar || !(S.forening || {}).opfoerelsesaar) nkd.push('Stiftelsesår/opførelsesår mangler (felt D1/D2).');
-  push({ id: 'nk', titel: 'Nøgleoplysninger (bekendtgørelse nr. 336/2025, bilag 1) er udfyldt', forklaring: 'Felterne B1–B6, C1–C3, D1–D2, E1–E2, F1–F4, G1–G3, H1–H3, J, K1–K3, M1–M3 og R skal fremgå af noterne.', status: nkd.length ? 'advarsel' : 'ok', detaljer: nkd });
+  push({ id: 'nk', titel: 'Nøgleoplysninger (bekendtgørelse nr. 336/2025, bilag 1) er udfyldt', forklaring: 'Felterne B1–B6, C1–C3, D1–D2, E1–E2, F1–F4, G1–G3, H1–H3, J, K1–K3, M1–M3 og R skal fremgå af noterne.', status: nkd.length ? 'advarsel' : (arealInfo.length ? 'info' : 'ok'), detaljer: [...nkd, ...arealInfo] });
 
   // 12. Stamdata og underskrifter
   const sd = [];
