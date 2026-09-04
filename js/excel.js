@@ -111,6 +111,13 @@ export function byggeWorkbook(engine, rapport, kontrol, ExcelJSLib) {
           ark.add(b.personer.map((x, i) => ({ c: 2 + i * 2, v: x.titel, muted: true })));
           ark.add([]);
           break;
+        case 'vurdering': ark.add([{ c: 2, v: { styrke: 'Robust', opmaerksomhed: 'Robust med opmærksomhedspunkter', advarsel: 'Advarselstegn' }[b.niveau] + ': ' + b.tekst, bold: true, wrap: true }], { height: 45 }); ark.merges.push([ark.rows.length, 2, ark.rows.length, 6]); ark.add([]); break;
+        case 'liste':
+          ark.add([{ c: 2, v: b.titel, bold: true, border: 'bottom' }]);
+          if (!b.punkter.length) ark.add([{ c: 2, v: 'Ingen.', muted: true }]);
+          b.punkter.forEach(x => { const r = ark.add([{ c: 1, v: { styrke: '+', opmaerksomhed: '!', advarsel: '!!' }[b.kategori], bold: true }, { c: 2, v: x.titel + ': ' + x.tekst, wrap: true }], { height: Math.max(15, Math.ceil((x.titel.length + x.tekst.length) / 95) * 15) }); ark.merges.push([r, 2, r, 6]); });
+          ark.add([]);
+          break;
         case 'table': {
           ark.add(b.columns.map((col, i) => ({ c: i + 1, v: col.label, bold: true, border: 'bottom', align: i < 2 ? 'left' : col.center ? 'center' : 'right', wrap: true })), { height: 30 });
           b.rows.forEach(r => {

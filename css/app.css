@@ -103,6 +103,18 @@ table.rpt .tabelnote { font-size: .78rem; color: var(--muted); }
 .vis-formler .formel { display: block; }
 .vis-formler table.rpt td.num { vertical-align: top; }
 
+/* Vurdering */
+.vurd-samlet { border-radius: 6px; padding: 12px 16px; margin: 10px 0 16px; border-left: 6px solid var(--info); background: #f3f4f6; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.vurd-samlet .vurd-niveau { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; }
+.vurd-samlet .vurd-antal { color: var(--muted); font-size: .85rem; margin-top: 6px; }
+.vurd-samlet.vurd-styrke { border-left-color: var(--ok); background: #e3f4ea; } .vurd-samlet.vurd-opmaerksomhed { border-left-color: var(--advarsel); background: #fff1d6; } .vurd-samlet.vurd-advarsel { border-left-color: var(--fejl); background: #fbe4e2; }
+h3.vurd-h { margin: 16px 0 6px; padding-bottom: 3px; border-bottom: 2px solid; font-size: 1rem; }
+h3.vurd-styrke { color: var(--ok); border-color: var(--ok); } h3.vurd-opmaerksomhed { color: var(--advarsel); border-color: var(--advarsel); } h3.vurd-advarsel { color: var(--fejl); border-color: var(--fejl); }
+.vurd { border-left: 4px solid; padding: 5px 10px; margin: 6px 0; font-size: .88rem; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.vurd.vurd-styrke { border-color: var(--ok); background: #f1faf4; } .vurd.vurd-opmaerksomhed { border-color: var(--advarsel); background: #fff8ea; } .vurd.vurd-advarsel { border-color: var(--fejl); background: #fdf0ef; }
+.vurd .vurd-titel { font-weight: 600; } .vurd .vurd-tekst { color: #333; line-height: 1.4; }
+.vurd-ingen { color: var(--muted); font-size: .88rem; margin: 4px 0 10px; }
+
 /* Sporing */
 #spor { position: fixed; right: 0; top: 48px; bottom: 0; width: 420px; max-width: 95vw; background: #fff; border-left: 1px solid var(--line); box-shadow: -2px 0 8px rgba(0,0,0,.08); padding: 14px 16px; overflow: auto; z-index: 30; transform: translateX(100%); transition: transform .15s; }
 #spor.open { transform: none; }

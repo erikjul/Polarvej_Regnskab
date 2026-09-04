@@ -6,6 +6,7 @@ Programmet er en ren webapplikation (HTML/JavaScript) uden server. Det kan køre
 
 ## Funktioner
 
+* **Vurdering af robusthed**: sidste side i årsrapporten sammenfatter automatisk styrker, opmærksomhedspunkter og advarselstegn (belåning, likviditet, dækning af afdrag, låneydelsernes andel, vedligeholdelse, andelsværdiens buffer, restancer m.m.) med en samlet konklusion. Grænseværdier i [docs/vurdering.md](docs/vurdering.md).
 * **Boligafgift pr. andel**: måned-for-måned-oversigt på tværs af alle år med restancer og forudbetalinger; indbetalinger genkendes på mønstre pr. andel.
 * **Arkiv**: de aflagte årsrapporter, DLR's låneafregning, bankens kontoudtog og dokumentationen ligger i mappen `arkiv/` og vises i fanen Arkiv.
 * **Bankimport**: Bankens CSV-eksport (fx Middelfart Sparekasse: `dato;tekst;beløb;valuta;modpart`) læses direkte ind i kasserapporten. Posteringerne konteres automatisk efter redigerbare konteringsregler (tekst indeholder, retning, beløb) og tidligere posteringer; dubletter og posteringer uden for regnskabsåret springes over. Linjer uden regel markeres, så kontoen vælges før import.
@@ -54,6 +55,7 @@ js/model.js           – datamodel, regnskabslinjer, standardkontoplan, standar
 js/engine.js          – regnskabsmotor (alle beregninger)
 js/report.js          – årsrapportens sider og noter
 js/controls.js        – kontrolsiden (afstemninger)
+js/vurdering.js       – vurdering af regnskabets robusthed (sidste side)
 js/excel.js           – Excel-eksport med formler (ExcelJS)
 js/ui.js, js/app.js   – brugerflade
 js/eksempel.js        – eksempeldata (Polarvej I, 2025)

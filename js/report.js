@@ -3,6 +3,7 @@
 import { NOTER_RESULTAT, VURDERINGSPRINCIPPER, FORDELINGSTAL } from './model.js';
 import { fmtKr, fmtInt, fmtDatoLang, fmtDato } from './format.js';
 import { sidsteTermin, restloebetid } from './betalingsplan.js';
+import { vurdering } from './vurdering.js';
 
 const N = (id) => ({ node: id });
 const T = (text) => ({ text });
@@ -16,7 +17,7 @@ export function skabelon(tekst, ctx) {
   });
 }
 
-export function byggeRapport(engine) {
+export function byggeRapport(engine, opts = {}) {
   const S = engine.state;
   const y = S.aar;
   const F = S.forening || {};
@@ -381,5 +382,18 @@ export function byggeRapport(engine) {
   nkBlocks.push({ type: 'table', columns: yrCols, rows: nkR, note: 'Forklaring på udregning: Årets afdrag / m² på balancedagen for andelsboliger (B1 + B2)' });
   pages.push({ id: 'noegle', titel: 'Nøgleoplysninger', header, blocks: nkBlocks });
 
+  // ---------- Vurdering af regnskabets robusthed ----------
+  if (opts.vurdering !== false) {
+    const v = vurdering(engine, opts);
+    const kat = (k) => v.punkter.filter(x => x.kategori === k);
+    pages.push({ id: 'vurdering', titel: 'Vurdering af regnskabets robusthed', header, blocks: [
+      { type: 'title', text: 'Vurdering af regnskabets robusthed' },
+      { type: 'para', text: `Denne side er en automatisk sammenfatning af regnskabets nøgletal til brug for andelshaverne. Den bygger på tallene i årsrapporten og de grænseværdier, der er beskrevet i programmets dokumentation, og erstatter ikke bestyrelsens eller en revisors vurdering.` },
+      { type: 'vurdering', niveau: v.niveau, tekst: v.tekst, antal: v.antal },
+      { type: 'liste', kategori: 'styrke', titel: 'Styrker', punkter: kat('styrke') },
+      { type: 'liste', kategori: 'opmaerksomhed', titel: 'Punkter andelshaverne bør være opmærksomme på', punkter: kat('opmaerksomhed') },
+      { type: 'liste', kategori: 'advarsel', titel: 'Advarselstegn om regnskabets robusthed', punkter: kat('advarsel') },
+    ]});
+  }
   return { pages, noter: balNoter, NN };
 }

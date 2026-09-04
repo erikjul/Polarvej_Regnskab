@@ -101,8 +101,8 @@ export class App {
   recompute() {
     try {
       this.engine = engineFor(this.samling, this.state.aar);
-      this.rapport = byggeRapport(this.engine);
       this.kontrol = kontroller(this.engine);
+      this.rapport = byggeRapport(this.engine, { kontrol: this.kontrol, samling: this.samling });
       this.fejl = null;
     } catch (e) {
       console.error(e);
@@ -717,7 +717,7 @@ export class App {
       <li><b>Primo &amp; lån</b>: sidste års balancetal, ejendommens værdi, andele, resultatdisponering, lån, anden gæld og reguleringer. For lån kan kreditforeningens betalingsplan indsættes (kopieret fra låneafregningen eller årsopgørelsen); så beregnes renter, afdrag, kortfristet del og restgæld automatisk for hvert år, og de bogførte ydelser afstemmes mod planen.</li>
       <li><b>Budget &amp; sidste år</b>: budget for næste år (vises i resultatopgørelsen) og evt. sidste års tal.</li>
       <li><b>Nøgleoplysninger</b>: arealer, fordelingstal, hæftelse, tilskud, december-indtægt og tidligere års nøgletal.</li>
-      <li><b>Regnskab</b>: den færdige årsrapport. Slå "Vis formler" til for at se beregningerne, eller klik på et tal for at spore det tilbage til posteringer og indtastninger.</li>
+      <li><b>Regnskab</b>: den færdige årsrapport, afsluttet med en automatisk vurdering af regnskabets robusthed (styrker, opmærksomhedspunkter, advarselstegn). Slå "Vis formler" til for at se beregningerne, eller klik på et tal for at spore det tilbage til posteringer og indtastninger.</li>
       <li><b>Kontrolside</b>: alle afstemninger. Regnskabet er klar, når alle kontroller er grønne (advarsler bør gennemgås).</li>
       <li><b>Excel</b>: eksporterer hele regnskabet som projektmappe med rigtige formler på tværs af arkene (Grunddata og Kasserapport er kilderne). <b>Udskriv / PDF</b>: åbner browserens udskrift, hvor du vælger "Gem som PDF".</li>
     </ol>
@@ -764,6 +764,8 @@ export class App {
           case 'title': return `<h2 class="titel">${b.note ? `<span style="color:var(--muted);font-size:.9rem;margin-right:8px">Note ${b.note}</span>` : ''}${esc(b.text)}</h2>`;
           case 'para': return para(b.text);
           case 'sign': return `${b.titel ? `<div class="sign-titel">${esc(b.titel)}</div>` : ''}<div class="sign">${b.personer.map(x => `<div class="person"><div class="navn">${esc(x.navn)}</div><div class="titel">${esc(x.titel)}</div></div>`).join('')}</div>`;
+          case 'vurdering': return `<div class="vurd-samlet vurd-${b.niveau}"><div class="vurd-niveau">${{ styrke: 'Robust', opmaerksomhed: 'Robust med opmærksomhedspunkter', advarsel: 'Advarselstegn' }[b.niveau]}</div><div>${esc(b.tekst)}</div><div class="vurd-antal">${b.antal.styrke} styrker · ${b.antal.opmaerksomhed} opmærksomhedspunkter · ${b.antal.advarsel} advarselstegn</div></div>`;
+          case 'liste': return `<h3 class="vurd-h vurd-${b.kategori}">${esc(b.titel)}</h3>${b.punkter.length ? b.punkter.map(x => `<div class="vurd vurd-${b.kategori}"><div class="vurd-titel">${esc(x.titel)}</div><div class="vurd-tekst">${esc(x.tekst)}</div></div>`).join('') : '<p class="vurd-ingen">Ingen.</p>'}`;
           case 'table': {
             const cols = b.columns;
             const head = `<tr>${cols.map((c, i) => `<th class="${i < 2 ? 'txt' : c.center ? 'center' : ''}">${esc(c.label)}</th>`).join('')}</tr>`;

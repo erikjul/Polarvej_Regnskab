@@ -33,7 +33,8 @@
         { "titel": "Fejl i årsrapporterne 2021–2025 og rettelser", "fil": "../docs/afvigelser.md" },
         { "titel": "Programmets tal mod årsrapporterne (tabel)", "fil": "../docs/afvigelser-tabel.md" },
         { "titel": "Regelgrundlag 2026", "fil": "../docs/regelgrundlag.md" },
-        { "titel": "Kontrolsidens afstemninger", "fil": "../docs/kontroller.md" }
+        { "titel": "Kontrolsidens afstemninger", "fil": "../docs/kontroller.md" },
+        { "titel": "Vurdering af robusthed – punkter og grænseværdier", "fil": "../docs/vurdering.md" }
       ]
     }
   ]
