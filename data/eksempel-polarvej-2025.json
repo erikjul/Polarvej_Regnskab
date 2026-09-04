@@ -1,0 +1,754 @@
+{
+  "version": 1,
+  "aar": 2025,
+  "forening": {
+    "navn": "Andelsboligforeningen Polarvej I",
+    "kortnavn": "Polarvejens Andelsboligforening I",
+    "adresse": "Polarvej 23",
+    "postnrBy": "7100 Vejle",
+    "by": "Vejle",
+    "cvr": "29 05 06 43",
+    "stiftelsesaar": 1983,
+    "opfoerelsesaar": 1983
+  },
+  "ledelse": {
+    "bestyrelse": [
+      {
+        "navn": "Heidi Jensen",
+        "titel": "Formand"
+      },
+      {
+        "navn": "Erik Jul Nielsen",
+        "titel": "Kasserer"
+      },
+      {
+        "navn": "Tina Qualmann",
+        "titel": "Bestyrelsesmedlem"
+      }
+    ],
+    "dirigent": "Tina Qualmann",
+    "bilagskontrolloerer": [
+      {
+        "navn": "Amal Mehdi"
+      },
+      {
+        "navn": "Jette Bruun"
+      }
+    ],
+    "datoPaategning": "2026-03-10",
+    "datoBilagskontrol": "2026-03-16",
+    "datoGeneralforsamling": "2026-03-17"
+  },
+  "tekster": {
+    "paategning": "Bestyrelsen har dags dato aflagt årsrapporten for {{aar}} for {{forening.navn}}.\n\nÅrsrapporten er aflagt i overensstemmelse med årsregnskabslovens bestemmelser for regnskabsklasse A, andelsboligforeningslovens § 5, stk. 11, og § 6, stk. 2 og 8, samt foreningens vedtægter.\n\nVi anser den valgte regnskabspraksis for hensigtsmæssig, og efter vor opfattelse giver årsregnskabet et retvisende billede af andelsboligforeningens aktiver og passiver, finansielle stilling samt resultat.\n\nIngen af andelsboligforeningens aktiver er pantsat eller behæftet med ejendomsforbehold ud over de anførte, og der påhviler ikke andelsboligforeningen eventualforpligtelser, som ikke fremgår af årsregnskabet.\n\nDer er efter regnskabsårets afslutning ikke indtruffet begivenheder, der væsentligt vil kunne påvirke vurderingen af andelsboligforeningens finansielle stilling.\n\nÅrsrapporten indstilles til generalforsamlingens godkendelse.",
+    "bilagskontrol": "Undertegnede bilagskontrollører har foretaget bilagskontrol i overensstemmelse med vedtægternes § 31. Bilagskontrollen har ikke givet anledning til bemærkninger.",
+    "praksis": "Årsrapporten for {{forening.navn}} er aflagt i overensstemmelse med årsregnskabslovens bestemmelser for regnskabsklasse A, andelsboligforeningslovens § 5, stk. 11, og § 6, stk. 2 og 8, samt bekendtgørelse nr. 336 af 20. marts 2025 om oplysningspligt ved salg af andelsboliger m.v. samt om bestyrelsens pligt til at fremlægge skema over centrale nøgleoplysninger.\n\nFormålet med årsrapporten er at give et retvisende billede af foreningens aktiviteter for regnskabsperioden og at vise, om den budgetterede og hos medlemmerne opkrævede boligafgift er tilstrækkelig.\n\nEndvidere er formålet at give de krævede nøgleoplysninger, at give oplysning om andelenes værdi og at give oplysninger om tilbagebetalingspligt vedrørende modtaget støtte.\n\n## Resultatopgørelsen\n\n### Opstillingsform\nResultatopgørelsen er opstillet, så denne bedst viser andelsboligforeningens aktivitet i det forløbne regnskabsår.\n\n### Indtægter\nBoligafgift og lejeindtægt vedrørende regnskabsperioden indgår i resultatopgørelsen.\n\n### Omkostninger\nOmkostninger vedrørende regnskabsperioden indgår i resultatopgørelsen.\n\n### Finansielle poster\nFinansielle indtægter og omkostninger indregnes i resultatopgørelsen med de beløb, der vedrører regnskabsperioden. Finansielle omkostninger består af regnskabsperiodens renteomkostninger og bidrag vedrørende prioritetsgæld.\n\n## Balancen\n\n### Materielle anlægsaktiver\nAndelsboligforeningens ejendom (grund og bygning) indregnes på anskaffelsestidspunktet og værdiansættes til kostpris.\n\nVed efterfølgende indregninger værdiansættes foreningens ejendom til dagsværdien på balancedagen. Opskrivninger i forhold til seneste indregning føres direkte på foreningens egenkapital på en særskilt opskrivningshenlæggelse.\n\nVurderes det, at ejendommens værdi på balancedagen er lavere end dagsværdi, nedskrives ejendommen til denne lavere værdi. Nedskrivningen indregnes i resultatopgørelsen.\n\nDer afskrives ikke på andelsboligforeningens ejendom.\n\n### Tilgodehavender\nTilgodehavender værdiansættes til nominel værdi.\n\n### Likvide beholdninger\nLikvide beholdninger omfatter indeståender i pengeinstitut samt kontantbeholdning.\n\n### Egenkapital\nUnder andelsboligforeningens egenkapital indregnes medlemmernes andelsindskud.\n\n\"Overført resultat m.v.\" indeholder akkumuleret resultat, tillægsværdi ved nyudstedelse af andele samt resterende overførsel af årets resultat.\n\nUnder \"andre reserver\" indregnes beløb reserveret til fremtidig vedligeholdelse samt reservation til imødegåelse af værdiforringelse af andelsboligforeningens ejendom, kursreguleringer m.v. i overensstemmelse med generalforsamlingsbeslutning. I henhold til vedtægterne indgår de reserverede beløb ikke i beregningen af andelsværdien.\n\n### Prioritetsgæld\nPrioritetsgæld indregnes ved låneoptagelsen til kostpris, svarende til det modtagne provenu efter fradrag af afholdte transaktionsomkostninger. I efterfølgende perioder værdiansættes prioritetsgælden til amortiseret kostpris svarende til den kapitaliserede værdi ved anvendelse af den effektive rente. Forskellen mellem provenuet og den nominelle værdi indregnes dermed i resultatopgørelsen over lånets løbetid.\n\nPrioritetsgælden er således værdiansat til amortiseret kostpris, der for kontantlån svarer til lånets restgæld. For obligationslån svarer amortiseret kostpris til en restgæld, der opgøres som det oprindeligt modtagne provenu ved låneoptagelsen reduceret med betalte afdrag og korrigeret for en over afdragstiden foretagen afskrivning af lånets kurstab og låneomkostninger på optagelsestidspunktet.\n\n### Øvrige gældsforpligtelser\nØvrige gældsforpligtelser værdiansættes til nominel værdi.\n\n## Øvrige noter\n\n### Nøgleoplysninger\nDe i noten \"Nøgleoplysninger\" anførte nøgleoplysninger har til formål at leve op til de krav, der følger af § 3 i bekendtgørelse nr. 336 af 20. marts 2025 fra Social- og Boligministeriet om oplysningspligt ved salg af andelsboliger m.v. samt om bestyrelsens pligt til at fremlægge skema over centrale nøgleoplysninger.\n\n### Andelsværdi\nBestyrelsens forslag til andelsværdi fremgår af noten \"Beregning af andelsværdi\". Andelsværdien opgøres i henhold til andelsboligforeningsloven samt vedtægternes § 6 og § 14.\n\nVedtægterne bestemmer desuden i § 14, at selvom der lovligt kan vedtages en højere andelsværdi, er det den på generalforsamlingen vedtagne andelsværdi, der er gældende.",
+    "pantsaetning": "Til sikkerhed for gæld til realkreditinstitut, restgæld {{laan.restgaeld}} kr., er der givet pant i grund og bygninger, hvis regnskabsmæssige værdi pr. 31. december {{aar}} udgør {{ejendom.bogfoert}} kr.",
+    "eventualforpligtelser": "Andelsboligforeningen har modtaget ydelsesstøtte til lån i realkreditinstitut fra staten og kommunen til etablering af andelsboligforeningen. Ydelsesstøtten kan kræves tilbagebetalt ved opløsning af foreningen efter almenboliglovens § 160 k. Den samlede modtagne ydelsesstøtte udgør pr. seneste opgørelse 2.167 t.kr.",
+    "andelsvaerdiIntro": "Bestyrelsen foreslår følgende værdiansættelse i henhold til andelsboligforeningslovens § 5, stk. 2, litra {{av.litra}} ({{av.princip}}), samt vedtægternes § 6, stk. 1:",
+    "noegleIntro": "Nøgletallene viser centrale dele af foreningens økonomi og er primært udregnet på baggrund af arealer. I {{forening.navn}} anvendes andelsindskuddene som fordelingsnøgle, og de arealbaserede nøgletal for andelsværdi og boligafgift svarer derfor ikke til de, der konkret gælder for den enkelte andelshaver.\n\nI bilag 1 til bekendtgørelse nr. 336 af 20. marts 2025 er opregnet en række nøgleoplysninger om foreningens økonomi, der skal optages som noter til årsregnskabet (§ 3). Disse nøgleoplysninger følger her:"
+  },
+  "likvidkonti": [
+    {
+      "id": "bank",
+      "navn": "Middelfart Sparekasse, forretningskonto",
+      "primo": 208611.97,
+      "kontoudtog": 212846.55
+    },
+    {
+      "id": "depo",
+      "navn": "Middelfart Sparekasse, deponeringskonto",
+      "primo": 20000,
+      "kontoudtog": 20000
+    },
+    {
+      "id": "henl",
+      "navn": "Middelfart Sparekasse, henlæggelseskonto",
+      "primo": 0,
+      "kontoudtog": 0
+    },
+    {
+      "id": "kasse",
+      "navn": "Kontanter",
+      "primo": 174,
+      "kontoudtog": 174
+    }
+  ],
+  "kontoplan": [
+    {
+      "nr": 10,
+      "navn": "Boligafgift / husleje",
+      "linje": "n1.boligafgift"
+    },
+    {
+      "nr": 20,
+      "navn": "Forsikringsbonus",
+      "linje": "n2.bonus"
+    },
+    {
+      "nr": 30,
+      "navn": "Gebyr ved andelshandel (indtægt)",
+      "linje": "n2.andelshandel"
+    },
+    {
+      "nr": 40,
+      "navn": "Uforudsete indtægter",
+      "linje": "n2.uforudset"
+    },
+    {
+      "nr": 45,
+      "navn": "Renteindtægter, bank",
+      "linje": "n2.rente"
+    },
+    {
+      "nr": 50,
+      "navn": "Diverse omkostninger",
+      "linje": "n5.diverse"
+    },
+    {
+      "nr": 80,
+      "navn": "Depositum fra andelshaver der udlejer",
+      "linje": "ag:depositum"
+    },
+    {
+      "nr": 90,
+      "navn": "Ejendomsskat",
+      "linje": "n3.ejendomsskat"
+    },
+    {
+      "nr": 95,
+      "navn": "Renovation og rottebekæmpelse",
+      "linje": "n3.renovation"
+    },
+    {
+      "nr": 100,
+      "navn": "Forsikring",
+      "linje": "n3.forsikring"
+    },
+    {
+      "nr": 105,
+      "navn": "Vedligeholdelse, løbende",
+      "linje": "n4.loebende"
+    },
+    {
+      "nr": 106,
+      "navn": "Vedligeholdelse, genopretning/renovering",
+      "linje": "n4.genopretning"
+    },
+    {
+      "nr": 110,
+      "navn": "Grundejerforening",
+      "linje": "n6.grundejer"
+    },
+    {
+      "nr": 120,
+      "navn": "DLR Kredit, låneydelse (renter + afdrag)",
+      "linje": "laan:dlr"
+    },
+    {
+      "nr": 130,
+      "navn": "ABF kontingent",
+      "linje": "n6.abf"
+    },
+    {
+      "nr": 140,
+      "navn": "Bestyrelseshonorar",
+      "linje": "n6.honorar"
+    },
+    {
+      "nr": 150,
+      "navn": "Generalforsamling og møder",
+      "linje": "n5.generalforsamling"
+    },
+    {
+      "nr": 160,
+      "navn": "Revisor",
+      "linje": "n5.revisor"
+    },
+    {
+      "nr": 170,
+      "navn": "Gebyrer, bank",
+      "linje": "n5.gebyrbank"
+    },
+    {
+      "nr": 180,
+      "navn": "Gebyrer, realkredit",
+      "linje": "n5.gebyrkredit"
+    },
+    {
+      "nr": 190,
+      "navn": "Omkostninger ved andelshandel",
+      "linje": "n5.andelshandel"
+    },
+    {
+      "nr": 300,
+      "navn": "Overførsel mellem konti",
+      "linje": "bal.overfoersel"
+    },
+    {
+      "nr": 310,
+      "navn": "Andelsindskud, nye andele",
+      "linje": "bal.indskud"
+    },
+    {
+      "nr": 320,
+      "navn": "Forudmodtaget boligafgift",
+      "linje": "bal.forud"
+    }
+  ],
+  "posteringer": [
+    {
+      "id": "p01_25",
+      "dato": "2025-01-01",
+      "bilag": "01.25",
+      "tekst": "Husleje januar",
+      "konto": 10,
+      "likvid": "bank",
+      "ind": 16000,
+      "ud": 0
+    },
+    {
+      "id": "p02_25",
+      "dato": "2025-01-01",
+      "bilag": "02.25",
+      "tekst": "Alm. Brand Forsikring, tilbagebetaling",
+      "konto": 40,
+      "likvid": "bank",
+      "ind": 2184.28,
+      "ud": 0
+    },
+    {
+      "id": "p03_25",
+      "dato": "2025-01-02",
+      "bilag": "03.25",
+      "tekst": "ALKA Husforsikring",
+      "konto": 100,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 15552.78
+    },
+    {
+      "id": "p04_25",
+      "dato": "2025-01-06",
+      "bilag": "04.25",
+      "tekst": "Vejle Kommune, renovation og rottebekæmpelse",
+      "konto": 90,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 1545.12
+    },
+    {
+      "id": "p05_25",
+      "dato": "2025-01-06",
+      "bilag": "05.25",
+      "tekst": "Vejle Kommune, ejendomsskat",
+      "konto": 90,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 34034
+    },
+    {
+      "id": "p06_25",
+      "dato": "2025-02-01",
+      "bilag": "06.25",
+      "tekst": "Husleje februar",
+      "konto": 10,
+      "likvid": "bank",
+      "ind": 16000,
+      "ud": 0
+    },
+    {
+      "id": "p07_25",
+      "dato": "2025-02-06",
+      "bilag": "07.25",
+      "tekst": "byggesagkyndig.nu",
+      "konto": 50,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 4683.84
+    },
+    {
+      "id": "p08_25",
+      "dato": "2025-02-06",
+      "bilag": "08.25",
+      "tekst": "Gældsstyrelsen",
+      "konto": 50,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 23952.86
+    },
+    {
+      "id": "p09_25",
+      "dato": "2025-02-11",
+      "bilag": "09.25",
+      "tekst": "Gældsstyrelsen, tilbagebetaling",
+      "konto": 40,
+      "likvid": "bank",
+      "ind": 23698.09,
+      "ud": 0
+    },
+    {
+      "id": "p10_25",
+      "dato": "2025-02-28",
+      "bilag": "10.25",
+      "tekst": "Gebyr MidSpar",
+      "konto": 170,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 10
+    },
+    {
+      "id": "p11_25",
+      "dato": "2025-03-01",
+      "bilag": "11.25",
+      "tekst": "Husleje marts",
+      "konto": 10,
+      "likvid": "bank",
+      "ind": 16000,
+      "ud": 0
+    },
+    {
+      "id": "p12_25",
+      "dato": "2025-03-28",
+      "bilag": "12.25",
+      "tekst": "Gebyr MidSpar",
+      "konto": 170,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 500
+    },
+    {
+      "id": "p13_25",
+      "dato": "2025-03-31",
+      "bilag": "13.25",
+      "tekst": "DLR Kredit, låneydelse",
+      "konto": 120,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 15178.54
+    },
+    {
+      "id": "p14_25",
+      "dato": "2025-04-01",
+      "bilag": "14.25",
+      "tekst": "Husleje april",
+      "konto": 10,
+      "likvid": "bank",
+      "ind": 16000,
+      "ud": 0
+    },
+    {
+      "id": "p15_25",
+      "dato": "2025-04-11",
+      "bilag": "15.25",
+      "tekst": "Bestyrelseshonorar Erik Jul Nielsen",
+      "konto": 140,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 1000
+    },
+    {
+      "id": "p16_25",
+      "dato": "2025-04-11",
+      "bilag": "16.25",
+      "tekst": "Bestyrelseshonorar Heidi Jensen",
+      "konto": 140,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 1500
+    },
+    {
+      "id": "p17_25",
+      "dato": "2025-04-11",
+      "bilag": "17.25",
+      "tekst": "Bestyrelseshonorar Tina Qualmann",
+      "konto": 140,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 1000
+    },
+    {
+      "id": "p18_25",
+      "dato": "2025-04-11",
+      "bilag": "18.25",
+      "tekst": "Din Madpartner, generalforsamling",
+      "konto": 150,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 3000
+    },
+    {
+      "id": "p19_25",
+      "dato": "2025-04-30",
+      "bilag": "19.25",
+      "tekst": "Gebyr MidSpar",
+      "konto": 170,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 40
+    },
+    {
+      "id": "p20_25",
+      "dato": "2025-05-01",
+      "bilag": "20.25",
+      "tekst": "Husleje maj",
+      "konto": 10,
+      "likvid": "bank",
+      "ind": 16000,
+      "ud": 0
+    },
+    {
+      "id": "p21_25",
+      "dato": "2025-05-21",
+      "bilag": "21.25",
+      "tekst": "Skattekontoen, ejendomsskat",
+      "konto": 90,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 23505.38
+    },
+    {
+      "id": "p22_25",
+      "dato": "2025-06-01",
+      "bilag": "22.25",
+      "tekst": "Husleje juni",
+      "konto": 10,
+      "likvid": "bank",
+      "ind": 16000,
+      "ud": 0
+    },
+    {
+      "id": "p23_25",
+      "dato": "2025-06-10",
+      "bilag": "23.25",
+      "tekst": "Totalalgeservice",
+      "konto": 50,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 5400
+    },
+    {
+      "id": "p24_25",
+      "dato": "2025-06-10",
+      "bilag": "24.25",
+      "tekst": "Dansk Tagbearbejdning",
+      "konto": 50,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 4850
+    },
+    {
+      "id": "p25_25",
+      "dato": "2025-06-10",
+      "bilag": "25.25",
+      "tekst": "Kontingent grundejerforeningen",
+      "konto": 110,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 4000
+    },
+    {
+      "id": "p26_25",
+      "dato": "2025-06-30",
+      "bilag": "26.25",
+      "tekst": "DLR Kredit, låneydelse",
+      "konto": 120,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 15152.86
+    },
+    {
+      "id": "p27_25",
+      "dato": "2025-06-30",
+      "bilag": "27.25",
+      "tekst": "Gebyr MidSpar",
+      "konto": 170,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 520
+    },
+    {
+      "id": "p28_25",
+      "dato": "2025-07-01",
+      "bilag": "28.25",
+      "tekst": "Husleje juli",
+      "konto": 10,
+      "likvid": "bank",
+      "ind": 16000,
+      "ud": 0
+    },
+    {
+      "id": "p29_25",
+      "dato": "2025-08-01",
+      "bilag": "29.25",
+      "tekst": "Husleje august",
+      "konto": 10,
+      "likvid": "bank",
+      "ind": 16000,
+      "ud": 0
+    },
+    {
+      "id": "p30_25",
+      "dato": "2025-09-01",
+      "bilag": "30.25",
+      "tekst": "Husleje september",
+      "konto": 10,
+      "likvid": "bank",
+      "ind": 16000,
+      "ud": 0
+    },
+    {
+      "id": "p31_25",
+      "dato": "2025-09-24",
+      "bilag": "31.25",
+      "tekst": "Bonus Tryghedsgruppen",
+      "konto": 20,
+      "likvid": "bank",
+      "ind": 894.71,
+      "ud": 0
+    },
+    {
+      "id": "p32_25",
+      "dato": "2025-09-30",
+      "bilag": "32.25",
+      "tekst": "DLR Kredit, låneydelse",
+      "konto": 120,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 15127.08
+    },
+    {
+      "id": "p33_25",
+      "dato": "2025-09-30",
+      "bilag": "33.25",
+      "tekst": "Gebyr MidSpar",
+      "konto": 170,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 500
+    },
+    {
+      "id": "p34_25",
+      "dato": "2025-10-01",
+      "bilag": "34.25",
+      "tekst": "Husleje oktober",
+      "konto": 10,
+      "likvid": "bank",
+      "ind": 16000,
+      "ud": 0
+    },
+    {
+      "id": "p35_25",
+      "dato": "2025-10-01",
+      "bilag": "35.25",
+      "tekst": "ABF foreningskontingent",
+      "konto": 130,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 2016
+    },
+    {
+      "id": "p36_25",
+      "dato": "2025-11-01",
+      "bilag": "36.25",
+      "tekst": "Husleje november",
+      "konto": 10,
+      "likvid": "bank",
+      "ind": 16000,
+      "ud": 0
+    },
+    {
+      "id": "p37_25",
+      "dato": "2025-11-26",
+      "bilag": "37.25",
+      "tekst": "Skattekontoen",
+      "konto": 90,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 273.84
+    },
+    {
+      "id": "p38_25",
+      "dato": "2025-11-26",
+      "bilag": "38.25",
+      "tekst": "Skattekontoen, ejendomsskat",
+      "konto": 90,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 23499
+    },
+    {
+      "id": "p39_25",
+      "dato": "2025-12-01",
+      "bilag": "39.25",
+      "tekst": "Husleje december",
+      "konto": 10,
+      "likvid": "bank",
+      "ind": 16000,
+      "ud": 0
+    },
+    {
+      "id": "p40_25",
+      "dato": "2025-12-30",
+      "bilag": "40.25",
+      "tekst": "DLR Kredit, låneydelse",
+      "konto": 120,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 15101.2
+    },
+    {
+      "id": "p41_25",
+      "dato": "2025-12-30",
+      "bilag": "41.25",
+      "tekst": "Gebyr MidSpar",
+      "konto": 170,
+      "likvid": "bank",
+      "ind": 0,
+      "ud": 500
+    }
+  ],
+  "reguleringer": [],
+  "ejendom": {
+    "kostprisPrimo": 3000000,
+    "opskrivningPrimo": 7300000,
+    "opskrivningAaret": 0,
+    "vurderingsprincip": "offentlig",
+    "vurdering": 10300000,
+    "vurderingTekst": "pr. 1. oktober 2017",
+    "fastholdt": false
+  },
+  "andele": {
+    "antal": 8,
+    "indskudPrAndel": 85800,
+    "fordelingstalType": "indskud",
+    "fordelingstalAndet": 0,
+    "senestVedtagetPrKrone": 14.25,
+    "senestVedtagetAar": "2017",
+    "andreReguleringer": 0
+  },
+  "egenkapitalPrimo": {
+    "overfoertResultat": 1913651.63,
+    "genopretning": 0,
+    "vedligehold": 0,
+    "andreReserver": 0
+  },
+  "disponering": {
+    "tilVedligehold": 0,
+    "tilAndreReserver": 0,
+    "tilGenopretning": 0,
+    "anvendtVedligehold": 0,
+    "anvendtAndreReserver": 0,
+    "anvendtGenopretning": 0
+  },
+  "laan": [
+    {
+      "id": "dlr",
+      "navn": "DLR Kredit, kontantlån",
+      "kreditor": "DLR Kredit",
+      "hovedstol": 950000,
+      "optagetTekst": "lån hjemtaget juli 2017",
+      "restgaeldPrimo": 627230.91,
+      "kortfristetPrimo": 45918.1,
+      "renter": 15733.35,
+      "afdragIflg": "",
+      "restgaeldUltimoIflg": "",
+      "kortfristet": 46610.76,
+      "kursvaerdi": 846786.53,
+      "kursvaerdiTekst": "pr. 31. december 2018",
+      "beskrivelse": "Lånet er et kontantlån, som er forrentet med 1,5 % p.a. og har en restløbetid på 18,75 år."
+    }
+  ],
+  "andenGaeld": [
+    {
+      "id": "depositum",
+      "tekst": "Modtaget depositum fra andelshaver der udlejer",
+      "primo": 20000
+    }
+  ],
+  "tilgodehavender": [],
+  "forudmodtaget": {
+    "primo": 0
+  },
+  "budget": {
+    "n1.boligafgift": 192000,
+    "n2.uforudset": 1000,
+    "n3.ejendomsskat": -82000,
+    "n3.renovation": -2000,
+    "n3.forsikring": -16000,
+    "n5.gebyrbank": -2100,
+    "n5.generalforsamling": -3000,
+    "n5.diverse": -3400,
+    "n6.honorar": -3500,
+    "n6.abf": -2100,
+    "n6.grundejer": -4400,
+    "n7.renter": -16000
+  },
+  "sidsteAar": {
+    "vis": false,
+    "linjer": {}
+  },
+  "noegle": {
+    "arealer": {
+      "y2": {
+        "b1": 889,
+        "b2": 0,
+        "b3": 0,
+        "b4": 0,
+        "b5": 0
+      },
+      "y1": {
+        "b1": 889,
+        "b2": 0,
+        "b3": 0,
+        "b4": 0,
+        "b5": 0
+      },
+      "y0": {
+        "b1": 889,
+        "b2": 0,
+        "b3": 0,
+        "b4": 0,
+        "b5": 0
+      }
+    },
+    "antal": {
+      "b1": 8,
+      "b2": 0,
+      "b3": 0,
+      "b4": 0,
+      "b5": 0
+    },
+    "fordelingstalAndelsvaerdi": "indskud",
+    "fordelingstalBoligafgift": "indskud",
+    "c3Tekst": "",
+    "c3Svar": "",
+    "haefter": false,
+    "haefterTekst": "",
+    "e2Tekst": "",
+    "e2Svar": "",
+    "g1": true,
+    "g2": false,
+    "g3": false,
+    "boligafgiftDecember": 16000,
+    "erhvervslejeDecember": 0,
+    "boliglejeDecember": 0,
+    "resultatPrM2": {
+      "y2": 41,
+      "y1": 79
+    },
+    "vedligeholdLoebende": {
+      "y2": 0,
+      "y1": 0
+    },
+    "vedligeholdGenopretning": {
+      "y2": 0,
+      "y1": 0
+    },
+    "afdragPrM2": {
+      "y2": 69,
+      "y1": 69
+    },
+    "visP": false
+  }
+}

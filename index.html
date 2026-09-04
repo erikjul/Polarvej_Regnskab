@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polarvej Regnskab – årsregnskab for andelsboligforeningen</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%276%27 fill=%27%231d5c8f%27/%3E%3Ctext x=%2716%27 y=%2722%27 font-size=%2718%27 text-anchor=%27middle%27 fill=%27white%27 font-family=%27Arial%27%3E%E2%88%91%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<header class="topbar">
+  <h1>Polarvej Regnskab <span class="aar" id="topbar-aar"></span></h1>
+  <span class="status-badge" id="status-badge">–</span>
+  <button id="btn-ny" title="Start et nyt, tomt regnskab">Nyt</button>
+  <button id="btn-eksempel" title="Indlæs eksempeldata (Polarvej I, 2025)">Eksempel</button>
+  <button id="btn-aabn" title="Åbn et gemt regnskab (.json)">Åbn fil</button>
+  <button id="btn-gem" title="Gem regnskabet som fil (.json)">Gem fil</button>
+  <button id="btn-excel" class="primary" title="Download regnskabet som Excel-projektmappe med formler">Excel</button>
+  <button id="btn-pdf" class="primary" title="Udskriv eller gem som PDF">Udskriv / PDF</button>
+  <input type="file" id="fil-input" accept=".json,application/json" class="hidden">
+</header>
+<div class="layout">
+  <nav class="tabs" id="tabs">
+    <button data-tab="stamdata">1. Stamdata</button>
+    <button data-tab="kasserapport">2. Kasserapport</button>
+    <button data-tab="kontoplan">3. Kontoplan</button>
+    <button data-tab="balance">4. Primo &amp; lån</button>
+    <button data-tab="budget">5. Budget &amp; sidste år</button>
+    <button data-tab="noegle">6. Nøgleoplysninger</button>
+    <button data-tab="tekster">7. Tekster</button>
+    <div class="sep"></div>
+    <button data-tab="rapport">Regnskab</button>
+    <button data-tab="kontrol">Kontrolside</button>
+    <div class="sep"></div>
+    <button data-tab="hjaelp">Hjælp</button>
+  </nav>
+  <main>
+    <div class="tab" id="tab-stamdata"></div>
+    <div class="tab" id="tab-kasserapport"></div>
+    <div class="tab" id="tab-kontoplan"></div>
+    <div class="tab" id="tab-balance"></div>
+    <div class="tab" id="tab-budget"></div>
+    <div class="tab" id="tab-noegle"></div>
+    <div class="tab" id="tab-tekster"></div>
+    <div class="tab" id="tab-rapport">
+      <div class="rapport-vaerktoej panel no-print">
+        <label class="check"><input type="checkbox" id="chk-formler"> Vis formler under tallene (som i et regneark)</label>
+        <p class="hjaelp">Klik på et tal for at se, hvordan det er beregnet, og hvilke tal det bygger på. Blå tal er indtastede værdier.</p>
+      </div>
+      <div id="rapport"></div>
+    </div>
+    <div class="tab" id="tab-kontrol"></div>
+    <div class="tab" id="tab-hjaelp"></div>
+  </main>
+</div>
+<aside id="spor"><button class="knap lille luk" id="spor-luk">Luk</button><h3>Sporing af tal</h3><div id="spor-indhold"></div></aside>
+<div class="toast" id="toast"></div>
+<script src="lib/exceljs.min.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

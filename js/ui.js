@@ -1,0 +1,633 @@
+// ui.js – brugerflade: indtastningsfaner, rapportvisning med formelsporing og kontrolside.
+import { Engine } from './engine.js';
+import { byggeRapport } from './report.js';
+import { kontroller } from './controls.js';
+import { NOTER_RESULTAT, ALLE_LINJER, alleMappings, STANDARD_KONTOPLAN, STANDARD_TEKSTER, VURDERINGSPRINCIPPER, FORDELINGSTAL, tomState, normaliser, nyId } from './model.js';
+import { eksempelPolarvej2025 } from './eksempel.js';
+import { fmtKr, fmtInt, fmtBy, parseTal, num } from './format.js';
+import { gemLokalt, hentLokalt, gemSomFil, laesFil } from './storage.js';
+import { eksporterExcel } from './excel.js';
+
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const getPath = (o, p) => p.split('.').reduce((a, k) => (a == null ? undefined : a[k]), o);
+const setPath = (o, p, v) => { const ks = p.split('.'); let a = o; for (let i = 0; i < ks.length - 1; i++) { if (a[ks[i]] == null) a[ks[i]] = /^\d+$/.test(ks[i + 1]) ? [] : {}; a = a[ks[i]]; } a[ks[ks.length - 1]] = v; };
+
+export class App {
+  constructor() {
+    this.tab = 'stamdata';
+    this.visFormler = false;
+    this.state = null;
+  }
+
+  init() {
+    const gemt = hentLokalt();
+    this.setState(gemt ? normaliser(gemt) : eksempelPolarvej2025(), !gemt);
+    document.querySelectorAll('#tabs button').forEach(b => b.addEventListener('click', () => this.visTab(b.dataset.tab)));
+    document.getElementById('btn-ny').addEventListener('click', () => {
+      if (confirm('Start et nyt, tomt regnskab? Husk at gemme det nuværende som fil først.')) {
+        const aar = parseInt(prompt('Regnskabsår:', String(new Date().getFullYear() - 1)) || '', 10);
+        this.setState(tomState(Number.isFinite(aar) ? aar : new Date().getFullYear() - 1)); this.visTab('stamdata');
+      }
+    });
+    document.getElementById('btn-eksempel').addEventListener('click', () => {
+      if (confirm('Erstat det nuværende regnskab med eksempeldata (Polarvej I, 2025)?')) { this.setState(eksempelPolarvej2025()); this.visTab('stamdata'); }
+    });
+    document.getElementById('btn-gem').addEventListener('click', () => gemSomFil(this.state));
+    document.getElementById('btn-aabn').addEventListener('click', () => document.getElementById('fil-input').click());
+    document.getElementById('fil-input').addEventListener('change', async (e) => {
+      const f = e.target.files[0]; if (!f) return;
+      try { const s = await laesFil(f); this.setState(normaliser(s)); this.toast('Regnskabet er indlæst'); this.visTab('stamdata'); }
+      catch (err) { alert('Kunne ikke læse filen: ' + err.message); }
+      e.target.value = '';
+    });
+    document.getElementById('btn-excel').addEventListener('click', async () => {
+      try { await eksporterExcel(this.engine, this.rapport, this.kontrol); this.toast('Excel-fil genereret'); }
+      catch (err) { console.error(err); alert('Excel-eksport fejlede: ' + err.message); }
+    });
+    document.getElementById('btn-pdf').addEventListener('click', () => { this.visTab('rapport'); setTimeout(() => window.print(), 150); });
+    document.getElementById('chk-formler').addEventListener('change', (e) => { this.visFormler = e.target.checked; document.getElementById('rapport').classList.toggle('vis-formler', this.visFormler); });
+    document.getElementById('spor-luk').addEventListener('click', () => document.getElementById('spor').classList.remove('open'));
+    document.getElementById('rapport').addEventListener('click', (e) => { const v = e.target.closest('.val'); if (v) this.visSpor(v.dataset.node); });
+    document.getElementById('tab-kontrol').addEventListener('click', (e) => { const v = e.target.closest('.val'); if (v) this.visSpor(v.dataset.node); });
+    this.visTab(this.tab);
+  }
+
+  setState(s, stille) {
+    this.state = s;
+    this.recompute();
+    if (!stille) this.toast('Data indlæst');
+  }
+
+  recompute() {
+    try {
+      this.engine = new Engine(this.state);
+      this.rapport = byggeRapport(this.engine);
+      this.kontrol = kontroller(this.engine);
+      this.fejl = null;
+    } catch (e) {
+      console.error(e);
+      this.fejl = e.message;
+    }
+    gemLokalt(this.state);
+    document.getElementById('topbar-aar').textContent = this.state.aar;
+    const b = document.getElementById('status-badge');
+    if (this.fejl) { b.textContent = 'Fejl: ' + this.fejl; b.className = 'status-badge fejl'; return; }
+    const k = this.kontrol.antal;
+    b.className = 'status-badge ' + (k.fejl ? 'fejl' : k.advarsel ? 'advarsel' : 'ok');
+    b.textContent = k.fejl ? `${k.fejl} fejl` : k.advarsel ? `Balancerer · ${k.advarsel} advarsler` : 'Balancerer ✓';
+    b.title = 'Se kontrolsiden';
+    b.onclick = () => this.visTab('kontrol');
+    if (this.tab === 'rapport') this.renderRapport();
+    if (this.tab === 'kontrol') this.renderKontrol();
+  }
+
+  visTab(id) {
+    this.tab = id;
+    document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+    document.querySelectorAll('main > .tab').forEach(t => t.classList.toggle('hidden', t.id !== 'tab-' + id));
+    this.renderTab(id);
+    window.scrollTo(0, 0);
+  }
+
+  renderTab(id) {
+    const el = document.getElementById('tab-' + id);
+    switch (id) {
+      case 'stamdata': el.innerHTML = this.htmlStamdata(); break;
+      case 'kasserapport': el.innerHTML = this.htmlKasserapport(); break;
+      case 'kontoplan': el.innerHTML = this.htmlKontoplan(); break;
+      case 'balance': el.innerHTML = this.htmlBalance(); break;
+      case 'budget': el.innerHTML = this.htmlBudget(); break;
+      case 'noegle': el.innerHTML = this.htmlNoegle(); break;
+      case 'tekster': el.innerHTML = this.htmlTekster(); break;
+      case 'rapport': this.renderRapport(); return;
+      case 'kontrol': this.renderKontrol(); return;
+      case 'hjaelp': el.innerHTML = this.htmlHjaelp(); return;
+    }
+    this.bind(el);
+  }
+
+  toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(this._toast); this._toast = setTimeout(() => t.classList.remove('show'), 1800); }
+
+  // ---------- generiske felter ----------
+  felt(label, path, type = 'text', opts = {}) {
+    const v = getPath(this.state, path);
+    const id = 'f_' + path.replace(/[^a-zA-Z0-9]/g, '_');
+    let input;
+    if (type === 'num' || type === 'int') input = `<input type="text" inputmode="decimal" class="num" id="${id}" data-path="${path}" data-type="${type}" value="${v === null || v === undefined || v === '' ? '' : (type === 'int' ? fmtInt(v) : fmtKr(v))}" ${opts.placeholder ? `placeholder="${esc(opts.placeholder)}"` : ''}>`;
+    else if (type === 'bool') input = `<label class="check"><input type="checkbox" id="${id}" data-path="${path}" data-type="bool" ${v ? 'checked' : ''}> ${esc(opts.checkLabel || '')}</label>`;
+    else if (type === 'date') input = `<input type="date" id="${id}" data-path="${path}" data-type="text" value="${esc(v || '')}">`;
+    else if (type === 'select') input = `<select id="${id}" data-path="${path}" data-type="${opts.numeric ? 'numsel' : 'text'}">${opts.options.map(o => `<option value="${esc(o.id)}" ${String(o.id) === String(v) ? 'selected' : ''}>${esc(o.label)}</option>`).join('')}</select>`;
+    else if (type === 'textarea') input = `<textarea id="${id}" data-path="${path}" data-type="text" rows="${opts.rows || 6}">${esc(v || '')}</textarea>`;
+    else input = `<input type="text" id="${id}" data-path="${path}" data-type="text" value="${esc(v ?? '')}" ${opts.placeholder ? `placeholder="${esc(opts.placeholder)}"` : ''}>`;
+    return `<div class="felt ${opts.wide ? 'wide' : ''}"><label for="${id}">${esc(label)}</label>${input}${opts.hint ? `<span class="hint">${esc(opts.hint)}</span>` : ''}</div>`;
+  }
+
+  // Redigerbar tabel for lister i state
+  tabel(basePath, cols, opts = {}) {
+    const items = getPath(this.state, basePath) || [];
+    const th = cols.map(c => `<th class="${c.width || ''}">${esc(c.label)}</th>`).join('') + (opts.beregnet ? opts.beregnet.map(b => `<th class="num">${esc(b.label)}</th>`).join('') : '') + '<th class="w-slet"></th>';
+    const rows = items.map((it, i) => {
+      const tds = cols.map(c => {
+        const p = `${basePath}.${i}.${c.key}`;
+        const v = it[c.key];
+        let inp;
+        if (c.type === 'num' || c.type === 'int') inp = `<input type="text" inputmode="decimal" class="num" data-path="${p}" data-type="${c.type}" value="${v === null || v === undefined || v === '' ? '' : (c.type === 'int' ? fmtInt(v) : fmtKr(v))}">`;
+        else if (c.type === 'date') inp = `<input type="date" data-path="${p}" data-type="text" value="${esc(v || '')}">`;
+        else if (c.type === 'select') { const o = typeof c.options === 'function' ? c.options(it) : c.options; inp = `<select data-path="${p}" data-type="${c.numeric ? 'numsel' : 'text'}"><option value="">–</option>${o.map(x => `<option value="${esc(x.id)}" ${String(x.id) === String(v ?? '') ? 'selected' : ''}>${esc(x.label)}</option>`).join('')}</select>`; }
+        else if (c.type === 'bool') inp = `<input type="checkbox" data-path="${p}" data-type="bool" ${v ? 'checked' : ''}>`;
+        else if (c.type === 'ro') inp = `<span>${esc(v ?? '')}</span>`;
+        else inp = `<input type="text" data-path="${p}" data-type="text" value="${esc(v ?? '')}">`;
+        return `<td class="${c.type === 'num' || c.type === 'int' ? 'num' : ''}">${inp}</td>`;
+      }).join('');
+      const calc = opts.beregnet ? opts.beregnet.map(b => `<td class="num" style="text-align:right">${esc(b.value(it, i))}</td>`).join('') : '';
+      return `<tr>${tds}${calc}<td><button class="knap lille slet" data-slet="${basePath}" data-index="${i}" title="Slet række">✕</button></td></tr>`;
+    }).join('');
+    const sum = opts.sum ? `<tr class="sum">${opts.sum()}</tr>` : '';
+    return `<table class="edit"><thead><tr>${th}</tr></thead><tbody>${rows}${sum}</tbody></table>
+      <div class="knapper"><button class="knap" data-tilfoej="${basePath}">+ ${esc(opts.tilfoejLabel || 'Tilføj række')}</button>${opts.ekstraKnapper || ''}</div>`;
+  }
+
+  bind(el) {
+    el.querySelectorAll('[data-path]').forEach(inp => {
+      const type = inp.dataset.type;
+      const handler = () => {
+        let v;
+        if (type === 'num' || type === 'int') { v = inp.value.trim() === '' ? (inp.dataset.allowEmpty ? '' : 0) : parseTal(inp.value); inp.value = inp.value.trim() === '' && inp.dataset.allowEmpty ? '' : (type === 'int' ? fmtInt(v) : fmtKr(v)); }
+        else if (type === 'bool') v = inp.checked;
+        else if (type === 'numsel') v = inp.value === '' ? '' : Number(inp.value);
+        else v = inp.value;
+        setPath(this.state, inp.dataset.path, v);
+        this.recompute();
+        if (inp.dataset.rerender) this.renderTab(this.tab);
+        else this.opdaterBeregnede(el);
+      };
+      inp.addEventListener('change', handler);
+    });
+    el.querySelectorAll('[data-slet]').forEach(b => b.addEventListener('click', () => {
+      const arr = getPath(this.state, b.dataset.slet); arr.splice(Number(b.dataset.index), 1); this.recompute(); this.renderTab(this.tab);
+    }));
+    el.querySelectorAll('[data-tilfoej]').forEach(b => b.addEventListener('click', () => { this.tilfoej(b.dataset.tilfoej); this.recompute(); this.renderTab(this.tab); }));
+    el.querySelectorAll('[data-action]').forEach(b => b.addEventListener('click', () => this.action(b.dataset.action, b)));
+  }
+
+  // Opdaterer "beregnede" celler (data-calc="nodeId") uden at gen-rendere formularen
+  opdaterBeregnede(el) {
+    if (!this.engine) return;
+    el.querySelectorAll('[data-calc]').forEach(c => { try { c.textContent = fmtBy(this.engine.get(c.dataset.calc), c.dataset.fmt || 'kr'); } catch (e) { c.textContent = '?'; } });
+    el.querySelectorAll('[data-calc-fn]').forEach(c => { c.textContent = this.calcFn(c.dataset.calcFn); });
+  }
+  calcFn(name) {
+    const S = this.state;
+    if (name.startsWith('konto:')) { return fmtKr(this.engine.konto(Number(name.slice(6)))); }
+    if (name === 'kasse.ind') return fmtKr(S.posteringer.reduce((s, p) => s + num(p.ind), 0));
+    if (name === 'kasse.ud') return fmtKr(S.posteringer.reduce((s, p) => s + num(p.ud), 0));
+    if (name === 'kasse.netto') return fmtKr(S.posteringer.reduce((s, p) => s + num(p.ind) - num(p.ud), 0));
+    return '';
+  }
+
+  tilfoej(basePath) {
+    const arr = getPath(this.state, basePath) || [];
+    if (!getPath(this.state, basePath)) setPath(this.state, basePath, arr);
+    const S = this.state;
+    switch (basePath) {
+      case 'posteringer': {
+        const sidste = arr[arr.length - 1];
+        const n = arr.length + 1;
+        const bilag = `${String(n).padStart(2, '0')}.${String(S.aar).slice(2)}`;
+        arr.push({ id: nyId('p'), dato: sidste ? sidste.dato : `${S.aar}-01-01`, bilag, tekst: '', konto: '', likvid: sidste ? sidste.likvid : (S.likvidkonti[0] || {}).id, ind: 0, ud: 0 });
+        break;
+      }
+      case 'kontoplan': { const max = arr.reduce((m, k) => Math.max(m, Number(k.nr) || 0), 0); arr.push({ nr: max + 10, navn: '', linje: '' }); break; }
+      case 'likvidkonti': arr.push({ id: nyId('lk'), navn: '', primo: 0, kontoudtog: '' }); break;
+      case 'laan': {
+        const id = nyId('l');
+        arr.push({ id, navn: 'Nyt lån', kreditor: '', hovedstol: 0, optagetTekst: '', restgaeldPrimo: 0, kortfristetPrimo: 0, renter: 0, afdragIflg: '', restgaeldUltimoIflg: '', kortfristet: 0, kursvaerdi: 0, kursvaerdiTekst: '', beskrivelse: '' });
+        const brugt = new Set(S.kontoplan.map(k => Number(k.nr)));
+        let nr = 120; while (brugt.has(nr)) nr++;
+        S.kontoplan.push({ nr, navn: 'Låneydelse, nyt lån', linje: 'laan:' + id });
+        S.kontoplan.sort((a, b) => a.nr - b.nr);
+        break;
+      }
+      case 'andenGaeld': { const id = nyId('ag'); arr.push({ id, tekst: 'Anden gæld', primo: 0 }); break; }
+      case 'tilgodehavender': { const id = nyId('tg'); arr.push({ id, tekst: 'Tilgodehavende', primo: 0 }); break; }
+      case 'reguleringer': arr.push({ id: nyId('r'), tekst: '', beloeb: 0, linje: '', balancepost: '' }); break;
+      case 'ledelse.bestyrelse': arr.push({ navn: '', titel: 'Bestyrelsesmedlem' }); break;
+      case 'ledelse.bilagskontrolloerer': arr.push({ navn: '' }); break;
+      default: arr.push({});
+    }
+  }
+
+  action(name, btn) {
+    const S = this.state;
+    if (name === 'sorter-posteringer') { S.posteringer.sort((a, b) => (a.dato || '').localeCompare(b.dato || '') || String(a.bilag).localeCompare(String(b.bilag), 'da', { numeric: true })); this.recompute(); this.renderTab(this.tab); }
+    if (name === 'nummerer-bilag') { S.posteringer.forEach((p, i) => { p.bilag = `${String(i + 1).padStart(2, '0')}.${String(S.aar).slice(2)}`; }); this.recompute(); this.renderTab(this.tab); }
+    if (name === 'standard-kontoplan') { if (confirm('Tilføj manglende standardkonti til kontoplanen?')) { const has = new Set(S.kontoplan.map(k => Number(k.nr))); STANDARD_KONTOPLAN.forEach(k => { if (!has.has(k.nr)) S.kontoplan.push({ ...k }); }); S.kontoplan.sort((a, b) => a.nr - b.nr); this.recompute(); this.renderTab(this.tab); } }
+    if (name.startsWith('standardtekst:')) { const k = name.slice(14); if (confirm('Gendan standardteksten?')) { S.tekster[k] = STANDARD_TEKSTER[k]; this.recompute(); this.renderTab(this.tab); } }
+    if (name === 'kopier-budget') { ALLE_LINJER.forEach(l => { S.budget[l.id] = Math.round(this.engine.get(l.id)); }); this.recompute(); this.renderTab(this.tab); }
+    if (name === 'overfoer-primo') {
+      if (!confirm(`Opret regnskab for ${S.aar + 1} med dette års ultimotal som primotal? Det nuværende regnskab gemmes først som fil.`)) return;
+      gemSomFil(S);
+      const e = this.engine;
+      const n = normaliser(JSON.parse(JSON.stringify(S)));
+      n.aar = S.aar + 1;
+      n.posteringer = [];
+      n.reguleringer = [];
+      n.likvidkonti.forEach(k => { k.primo = e.get(`likvid.${k.id}.ultimo`); k.kontoudtog = ''; });
+      n.ejendom.kostprisPrimo = e.get('ejendom.kostpris.ultimo'); n.ejendom.opskrivningPrimo = e.get('ek.opskrivning.ultimo'); n.ejendom.opskrivningAaret = 0;
+      n.egenkapitalPrimo = { overfoertResultat: e.get('ek.overfoert.ultimo'), genopretning: e.get('ek.genopretning.ultimo'), vedligehold: e.get('ek.vedligehold.ultimo'), andreReserver: e.get('ek.andre.ultimo') };
+      n.disponering = { tilVedligehold: 0, tilAndreReserver: 0, tilGenopretning: 0, anvendtVedligehold: 0, anvendtAndreReserver: 0, anvendtGenopretning: 0 };
+      n.laan.forEach(l => { l.restgaeldPrimo = e.get(`laan.${l.id}.restgaeldUltimo`); l.kortfristetPrimo = e.get(`laan.${l.id}.kortfristet`); l.renter = 0; l.kortfristet = 0; l.afdragIflg = ''; l.restgaeldUltimoIflg = ''; });
+      n.andenGaeld.forEach(a => { a.primo = e.get(`ag.${a.id}.ultimo`); });
+      n.tilgodehavender.forEach(t => { t.primo = e.get(`tg.${t.id}.ultimo`); });
+      n.forudmodtaget.primo = e.get('forud.ultimo');
+      n.andele.senestVedtagetPrKrone = e.get('av.prKrone'); n.andele.senestVedtagetAar = String(S.aar + 1);
+      n.sidsteAar = { vis: true, linjer: Object.fromEntries(ALLE_LINJER.map(l => [l.id, e.get(l.id)])) };
+      n.budget = {};
+      const nk = n.noegle;
+      nk.arealer.y2 = { ...S.noegle.arealer.y1 }; nk.arealer.y1 = { ...S.noegle.arealer.y0 };
+      nk.resultatPrM2 = { y2: e.get('nk.j.y1'), y1: e.get('nk.j.y0') };
+      nk.vedligeholdLoebende = { y2: e.get('nk.m1.y1'), y1: e.get('nk.m1.y0') };
+      nk.vedligeholdGenopretning = { y2: e.get('nk.m2.y1'), y1: e.get('nk.m2.y0') };
+      nk.afdragPrM2 = { y2: e.get('nk.r.y1'), y1: e.get('nk.r.y0') };
+      n.ledelse.datoPaategning = ''; n.ledelse.datoBilagskontrol = ''; n.ledelse.datoGeneralforsamling = '';
+      this.setState(n); this.visTab('stamdata');
+    }
+  }
+
+  // ---------- Faner ----------
+  htmlStamdata() {
+    const S = this.state;
+    return `<h2>Stamdata</h2>
+    <div class="panel"><h3>Forening</h3><div class="grid">
+      ${this.felt('Regnskabsår', 'aar', 'int', { hint: 'Ændres kun ved nyt regnskab' })}
+      ${this.felt('Foreningens navn (forside og påtegning)', 'forening.navn', 'text', { placeholder: 'Andelsboligforeningen …' })}
+      ${this.felt('Kort navn (sidehoved)', 'forening.kortnavn', 'text')}
+      ${this.felt('Adresse', 'forening.adresse')}
+      ${this.felt('Postnr. og by', 'forening.postnrBy')}
+      ${this.felt('By (til underskrifter)', 'forening.by')}
+      ${this.felt('CVR-nr.', 'forening.cvr')}
+      ${this.felt('Foreningens stiftelsesår (nøgleoplysning D1)', 'forening.stiftelsesaar')}
+      ${this.felt('Ejendommens opførelsesår (nøgleoplysning D2)', 'forening.opfoerelsesaar')}
+    </div></div>
+    <div class="panel"><h3>Bestyrelse</h3>
+      ${this.tabel('ledelse.bestyrelse', [{ key: 'navn', label: 'Navn' }, { key: 'titel', label: 'Titel' }], { tilfoejLabel: 'Tilføj bestyrelsesmedlem' })}
+      <div class="grid">${this.felt('Dirigent på generalforsamlingen', 'ledelse.dirigent')}</div>
+    </div>
+    <div class="panel"><h3>Bilagskontrollører / revision</h3>
+      ${this.tabel('ledelse.bilagskontrolloerer', [{ key: 'navn', label: 'Navn' }], { tilfoejLabel: 'Tilføj bilagskontrollør' })}
+    </div>
+    <div class="panel"><h3>Datoer</h3><div class="grid">
+      ${this.felt('Bestyrelsens påtegning', 'ledelse.datoPaategning', 'date')}
+      ${this.felt('Bilagskontrol', 'ledelse.datoBilagskontrol', 'date')}
+      ${this.felt('Ordinær generalforsamling', 'ledelse.datoGeneralforsamling', 'date')}
+    </div></div>
+    <div class="panel"><h3>Næste regnskabsår</h3>
+      <p class="hjaelp">Når regnskabet er færdigt og godkendt, kan du oprette næste års regnskab med dette års ultimotal som primotal. Sidste års resultat lægges i sammenligningskolonnen, og nøgletallene for tidligere år flyttes automatisk.</p>
+      <button class="knap" data-action="overfoer-primo">Opret regnskab for ${S.aar + 1} med primotal fra ${S.aar}</button>
+    </div>`;
+  }
+
+  kontoOptions() { return this.state.kontoplan.slice().sort((a, b) => a.nr - b.nr).map(k => ({ id: k.nr, label: `${k.nr} ${k.navn}` })); }
+  likvidOptions() { return this.state.likvidkonti.map(k => ({ id: k.id, label: k.navn })); }
+
+  htmlKasserapport() {
+    const S = this.state;
+    const cols = [
+      { key: 'dato', label: 'Dato', type: 'date', width: 'w-dato' },
+      { key: 'bilag', label: 'Bilag', width: 'w-bilag' },
+      { key: 'tekst', label: 'Tekst' },
+      { key: 'konto', label: 'Konto', type: 'select', numeric: true, options: this.kontoOptions(), width: 'w-konto' },
+      { key: 'likvid', label: 'Likvid konto', type: 'select', options: this.likvidOptions(), width: 'w-likvid' },
+      { key: 'ind', label: 'Indsat', type: 'num', width: 'w-beloeb' },
+      { key: 'ud', label: 'Hævet', type: 'num', width: 'w-beloeb' },
+    ];
+    const sum = () => `<td colspan="5">I alt</td><td data-calc-fn="kasse.ind">${this.calcFn('kasse.ind')}</td><td data-calc-fn="kasse.ud">${this.calcFn('kasse.ud')}</td><td></td>`;
+    const ekstra = `<button class="knap" data-action="sorter-posteringer">Sortér efter dato</button><button class="knap" data-action="nummerer-bilag">Nummerér bilag fortløbende</button>`;
+    // Kontokort
+    const grupper = {};
+    S.posteringer.forEach(p => { (grupper[p.konto] = grupper[p.konto] || []).push(p); });
+    const kontokort = S.kontoplan.slice().sort((a, b) => a.nr - b.nr).filter(k => grupper[k.nr]).map(k => {
+      const ps = grupper[k.nr];
+      const rows = ps.map(p => `<tr><td>${esc(p.dato)}</td><td>${esc(p.bilag)}</td><td>${esc(p.tekst)}</td><td class="num" style="text-align:right">${fmtKr(p.ind)}</td><td class="num" style="text-align:right">${fmtKr(p.ud)}</td></tr>`).join('');
+      const m = alleMappings(S).find(x => x.id === k.linje);
+      return `<h3>${k.nr} ${esc(k.navn)} <span class="kontoplan-hint">→ ${esc(m ? m.label : 'IKKE KNYTTET TIL REGNSKABSLINJE')}</span></h3>
+        <table class="edit"><thead><tr><th>Dato</th><th>Bilag</th><th>Tekst</th><th class="num">Indsat</th><th class="num">Hævet</th></tr></thead><tbody>${rows}
+        <tr class="sum"><td colspan="3">I alt (netto)</td><td colspan="2">${fmtKr(this.engine.konto(k.nr))}</td></tr></tbody></table>`;
+    }).join('');
+    const ukendte = Object.keys(grupper).filter(nr => !S.kontoplan.some(k => String(k.nr) === String(nr)));
+    return `<h2>Kasserapport ${S.aar}</h2>
+    <p class="hjaelp">Indtast alle ind- og udbetalinger i regnskabsåret. Vælg for hver postering en konto fra kontoplanen (bestemmer hvor beløbet lander i regnskabet) og hvilken likvid konto pengene gik ind på/ud fra. Låneydelser bogføres med det fulde beløb på lånekontoen – motoren deler i renter og afdrag ud fra kreditforeningens årsopgørelse (fanen Primo &amp; lån).</p>
+    <div class="panel">${this.tabel('posteringer', cols, { sum, tilfoejLabel: 'Tilføj postering', ekstraKnapper: ekstra })}</div>
+    <div class="panel"><h3>Likvide konti – bevægelser</h3>
+      <table class="edit"><thead><tr><th>Konto</th><th class="num">Primo</th><th class="num">Indsat</th><th class="num">Hævet</th><th class="num">Beregnet ultimo</th><th class="num">Iflg. kontoudtog</th></tr></thead><tbody>
+      ${S.likvidkonti.map(k => `<tr><td>${esc(k.navn)}</td><td style="text-align:right">${fmtKr(k.primo)}</td><td style="text-align:right" data-calc="likvid.${k.id}.ind">${fmtKr(this.engine.get(`likvid.${k.id}.ind`))}</td><td style="text-align:right" data-calc="likvid.${k.id}.ud">${fmtKr(this.engine.get(`likvid.${k.id}.ud`))}</td><td style="text-align:right;font-weight:600" data-calc="likvid.${k.id}.ultimo">${fmtKr(this.engine.get(`likvid.${k.id}.ultimo`))}</td><td style="text-align:right">${k.kontoudtog === '' || k.kontoudtog === null || k.kontoudtog === undefined ? '–' : fmtKr(k.kontoudtog)}</td></tr>`).join('')}
+      </tbody></table></div>
+    <div class="panel"><h3>Kontokort – posteringer pr. konto</h3>
+      ${ukendte.length ? `<p class="hjaelp" style="color:var(--fejl)">Posteringer på konti der ikke findes i kontoplanen: ${ukendte.join(', ')}</p>` : ''}
+      ${kontokort || '<p class="hjaelp">Ingen posteringer endnu.</p>'}
+    </div>`;
+  }
+
+  htmlKontoplan() {
+    const S = this.state;
+    const mappings = alleMappings(S);
+    const cols = [
+      { key: 'nr', label: 'Nr.', type: 'int', width: 'w-bilag' },
+      { key: 'navn', label: 'Kontonavn' },
+      { key: 'linje', label: 'Regnskabslinje (note) / balancepost', type: 'select', options: mappings },
+    ];
+    const beregnet = [{ label: `Bevægelse ${S.aar}`, value: (it) => fmtKr(this.engine.konto(Number(it.nr))) }];
+    return `<h2>Kontoplan</h2>
+    <p class="hjaelp">Kontoplanen bestemmer, hvor hver postering havner i årsregnskabet. Hver konto knyttes til en linje i noterne (indtægt/omkostning) eller til en balancepost (lån, anden gæld, tilgodehavender, andelsindskud, overførsel mellem likvide konti). Flere konti kan pege på samme linje.</p>
+    <div class="panel">${this.tabel('kontoplan', cols, { beregnet, tilfoejLabel: 'Tilføj konto', ekstraKnapper: '<button class="knap" data-action="standard-kontoplan">Tilføj manglende standardkonti</button>' })}</div>`;
+  }
+
+  htmlBalance() {
+    const S = this.state;
+    const e = this.engine;
+    const laanHtml = S.laan.map((l, i) => {
+      const p = `laan.${i}`;
+      const n = `laan.${l.id}`;
+      return `<div class="panel"><h3>${esc(l.navn || 'Lån')}</h3><div class="grid">
+        ${this.felt('Betegnelse (vises i noten)', `${p}.navn`)}
+        ${this.felt('Kreditor', `${p}.kreditor`)}
+        ${this.felt('Hovedstol', `${p}.hovedstol`, 'num')}
+        ${this.felt('Optaget (tekst, fx "lån hjemtaget juli 2017")', `${p}.optagetTekst`)}
+        ${this.felt(`Restgæld primo (31/12 ${S.aar - 1})`, `${p}.restgaeldPrimo`, 'num')}
+        ${this.felt(`Kortfristet del primo (afdrag i ${S.aar} iflg. sidste års regnskab)`, `${p}.kortfristetPrimo`, 'num')}
+        ${this.felt(`Renter og bidrag i ${S.aar} iflg. årsopgørelse`, `${p}.renter`, 'num', { hint: 'Afdrag = betalte ydelser − renter og bidrag' })}
+        ${this.felt(`Kortfristet del ultimo (afdrag i ${S.aar + 1} iflg. betalingsplan)`, `${p}.kortfristet`, 'num')}
+        ${this.felt(`Kursværdi af restgæld pr. 31/12 ${S.aar}`, `${p}.kursvaerdi`, 'num', { hint: 'Fra kreditforeningens årsopgørelse – bruges i andelsværdiberegningen' })}
+        ${this.felt('Kursværdi, tekst (fx "pr. 31. december 2025")', `${p}.kursvaerdiTekst`)}
+        ${this.felt('Afdrag iflg. årsopgørelse (til kontrol, kan udelades)', `${p}.afdragIflg`, 'num')}
+        ${this.felt('Restgæld ultimo iflg. årsopgørelse (til kontrol, kan udelades)', `${p}.restgaeldUltimoIflg`, 'num')}
+        ${this.felt('Beskrivelse i noten (lånetype, rente, restløbetid)', `${p}.beskrivelse`, 'textarea', { wide: true, rows: 2 })}
+      </div>
+      <table class="edit" style="max-width:520px;margin-top:8px"><tbody>
+        <tr><td>Betalte ydelser iflg. kasserapport</td><td style="text-align:right" data-calc="${n}.ydelser">${fmtKr(e.get(n + '.ydelser'))}</td></tr>
+        <tr><td>Beregnet afdrag</td><td style="text-align:right" data-calc="${n}.afdrag">${fmtKr(e.get(n + '.afdrag'))}</td></tr>
+        <tr><td>Restgæld ultimo</td><td style="text-align:right;font-weight:600" data-calc="${n}.restgaeldUltimo">${fmtKr(e.get(n + '.restgaeldUltimo'))}</td></tr>
+        <tr><td>Heraf langfristet</td><td style="text-align:right" data-calc="${n}.langfristet">${fmtKr(e.get(n + '.langfristet'))}</td></tr>
+      </tbody></table>
+      <div class="knapper"><button class="knap lille slet" data-slet="laan" data-index="${i}">Slet lån</button></div></div>`;
+    }).join('');
+    const balanceposter = [{ id: 'forud', label: 'Forudmodtaget boligafgift' }, ...S.andenGaeld.map(a => ({ id: 'ag:' + a.id, label: 'Anden gæld: ' + a.tekst })), ...S.tilgodehavender.map(t => ({ id: 'tg:' + t.id, label: 'Tilgodehavende: ' + t.tekst }))];
+    return `<h2>Primo, ejendom, egenkapital og lån</h2>
+    <p class="hjaelp">Primotal er sidste års ultimotal (fra årsrapporten for ${S.aar - 1}). Kontrolsiden tjekker, at primobalancen balancerer.</p>
+    <div class="panel"><h3>Likvide beholdninger</h3>
+      ${this.tabel('likvidkonti', [{ key: 'navn', label: 'Konto (som vist i noten)' }, { key: 'primo', label: `Saldo primo 1/1 ${S.aar}`, type: 'num', width: 'w-beloeb' }, { key: 'kontoudtog', label: `Saldo iflg. kontoudtog 31/12 ${S.aar} (til afstemning)`, type: 'num', width: 'w-beloeb' }], { beregnet: [{ label: 'Beregnet ultimo', value: (it) => fmtKr(e.get(`likvid.${it.id}.ultimo`)) }], tilfoejLabel: 'Tilføj likvid konto' })}
+    </div>
+    <div class="panel"><h3>Ejendom</h3><div class="grid">
+      ${this.felt('Kostpris primo (grund og bygninger)', 'ejendom.kostprisPrimo', 'num')}
+      ${this.felt('Opskrivninger primo', 'ejendom.opskrivningPrimo', 'num')}
+      ${this.felt(`Årets opskrivning (+) / tilbageførsel (−)`, 'ejendom.opskrivningAaret', 'num', { hint: 'Føres direkte på egenkapitalen (reserve for opskrivning)' })}
+      ${this.felt('Vurderingsprincip (andelsboliglovens § 5, stk. 2)', 'ejendom.vurderingsprincip', 'select', { options: VURDERINGSPRINCIPPER.map(v => ({ id: v.id, label: `Litra ${v.litra}: ${v.label}` })) })}
+      ${this.felt('Ejendommens værdi efter det valgte princip', 'ejendom.vurdering', 'num')}
+      ${this.felt('Vurderingens dato/tekst (fx "pr. 1. januar 2024")', 'ejendom.vurderingTekst')}
+      ${this.felt('', 'ejendom.fastholdt', 'bool', { checkLabel: 'Værdien er fastholdt efter § 5, stk. 3 (vurdering foretaget før 1. juli 2020)' })}
+    </div>
+    <p class="hjaelp">Regnskabsmæssig værdi = kostpris + opskrivninger (bogført til dagsværdi). Tilgang til kostpris i året bogføres i kasserapporten på en konto knyttet til "Balance: Ejendom".</p></div>
+    <div class="panel"><h3>Andele og andelsværdi</h3><div class="grid">
+      ${this.felt('Antal andele', 'andele.antal', 'int')}
+      ${this.felt('Indskud pr. andel (kr.)', 'andele.indskudPrAndel', 'num')}
+      ${this.felt('Fordelingstal ved andelsværdi', 'andele.fordelingstalType', 'select', { options: [{ id: 'indskud', label: 'Indskudt andelskapital (antal × indskud)' }, { id: 'andet', label: 'Andet fordelingstal (indtast sum)' }] })}
+      ${this.felt('Fordelingstal i alt (kun ved "andet")', 'andele.fordelingstalAndet', 'num')}
+      ${this.felt('Senest vedtagne andelsværdi pr. andelskrone', 'andele.senestVedtagetPrKrone', 'num')}
+      ${this.felt('Vedtaget på generalforsamlingen i (år)', 'andele.senestVedtagetAar')}
+      ${this.felt('Andre reguleringer i andelsværdiberegningen (+/−)', 'andele.andreReguleringer', 'num', { hint: 'Fx fradrag besluttet af generalforsamlingen' })}
+    </div></div>
+    <div class="panel"><h3>Egenkapital primo (31/12 ${S.aar - 1})</h3><div class="grid">
+      ${this.felt('Overført resultat primo', 'egenkapitalPrimo.overfoertResultat', 'num')}
+      ${this.felt('Genopretningskonto primo', 'egenkapitalPrimo.genopretning', 'num')}
+      ${this.felt('Reserve til vedligeholdelse primo', 'egenkapitalPrimo.vedligehold', 'num')}
+      ${this.felt('Andre reserver primo', 'egenkapitalPrimo.andreReserver', 'num')}
+    </div><p class="hjaelp">Andelsindskud primo beregnes som antal × indskud fratrukket indskud fra nye andele i året.</p></div>
+    <div class="panel"><h3>Resultatdisponering (bestyrelsens forslag)</h3><div class="grid">
+      ${this.felt('Overført til reserve til vedligeholdelse', 'disponering.tilVedligehold', 'num')}
+      ${this.felt('Overført til andre reserver', 'disponering.tilAndreReserver', 'num')}
+      ${this.felt('Overført til genopretningskonto', 'disponering.tilGenopretning', 'num')}
+      ${this.felt('Anvendt af reserve til vedligeholdelse i året', 'disponering.anvendtVedligehold', 'num')}
+      ${this.felt('Anvendt af andre reserver i året', 'disponering.anvendtAndreReserver', 'num')}
+      ${this.felt('Anvendt af genopretningskonto i året', 'disponering.anvendtGenopretning', 'num')}
+    </div>
+    <table class="edit" style="max-width:520px;margin-top:8px"><tbody>
+      <tr><td>Årets resultat</td><td style="text-align:right" data-calc="res.resultat">${fmtKr(e.get('res.resultat'))}</td></tr>
+      <tr><td>Betalte prioritetsafdrag (overføres til overført resultat)</td><td style="text-align:right" data-calc="disp.afdrag">${fmtKr(e.get('disp.afdrag'))}</td></tr>
+      <tr><td>Overført restandel af årets resultat</td><td style="text-align:right;font-weight:600" data-calc="disp.rest">${fmtKr(e.get('disp.rest'))}</td></tr>
+    </tbody></table></div>
+    <h2>Prioritetsgæld</h2>
+    ${laanHtml || '<p class="hjaelp">Ingen lån oprettet.</p>'}
+    <div class="knapper"><button class="knap" data-tilfoej="laan">+ Tilføj lån (opretter samtidig en konto til låneydelser)</button></div>
+    <div class="panel"><h3>Anden gæld</h3>
+      ${this.tabel('andenGaeld', [{ key: 'tekst', label: 'Tekst (vises i noten)' }, { key: 'primo', label: 'Primo', type: 'num', width: 'w-beloeb' }], { beregnet: [{ label: 'Ultimo', value: (it) => fmtKr(e.get(`ag.${it.id}.ultimo`)) }], tilfoejLabel: 'Tilføj anden gæld' })}
+      <div class="grid">${this.felt('Forudmodtaget boligafgift primo', 'forudmodtaget.primo', 'num')}</div>
+      <p class="hjaelp">Bevægelser i året bogføres i kasserapporten på konti knyttet til posten (fx depositum modtaget) eller som regulering nedenfor.</p></div>
+    <div class="panel"><h3>Tilgodehavender</h3>
+      ${this.tabel('tilgodehavender', [{ key: 'tekst', label: 'Tekst (vises i noten)' }, { key: 'primo', label: 'Primo', type: 'num', width: 'w-beloeb' }], { beregnet: [{ label: 'Ultimo', value: (it) => fmtKr(e.get(`tg.${it.id}.ultimo`)) }], tilfoejLabel: 'Tilføj tilgodehavende' })}</div>
+    <div class="panel"><h3>Reguleringer (periodiseringer uden likvid bevægelse)</h3>
+      <p class="hjaelp">Bruges til skyldige eller forudbetalte beløb, fx "skyldig revisor" (omkostning i år, betales næste år) eller "forudmodtaget boligafgift for januar". Beløbet føres på resultatlinjen og på balanceposten. Tilbageførsel af sidste års regulering indtastes med negativt beløb.</p>
+      ${this.tabel('reguleringer', [{ key: 'tekst', label: 'Tekst' }, { key: 'beloeb', label: 'Beløb', type: 'num', width: 'w-beloeb' }, { key: 'linje', label: 'Resultatlinje', type: 'select', options: ALLE_LINJER.map(l => ({ id: l.id, label: `Note ${l.note}: ${l.label}` })) }, { key: 'balancepost', label: 'Balancepost', type: 'select', options: balanceposter }], { tilfoejLabel: 'Tilføj regulering' })}</div>`;
+  }
+
+  htmlBudget() {
+    const S = this.state;
+    const e = this.engine;
+    const rows = NOTER_RESULTAT.map(n => {
+      const lines = n.linjer.map(l => `<tr><td>${esc(l.label)}</td><td style="text-align:right" data-calc="${l.id}">${fmtKr(e.get(l.id))}</td><td class="num"><input type="text" inputmode="decimal" class="num" data-path="budget.${l.id}" data-type="num" value="${fmtKr(S.budget[l.id] || 0)}"></td><td class="num"><input type="text" inputmode="decimal" class="num" data-path="sidsteAar.linjer.${l.id}" data-type="num" value="${fmtKr(S.sidsteAar.linjer[l.id] || 0)}"></td></tr>`).join('');
+      return `<tr class="sum"><td style="text-align:left">Note ${n.nr} ${esc(n.titel)}</td><td data-calc="${n.id}.total">${fmtKr(e.get(n.id + '.total'))}</td><td data-calc="bud.${n.id}.total">${fmtKr(e.get('bud.' + n.id + '.total'))}</td><td data-calc="prev.${n.id}.total">${fmtKr(e.get('prev.' + n.id + '.total'))}</td></tr>${lines}`;
+    }).join('');
+    return `<h2>Budget ${S.aar + 1} og sammenligningstal ${S.aar - 1}</h2>
+    <p class="hjaelp">Budgettet vises i resultatopgørelsens højre kolonne. Omkostninger indtastes med minus. Sidste års tal kan vises som ekstra kolonne.</p>
+    <div class="panel">
+      ${this.felt('', 'sidsteAar.vis', 'bool', { checkLabel: `Vis kolonnen "Regnskab ${S.aar - 1}" i resultatopgørelse og noter` })}
+      <div class="knapper"><button class="knap" data-action="kopier-budget">Kopiér årets tal til budgettet (afrundet)</button></div>
+      <table class="edit"><thead><tr><th>Linje</th><th class="num">Regnskab ${S.aar}</th><th class="num">Budget ${S.aar + 1}</th><th class="num">Regnskab ${S.aar - 1}</th></tr></thead><tbody>${rows}
+      <tr class="sum"><td style="text-align:left">Årets resultat</td><td data-calc="res.resultat">${fmtKr(e.get('res.resultat'))}</td><td data-calc="bud.res.resultat">${fmtKr(e.get('bud.res.resultat'))}</td><td data-calc="prev.res.resultat">${fmtKr(e.get('prev.res.resultat'))}</td></tr>
+      <tr class="sum"><td style="text-align:left">Heraf afdrag på prioritetsgæld</td><td data-calc="disp.afdrag">${fmtKr(e.get('disp.afdrag'))}</td><td data-calc="bud.disp.afdrag">${fmtKr(e.get('bud.disp.afdrag'))}</td><td></td></tr>
+      <tr class="sum"><td style="text-align:left">Overført restandel</td><td data-calc="disp.rest">${fmtKr(e.get('disp.rest'))}</td><td data-calc="bud.disp.rest">${fmtKr(e.get('bud.disp.rest'))}</td><td></td></tr>
+      </tbody></table></div>`;
+  }
+
+  htmlNoegle() {
+    const S = this.state; const y = S.aar;
+    const typer = [['b1', 'B1 Andelsboliger'], ['b2', 'B2 Erhvervsandele'], ['b3', 'B3 Boliglejemål'], ['b4', 'B4 Erhvervslejemål'], ['b5', 'B5 Øvrige lejemål, kældre, garager m.m.']];
+    const ar = typer.map(([b, t]) => `<tr><td>${t}</td>
+      <td class="num"><input type="text" inputmode="decimal" class="num" data-path="noegle.arealer.y2.${b}" data-type="int" value="${fmtInt(S.noegle.arealer.y2[b])}"></td>
+      <td class="num"><input type="text" inputmode="decimal" class="num" data-path="noegle.arealer.y1.${b}" data-type="int" value="${fmtInt(S.noegle.arealer.y1[b])}"></td>
+      <td class="num"><input type="text" inputmode="decimal" class="num" data-path="noegle.antal.${b}" data-type="int" value="${fmtInt(S.noegle.antal[b])}"></td>
+      <td class="num"><input type="text" inputmode="decimal" class="num" data-path="noegle.arealer.y0.${b}" data-type="int" value="${fmtInt(S.noegle.arealer.y0[b])}"></td></tr>`).join('');
+    const ft = FORDELINGSTAL.map(f => ({ id: f.id, label: f.label }));
+    return `<h2>Nøgleoplysninger (bekendtgørelse nr. 336 af 20. marts 2025, bilag 1)</h2>
+    <p class="hjaelp">Nøgleoplysningerne B1–B6, C1–C3, D1–D2, E1–E2, F1–F4, G1–G3, H1–H3, J, K1–K3, M1–M3 og R skal optages som noter til årsregnskabet (§ 3). De beregnede felter (F2–F4, H, J, K, M, R for året) udregnes automatisk. Stiftelses- og opførelsesår (D1–D2) indtastes under Stamdata.</p>
+    <div class="panel"><h3>B. Arealer og antal</h3>
+      <table class="edit"><thead><tr><th>Boligtype</th><th class="num">BBR-areal m² ${y - 2}</th><th class="num">BBR-areal m² ${y - 1}</th><th class="num">Antal ${y}</th><th class="num">BBR-areal m² ${y}</th></tr></thead><tbody>${ar}</tbody></table></div>
+    <div class="panel"><h3>C. Fordelingstal</h3><div class="grid">
+      ${this.felt('C1 Fordelingstal ved opgørelse af andelsværdien', 'noegle.fordelingstalAndelsvaerdi', 'select', { options: ft })}
+      ${this.felt('C2 Fordelingstal ved opgørelse af boligafgiften', 'noegle.fordelingstalBoligafgift', 'select', { options: ft })}
+      ${this.felt('C3 Tekst (feltets ordlyd fra bilag 1 – udfyld hvis relevant)', 'noegle.c3Tekst', 'text', { hint: 'Kontrollér ordlyden af felt C3 i bilag 1 til bekendtgørelse nr. 336/2025' })}
+      ${this.felt('C3 Svar', 'noegle.c3Svar')}
+    </div></div>
+    <div class="panel"><h3>E. Hæftelse</h3><div class="grid">
+      ${this.felt('', 'noegle.haefter', 'bool', { checkLabel: 'E1 Andelshaverne hæfter for mere end deres indskud' })}
+      ${this.felt('E1 Uddybning (fx "personligt og solidarisk for realkreditlån")', 'noegle.haefterTekst')}
+      ${this.felt('E2 Tekst (feltets ordlyd fra bilag 1 – udfyld hvis relevant)', 'noegle.e2Tekst', 'text', { hint: 'Kontrollér ordlyden af felt E2 i bilag 1 til bekendtgørelse nr. 336/2025' })}
+      ${this.felt('E2 Svar', 'noegle.e2Svar')}
+    </div></div>
+    <div class="panel"><h3>G. Tilskud og klausuler</h3>
+      ${this.felt('', 'noegle.g1', 'bool', { checkLabel: 'G1 Foreningen har modtaget offentligt tilskud, som skal tilbagebetales ved foreningens opløsning' })}
+      ${this.felt('', 'noegle.g2', 'bool', { checkLabel: 'G2 Ejendommen er pålagt tilskudsbestemmelser, jf. lov om frigørelse for visse tilskudsbestemmelser m.v.' })}
+      ${this.felt('', 'noegle.g3', 'bool', { checkLabel: 'G3 Der er tinglyst tilbagekøbsklausul (hjemfaldspligt) på ejendommen' })}
+    </div>
+    <div class="panel"><h3>H. Indtægter i december måned (× 12 / m²)</h3><div class="grid">
+      ${this.felt('H1 Boligafgift, december', 'noegle.boligafgiftDecember', 'num')}
+      ${this.felt('H2 Erhvervslejeindtægter, december', 'noegle.erhvervslejeDecember', 'num')}
+      ${this.felt('H3 Boliglejeindtægter, december', 'noegle.boliglejeDecember', 'num')}
+    </div></div>
+    <div class="panel"><h3>J, M, R – tidligere år (kr. pr. m², fra de to foregående årsrapporter)</h3><div class="grid">
+      ${this.felt(`J Årets resultat pr. m² ${y - 2}`, 'noegle.resultatPrM2.y2', 'int')}
+      ${this.felt(`J Årets resultat pr. m² ${y - 1}`, 'noegle.resultatPrM2.y1', 'int')}
+      ${this.felt(`M1 Vedligeholdelse, løbende pr. m² ${y - 2}`, 'noegle.vedligeholdLoebende.y2', 'int')}
+      ${this.felt(`M1 Vedligeholdelse, løbende pr. m² ${y - 1}`, 'noegle.vedligeholdLoebende.y1', 'int')}
+      ${this.felt(`M2 Genopretning/renovering pr. m² ${y - 2}`, 'noegle.vedligeholdGenopretning.y2', 'int')}
+      ${this.felt(`M2 Genopretning/renovering pr. m² ${y - 1}`, 'noegle.vedligeholdGenopretning.y1', 'int')}
+      ${this.felt(`R Årets afdrag pr. m² ${y - 2}`, 'noegle.afdragPrM2.y2', 'int')}
+      ${this.felt(`R Årets afdrag pr. m² ${y - 1}`, 'noegle.afdragPrM2.y1', 'int')}
+    </div></div>
+    <div class="panel"><h3>Frivilligt</h3>
+      ${this.felt('', 'noegle.visP', 'bool', { checkLabel: 'Vis nøgletal P (friværdi) – udgået af bekendtgørelsen pr. 1. juli 2025, kan medtages frivilligt' })}
+    </div>`;
+  }
+
+  htmlTekster() {
+    const t = (key, label, hint) => `<div class="panel"><h3>${esc(label)}</h3>${hint ? `<p class="hjaelp">${esc(hint)}</p>` : ''}${this.felt('', 'tekster.' + key, 'textarea', { rows: key === 'praksis' ? 22 : 5 })}<div class="knapper"><button class="knap lille" data-action="standardtekst:${key}">Gendan standardtekst</button></div></div>`;
+    return `<h2>Tekster i årsrapporten</h2>
+    <p class="hjaelp">Flettefelter: {{forening.navn}}, {{aar}}, {{aarNaeste}}, {{aarForrige}}, {{laan.restgaeld}}, {{laan.kursvaerdi}}, {{ejendom.bogfoert}}, {{ejendom.vurdering}}, {{av.litra}}, {{av.princip}}, {{av.prKrone}}, {{av.prAndel}}. I "Anvendt regnskabspraksis" giver linjer der starter med "## " overskrifter og "### " underoverskrifter.</p>
+    ${t('paategning', 'Bestyrelsespåtegning')}
+    ${t('bilagskontrol', 'Bilagskontrollørernes erklæring', 'Hvis foreningen bruger revisor, indsættes revisors erklæring her i stedet.')}
+    ${t('praksis', 'Anvendt regnskabspraksis')}
+    ${t('pantsaetning', 'Note: Pantsætninger og sikkerhedsstillelser')}
+    ${t('eventualforpligtelser', 'Note: Eventualforpligtelser')}
+    ${t('andelsvaerdiIntro', 'Note: Beregning af andelsværdi – indledning')}
+    ${t('noegleIntro', 'Note: Nøgleoplysninger – indledning')}`;
+  }
+
+  htmlHjaelp() {
+    return `<h2>Sådan bruger du programmet</h2>
+    <div class="panel">
+    <ol>
+      <li><b>Stamdata</b>: foreningens navn, CVR, bestyrelse, bilagskontrollører og datoer.</li>
+      <li><b>Kasserapport</b>: indtast alle årets ind- og udbetalinger med dato, bilagsnummer, tekst, konto og likvid konto. Kontokortet nederst viser posteringerne pr. konto.</li>
+      <li><b>Kontoplan</b>: knyt hver konto til en linje i regnskabet. Standardkontoplanen dækker de fleste behov.</li>
+      <li><b>Primo &amp; lån</b>: sidste års balancetal, ejendommens værdi, andele, resultatdisponering, lån (renter fra årsopgørelsen, kortfristet del, kursværdi), anden gæld og reguleringer.</li>
+      <li><b>Budget &amp; sidste år</b>: budget for næste år (vises i resultatopgørelsen) og evt. sidste års tal.</li>
+      <li><b>Nøgleoplysninger</b>: arealer, fordelingstal, hæftelse, tilskud, december-indtægt og tidligere års nøgletal.</li>
+      <li><b>Regnskab</b>: den færdige årsrapport. Slå "Vis formler" til for at se beregningerne, eller klik på et tal for at spore det tilbage til posteringer og indtastninger.</li>
+      <li><b>Kontrolside</b>: alle afstemninger. Regnskabet er klar, når alle kontroller er grønne (advarsler bør gennemgås).</li>
+      <li><b>Excel</b>: eksporterer hele regnskabet som projektmappe med rigtige formler på tværs af arkene (Grunddata og Kasserapport er kilderne). <b>Udskriv / PDF</b>: åbner browserens udskrift, hvor du vælger "Gem som PDF".</li>
+    </ol>
+    <p>Data gemmes automatisk i browseren. Brug <b>Gem fil</b> for at gemme en kopi (.json), som kan åbnes igen på en anden computer.</p>
+    </div>
+    <div class="panel"><h3>Regelgrundlag (2026)</h3>
+    <ul>
+      <li>Årsregnskabsloven, regnskabsklasse A (andelsboligforeninger aflægger efter klasse A, jf. andelsboligforeningslovens § 6, stk. 2).</li>
+      <li>Andelsboligforeningsloven § 5 (andelsværdi: litra a anskaffelsespris, b valuarvurdering, c offentlig vurdering, d nettoprisindekseret offentlig vurdering; § 5, stk. 3 fastholdt vurdering) og § 6 (årsregnskab, note om andelsværdi og nøgleoplysninger).</li>
+      <li>Bekendtgørelse nr. 336 af 20. marts 2025 om oplysningspligt ved salg af andelsboliger m.v. samt om bestyrelsens pligt til at fremlægge skema over centrale nøgleoplysninger (i kraft 1. juli 2025). § 3: felterne B1–B6, C1–C3, D1–D2, E1–E2, F1–F4, G1–G3, H1–H3, J, K1–K3, M1–M3 og R fra bilag 1 skal være noter i årsregnskabet. Nøgletal P (friværdi) er udgået.</li>
+      <li>Erhvervsstyrelsens "Regnskabsvejledning for andelsboligforeninger" (december 2021) og modelregnskab: opstilling af resultatopgørelse, balance, noter, resultatdisponering, kortfristet del af prioritetsgæld, egenkapital med generalforsamlingsbestemte reserver.</li>
+    </ul></div>`;
+  }
+
+  // ---------- Rapport ----------
+  renderRapport() {
+    const el = document.getElementById('rapport');
+    if (this.fejl) { el.innerHTML = `<div class="panel">Fejl i beregningen: ${esc(this.fejl)}</div>`; return; }
+    const e = this.engine;
+    const cell = (c, col, rowKind) => {
+      if (!c) return '<td></td>';
+      if (c.node) {
+        const n = e.node(c.node);
+        let v = e.get(c.node);
+        if (c.neg) v = -v;
+        const txt = fmtBy(v, n.fmt);
+        const formel = n.input ? 'indtastet' : '= ' + e.formelTekst(c.node);
+        return `<td class="num"><span class="val ${n.input ? 'input' : ''}" data-node="${c.node}" title="${esc(n.label)}">${txt}</span><div class="formel">${esc((c.neg ? '− ' : '') + formel)}</div></td>`;
+      }
+      return `<td class="${col && col.center ? 'center' : col && col.num ? 'num' : ''}">${esc(c.text ?? '')}</td>`;
+    };
+    const para = (text) => '<div class="para">' + String(text || '').split(/\n/).map(line => {
+      if (line.startsWith('### ')) return `<h4>${esc(line.slice(4))}</h4>`;
+      if (line.startsWith('## ')) return `<h3>${esc(line.slice(3))}</h3>`;
+      return esc(line);
+    }).join('\n') + '</div>';
+    let sidenr = 0;
+    const html = this.rapport.pages.map((p) => {
+      const blocks = p.blocks.map(b => {
+        switch (b.type) {
+          case 'forside': return `<div class="forside">${b.lines.map((l, i) => `<div class="l${i}">${esc(l)}</div>`).join('')}</div>`;
+          case 'title': return `<h2 class="titel">${b.note ? `<span style="color:var(--muted);font-size:.9rem;margin-right:8px">Note ${b.note}</span>` : ''}${esc(b.text)}</h2>`;
+          case 'para': return para(b.text);
+          case 'sign': return `${b.titel ? `<div class="sign-titel">${esc(b.titel)}</div>` : ''}<div class="sign">${b.personer.map(x => `<div class="person"><div class="navn">${esc(x.navn)}</div><div class="titel">${esc(x.titel)}</div></div>`).join('')}</div>`;
+          case 'table': {
+            const cols = b.columns;
+            const head = `<tr>${cols.map((c, i) => `<th class="${i < 2 ? 'txt' : c.center ? 'center' : ''}">${esc(c.label)}</th>`).join('')}</tr>`;
+            const rows = b.rows.map(r => {
+              if (r.kind === 'blank') return `<tr class="blank"><td colspan="${cols.length}"></td></tr>`;
+              if (r.kind === 'text') return `<tr class="text"><td></td><td colspan="${cols.length - 1}">${esc(r.label)}</td></tr>`;
+              const cells = r.cells || [];
+              return `<tr class="${r.kind}"><td class="note">${esc(r.note ?? '')}</td><td>${esc(r.label ?? '')}</td>${cols.slice(2).map((col, i) => cell(cells[i], col, r.kind)).join('')}</tr>`;
+            }).join('');
+            return `<table class="rpt"><thead>${head}</thead><tbody>${rows}</tbody></table>${b.note ? `<div class="tabelnote" style="margin:-8px 0 12px;font-size:.78rem;color:var(--muted)">${esc(b.note)}</div>` : ''}`;
+          }
+        }
+        return '';
+      }).join('');
+      const side = p.id === 'forside' ? '' : `<div class="ftr">Side ${++sidenr}</div>`;
+      return `<section class="page" id="side-${p.id}">${p.header ? `<div class="hdr"><span>${esc(p.header)}</span><span>Årsrapport ${this.state.aar}</span></div>` : ''}${blocks}${side}</section>`;
+    }).join('');
+    el.innerHTML = html;
+    el.classList.toggle('vis-formler', this.visFormler);
+  }
+
+  visSpor(id) {
+    const e = this.engine;
+    const panel = document.getElementById('spor');
+    const ind = document.getElementById('spor-indhold');
+    const render = (nodeId) => {
+      const t = e.trace(nodeId, 1);
+      const deps = t.deps.map(d => `<div class="dep ${d.input ? 'input' : ''}" data-id="${d.id}"><span class="dl">${esc(d.label)}</span><span class="dv">${fmtBy(d.value, d.fmt)}</span></div>`).join('');
+      let kilde = '';
+      // Vis posteringer bag KONTO/LIKVID-udtryk
+      const n = e.node(nodeId);
+      if (!n.input && /KONTO\(|LIKVID(IND|UD)\(/.test(n.expr)) {
+        const kontoer = [...n.expr.matchAll(/KONTO\((\d+)\)/g)].map(m => Number(m[1]));
+        const likv = [...n.expr.matchAll(/LIKVID(?:IND|UD)\("([^"]+)"\)/g)].map(m => m[1]);
+        const ps = this.state.posteringer.filter(p => kontoer.includes(Number(p.konto)) || likv.includes(p.likvid));
+        if (ps.length) kilde = `<div class="deps"><b>Posteringer (${ps.length})</b>${ps.map(p => `<div class="dep"><span class="dl">${esc(p.dato)} ${esc(p.bilag)} ${esc(p.tekst)} <span style="color:var(--muted)">(konto ${esc(p.konto)})</span></span><span class="dv">${fmtKr(num(p.ind) - num(p.ud))}</span></div>`).join('')}</div>`;
+      }
+      ind.innerHTML = `<div class="spor-node"><span class="v">${fmtBy(t.value, t.fmt)}</span><div class="lbl">${esc(t.label)}</div><div class="f">${t.input ? 'Indtastet værdi' : '= ' + esc(t.formel)}</div><div class="f" style="color:var(--muted)">id: ${esc(nodeId)}</div>${deps ? `<div class="deps"><b>Bygger på</b>${deps}</div>` : ''}${kilde}</div>${this._sporHist.length > 1 ? '<button class="knap lille" id="spor-tilbage">← Tilbage</button>' : ''}`;
+      ind.querySelectorAll('.dep[data-id]').forEach(d => d.addEventListener('click', () => { this._sporHist.push(d.dataset.id); render(d.dataset.id); }));
+      const tb = document.getElementById('spor-tilbage'); if (tb) tb.addEventListener('click', () => { this._sporHist.pop(); render(this._sporHist[this._sporHist.length - 1]); });
+    };
+    this._sporHist = [id];
+    render(id);
+    panel.classList.add('open');
+  }
+
+  // ---------- Kontrol ----------
+  renderKontrol() {
+    const el = document.getElementById('tab-kontrol');
+    if (this.fejl) { el.innerHTML = `<div class="kontrol-banner fejl">Fejl i beregningen: ${esc(this.fejl)}</div>`; return; }
+    const k = this.kontrol;
+    const banner = k.antal.fejl ? `<div class="kontrol-banner fejl">Regnskabet balancerer IKKE – ${k.antal.fejl} kontrol(ler) fejler. Ret fejlene, før regnskabet aflægges.</div>`
+      : k.antal.advarsel ? `<div class="kontrol-banner advarsel">Regnskabet balancerer, og afstemningerne stemmer. ${k.antal.advarsel} advarsel(er) bør gennemgås.</div>`
+      : `<div class="kontrol-banner ok">Regnskabet balancerer, og alle afstemninger er korrekte.</div>`;
+    const e = this.engine;
+    const items = k.kontroller.map(c => {
+      const afstem = c.venstre && c.hoejre ? `<table class="afstem"><tr><td>${esc(c.venstre.label)}</td><td class="num">${c.venstre.node ? `<span class="val" data-node="${c.venstre.node}">${fmtKr(c.venstre.value)}</span>` : fmtKr(c.venstre.value)}</td></tr><tr><td>${esc(c.hoejre.label)}</td><td class="num">${c.hoejre.node ? `<span class="val" data-node="${c.hoejre.node}">${fmtKr(c.hoejre.value)}</span>` : fmtKr(c.hoejre.value)}</td></tr><tr><td><b>Difference</b></td><td class="num"><b>${fmtKr(c.diff)}</b></td></tr></table>`
+        : c.venstre ? `<table class="afstem"><tr><td>${esc(c.venstre.label)}</td><td class="num">${c.venstre.node ? `<span class="val" data-node="${c.venstre.node}">${fmtKr(c.venstre.value)}</span>` : fmtKr(c.venstre.value)}</td></tr></table>` : '';
+      return `<div class="kontrol ${c.status}"><div class="k-titel"><span class="k-status">${c.status}</span>${esc(c.titel)}</div><div class="k-fork">${esc(c.forklaring)}</div>${afstem}${c.detaljer.length ? `<ul>${c.detaljer.map(d => `<li>${esc(d)}</li>`).join('')}</ul>` : ''}</div>`;
+    }).join('');
+    el.innerHTML = `<h2>Kontrolside – afstemninger</h2>${banner}
+    <div class="panel"><b>Nøgletal:</b> Årets resultat <span class="val" data-node="res.resultat">${fmtKr(e.get('res.resultat'))}</span> · Aktiver i alt <span class="val" data-node="bal.aktiver.ultimo">${fmtKr(e.get('bal.aktiver.ultimo'))}</span> · Passiver i alt <span class="val" data-node="bal.passiver.ultimo">${fmtKr(e.get('bal.passiver.ultimo'))}</span> · Likvide beholdninger <span class="val" data-node="likvid.total.ultimo">${fmtKr(e.get('likvid.total.ultimo'))}</span> · Andelsværdi pr. andelskrone <span class="val" data-node="av.prKrone">${fmtKr(e.get('av.prKrone'))}</span></div>
+    ${items}`;
+  }
+}
