@@ -217,6 +217,7 @@ export function tomState(aar = new Date().getFullYear() - 1) {
   return {
     version: 1,
     aar,
+    primoKilde: 'manuel',
     forening: { navn: '', kortnavn: '', adresse: '', postnrBy: '', by: '', cvr: '', stiftelsesaar: '', opfoerelsesaar: '' },
     ledelse: {
       bestyrelse: [{ navn: '', titel: 'Formand' }, { navn: '', titel: 'Kasserer' }, { navn: '', titel: 'Bestyrelsesmedlem' }],

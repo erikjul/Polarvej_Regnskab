@@ -12,14 +12,15 @@ Programmet er en ren webapplikation (HTML/JavaScript) uden server. Det kan køre
 * **Kontrolside**: balance primo/ultimo, kontering af alle posteringer, pengestrømsafstemning, bankafstemning pr. konto, resultatdisponering, egenkapitalbevægelse, lån mod årsopgørelse, andelsværdiens lovlighed, nøgleoplysninger, stamdata og budget. Se [docs/kontroller.md](docs/kontroller.md).
 * **Excel-eksport**: Én projektmappe med et ark pr. side i årsrapporten plus *Kasserapport*, *Kontoplan*, *Grunddata*, *Beregninger* og *Kontrol*. Alle tal i rapportarkene er formler (SUMIF over kasserapporten, referencer til grunddata), så rettelser i Excel slår igennem overalt, og kontrolarket viser OK/FEJL med formler.
 * **PDF**: "Udskriv / PDF" åbner browserens udskrift med A4-sideopsætning og sideskift; vælg "Gem som PDF".
-* **Næste år**: Ét klik opretter næste års regnskab med dette års ultimotal som primotal, sidste års tal i sammenligningskolonnen og nøgletallene forskudt.
+* **Flere regnskabsår**: Programmet rummer alle årene (fx 2025 og 2026) og har en årsvælger i topbjælken. "+ Nyt år" opretter næste år med dette års ultimotal som primotal, sidste års resultat i sammenligningskolonnen og nøgletallene forskudt. Koblingen er levende: rettes 2025, følger 2026's primotal med. Koblingen kan afbrydes, hvis primotal skal indtastes manuelt.
 
 ## Kom i gang
 
 1. Åbn programmet (GitHub Pages) eller start en lokal server i mappen, fx `python3 -m http.server 8000`, og åbn `http://localhost:8000/`.
-2. Programmet starter med eksempeldata for Polarvej I, regnskabsåret 2025. Klik **Nyt** for et tomt regnskab eller **Åbn fil** for et gemt.
+2. Programmet starter med eksempeldata for Polarvej I, regnskabsåret 2025. Ret tallene, så kontrolsiden bliver grøn (eller klik **Nyt** for et tomt regnskab / **Åbn fil** for et gemt).
 3. Gennemgå fanerne 1–7, se **Regnskab** og **Kontrolside**, og eksportér med **Excel** eller **Udskriv / PDF**.
-4. Gem løbende med **Gem fil** (`.json`).
+4. Klik **+ Nyt år** for at oprette 2026 ovenpå 2025 og begynd at taste 2026-posteringer. Skift mellem årene i årsvælgeren; regnskab, kontrolside og eksport gælder altid det valgte år.
+5. Gem løbende med **Gem fil** (`.json` med alle regnskabsår).
 
 Fanen **Hjælp** i programmet beskriver arbejdsgangen. Regelgrundlaget er beskrevet i [docs/regelgrundlag.md](docs/regelgrundlag.md).
 
@@ -52,6 +53,7 @@ js/controls.js        – kontrolsiden (afstemninger)
 js/excel.js           – Excel-eksport med formler (ExcelJS)
 js/ui.js, js/app.js   – brugerflade
 js/eksempel.js        – eksempeldata (Polarvej I, 2025)
+js/samling.js         – flere regnskabsår med koblede primotal
 js/storage.js         – autosave og filer
 lib/exceljs.min.js    – ExcelJS 4.4.0 (MIT)
 data/                 – eksempeldata som JSON

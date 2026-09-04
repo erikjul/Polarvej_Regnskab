@@ -6,6 +6,7 @@ import { NOTER_RESULTAT, ALLE_LINJER, alleMappings, STANDARD_KONTOPLAN, STANDARD
 import { eksempelPolarvej2025 } from './eksempel.js';
 import { fmtKr, fmtInt, fmtBy, parseTal, num } from './format.js';
 import { gemLokalt, hentLokalt, gemSomFil, laesFil } from './storage.js';
+import { nySamling, migrer, aarListe, erKoblet, engineFor, opretNytAar, PRIMO_STI } from './samling.js';
 import { eksporterExcel } from './excel.js';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -20,23 +21,25 @@ export class App {
   }
 
   init() {
-    const gemt = hentLokalt();
-    this.setState(gemt ? normaliser(gemt) : eksempelPolarvej2025(), !gemt);
+    const gemt = migrer(hentLokalt());
+    this.setSamling(gemt || nySamling(eksempelPolarvej2025()), !gemt);
     document.querySelectorAll('#tabs button').forEach(b => b.addEventListener('click', () => this.visTab(b.dataset.tab)));
+    document.getElementById('aar-valg').addEventListener('change', (e) => this.skiftAar(Number(e.target.value)));
+    document.getElementById('btn-nyt-aar').addEventListener('click', () => this.nytAar());
     document.getElementById('btn-ny').addEventListener('click', () => {
-      if (confirm('Start et nyt, tomt regnskab? Husk at gemme det nuværende som fil først.')) {
+      if (confirm('Start helt forfra med et nyt, tomt regnskab? Alle regnskabsår i programmet erstattes. Husk at gemme som fil først.')) {
         const aar = parseInt(prompt('Regnskabsår:', String(new Date().getFullYear() - 1)) || '', 10);
-        this.setState(tomState(Number.isFinite(aar) ? aar : new Date().getFullYear() - 1)); this.visTab('stamdata');
+        this.setSamling(nySamling(tomState(Number.isFinite(aar) ? aar : new Date().getFullYear() - 1))); this.visTab('stamdata');
       }
     });
     document.getElementById('btn-eksempel').addEventListener('click', () => {
-      if (confirm('Erstat det nuværende regnskab med eksempeldata (Polarvej I, 2025)?')) { this.setState(eksempelPolarvej2025()); this.visTab('stamdata'); }
+      if (confirm('Erstat alle regnskabsår i programmet med eksempeldata (Polarvej I, 2025)?')) { this.setSamling(nySamling(eksempelPolarvej2025())); this.visTab('stamdata'); }
     });
-    document.getElementById('btn-gem').addEventListener('click', () => gemSomFil(this.state));
+    document.getElementById('btn-gem').addEventListener('click', () => gemSomFil(this.samling));
     document.getElementById('btn-aabn').addEventListener('click', () => document.getElementById('fil-input').click());
     document.getElementById('fil-input').addEventListener('change', async (e) => {
       const f = e.target.files[0]; if (!f) return;
-      try { const s = await laesFil(f); this.setState(normaliser(s)); this.toast('Regnskabet er indlæst'); this.visTab('stamdata'); }
+      try { const s = migrer(await laesFil(f)); if (!s) throw new Error('Filen indeholder ikke et regnskab'); this.setSamling(s); this.toast('Regnskabet er indlæst'); this.visTab('stamdata'); }
       catch (err) { alert('Kunne ikke læse filen: ' + err.message); }
       e.target.value = '';
     });
@@ -52,15 +55,48 @@ export class App {
     this.visTab(this.tab);
   }
 
-  setState(s, stille) {
-    this.state = s;
+  setSamling(samling, stille) {
+    this.samling = samling;
+    this.state = samling.regnskaber[samling.aktivAar];
     this.recompute();
     if (!stille) this.toast('Data indlæst');
   }
 
+  skiftAar(aar) {
+    if (!this.samling.regnskaber[aar]) return;
+    this.samling.aktivAar = aar;
+    this.state = this.samling.regnskaber[aar];
+    this.recompute();
+    this.renderTab(this.tab);
+    this.toast('Viser regnskabsåret ' + aar);
+  }
+
+  nytAar() {
+    const fra = this.state.aar;
+    if (this.samling.regnskaber[fra + 1]) { this.skiftAar(fra + 1); return; }
+    if (!confirm(`Opret regnskabsåret ${fra + 1}? Primotal, sidste års resultat og nøgletal hentes automatisk fra ${fra} og følger med, hvis ${fra} rettes senere.`)) return;
+    opretNytAar(this.samling, fra);
+    this.state = this.samling.regnskaber[fra + 1];
+    this.recompute();
+    this.visTab('kasserapport');
+    this.toast(`Regnskabsåret ${fra + 1} er oprettet`);
+  }
+
+  sletAar() {
+    const aar = this.state.aar;
+    const liste = aarListe(this.samling);
+    if (liste.length === 1) { alert('Det eneste regnskabsår kan ikke slettes. Brug "Nyt" for at starte forfra.'); return; }
+    if (this.samling.regnskaber[aar + 1]) { alert(`Slet først ${aar + 1}, som bygger på ${aar}.`); return; }
+    if (!confirm(`Slet regnskabsåret ${aar} permanent? (Gem evt. som fil først.)`)) return;
+    delete this.samling.regnskaber[aar];
+    this.skiftAar(aarListe(this.samling).pop());
+  }
+
+  erKoblet() { return erKoblet(this.samling, this.state.aar); }
+
   recompute() {
     try {
-      this.engine = new Engine(this.state);
+      this.engine = engineFor(this.samling, this.state.aar);
       this.rapport = byggeRapport(this.engine);
       this.kontrol = kontroller(this.engine);
       this.fejl = null;
@@ -68,8 +104,10 @@ export class App {
       console.error(e);
       this.fejl = e.message;
     }
-    gemLokalt(this.state);
-    document.getElementById('topbar-aar').textContent = this.state.aar;
+    gemLokalt(this.samling);
+    const sel = document.getElementById('aar-valg');
+    sel.innerHTML = aarListe(this.samling).map(a => `<option value="${a}" ${a === this.state.aar ? 'selected' : ''}>${a}${erKoblet(this.samling, a) ? ' ⇐' : ''}</option>`).join('');
+    document.getElementById('btn-nyt-aar').textContent = this.samling.regnskaber[this.state.aar + 1] ? `Gå til ${this.state.aar + 1} →` : `+ Nyt år (${this.state.aar + 1})`;
     const b = document.getElementById('status-badge');
     if (this.fejl) { b.textContent = 'Fejl: ' + this.fejl; b.className = 'status-badge fejl'; return; }
     const k = this.kontrol.antal;
@@ -148,6 +186,7 @@ export class App {
   }
 
   bind(el) {
+    if (this.erKoblet()) el.querySelectorAll('[data-path]').forEach(inp => { if (PRIMO_STI.test(inp.dataset.path)) { inp.disabled = true; inp.title = `Hentes automatisk fra ${this.state.aar - 1}`; } });
     el.querySelectorAll('[data-path]').forEach(inp => {
       const type = inp.dataset.type;
       const handler = () => {
@@ -224,34 +263,10 @@ export class App {
     if (name === 'standard-kontoplan') { if (confirm('Tilføj manglende standardkonti til kontoplanen?')) { const has = new Set(S.kontoplan.map(k => Number(k.nr))); STANDARD_KONTOPLAN.forEach(k => { if (!has.has(k.nr)) S.kontoplan.push({ ...k }); }); S.kontoplan.sort((a, b) => a.nr - b.nr); this.recompute(); this.renderTab(this.tab); } }
     if (name.startsWith('standardtekst:')) { const k = name.slice(14); if (confirm('Gendan standardteksten?')) { S.tekster[k] = STANDARD_TEKSTER[k]; this.recompute(); this.renderTab(this.tab); } }
     if (name === 'kopier-budget') { ALLE_LINJER.forEach(l => { S.budget[l.id] = Math.round(this.engine.get(l.id)); }); this.recompute(); this.renderTab(this.tab); }
-    if (name === 'overfoer-primo') {
-      if (!confirm(`Opret regnskab for ${S.aar + 1} med dette års ultimotal som primotal? Det nuværende regnskab gemmes først som fil.`)) return;
-      gemSomFil(S);
-      const e = this.engine;
-      const n = normaliser(JSON.parse(JSON.stringify(S)));
-      n.aar = S.aar + 1;
-      n.posteringer = [];
-      n.reguleringer = [];
-      n.likvidkonti.forEach(k => { k.primo = e.get(`likvid.${k.id}.ultimo`); k.kontoudtog = ''; });
-      n.ejendom.kostprisPrimo = e.get('ejendom.kostpris.ultimo'); n.ejendom.opskrivningPrimo = e.get('ek.opskrivning.ultimo'); n.ejendom.opskrivningAaret = 0;
-      n.egenkapitalPrimo = { overfoertResultat: e.get('ek.overfoert.ultimo'), genopretning: e.get('ek.genopretning.ultimo'), vedligehold: e.get('ek.vedligehold.ultimo'), andreReserver: e.get('ek.andre.ultimo') };
-      n.disponering = { tilVedligehold: 0, tilAndreReserver: 0, tilGenopretning: 0, anvendtVedligehold: 0, anvendtAndreReserver: 0, anvendtGenopretning: 0 };
-      n.laan.forEach(l => { l.restgaeldPrimo = e.get(`laan.${l.id}.restgaeldUltimo`); l.kortfristetPrimo = e.get(`laan.${l.id}.kortfristet`); l.renter = 0; l.kortfristet = 0; l.afdragIflg = ''; l.restgaeldUltimoIflg = ''; });
-      n.andenGaeld.forEach(a => { a.primo = e.get(`ag.${a.id}.ultimo`); });
-      n.tilgodehavender.forEach(t => { t.primo = e.get(`tg.${t.id}.ultimo`); });
-      n.forudmodtaget.primo = e.get('forud.ultimo');
-      n.andele.senestVedtagetPrKrone = e.get('av.prKrone'); n.andele.senestVedtagetAar = String(S.aar + 1);
-      n.sidsteAar = { vis: true, linjer: Object.fromEntries(ALLE_LINJER.map(l => [l.id, e.get(l.id)])) };
-      n.budget = {};
-      const nk = n.noegle;
-      nk.arealer.y2 = { ...S.noegle.arealer.y1 }; nk.arealer.y1 = { ...S.noegle.arealer.y0 };
-      nk.resultatPrM2 = { y2: e.get('nk.j.y1'), y1: e.get('nk.j.y0') };
-      nk.vedligeholdLoebende = { y2: e.get('nk.m1.y1'), y1: e.get('nk.m1.y0') };
-      nk.vedligeholdGenopretning = { y2: e.get('nk.m2.y1'), y1: e.get('nk.m2.y0') };
-      nk.afdragPrM2 = { y2: e.get('nk.r.y1'), y1: e.get('nk.r.y0') };
-      n.ledelse.datoPaategning = ''; n.ledelse.datoBilagskontrol = ''; n.ledelse.datoGeneralforsamling = '';
-      this.setState(n); this.visTab('stamdata');
-    }
+    if (name === 'slet-aar') this.sletAar();
+    if (name === 'nyt-aar') this.nytAar();
+    if (name === 'kobling-fra') { if (confirm(`Afbryd koblingen til ${S.aar - 1}? Primotallene beholdes som de er nu, men følger ikke længere med, hvis ${S.aar - 1} rettes.`)) { S.primoKilde = 'manuel'; this.recompute(); this.renderTab(this.tab); } }
+    if (name === 'kobling-til') { S.primoKilde = 'forrigeAar'; this.recompute(); this.renderTab(this.tab); this.toast(`Primotal hentes nu fra ${S.aar - 1}`); }
   }
 
   // ---------- Faner ----------
@@ -259,7 +274,7 @@ export class App {
     const S = this.state;
     return `<h2>Stamdata</h2>
     <div class="panel"><h3>Forening</h3><div class="grid">
-      ${this.felt('Regnskabsår', 'aar', 'int', { hint: 'Ændres kun ved nyt regnskab' })}
+      <div class="felt"><label>Regnskabsår</label><input type="text" value="${S.aar}" disabled></div>
       ${this.felt('Foreningens navn (forside og påtegning)', 'forening.navn', 'text', { placeholder: 'Andelsboligforeningen …' })}
       ${this.felt('Kort navn (sidehoved)', 'forening.kortnavn', 'text')}
       ${this.felt('Adresse', 'forening.adresse')}
@@ -281,10 +296,18 @@ export class App {
       ${this.felt('Bilagskontrol', 'ledelse.datoBilagskontrol', 'date')}
       ${this.felt('Ordinær generalforsamling', 'ledelse.datoGeneralforsamling', 'date')}
     </div></div>
-    <div class="panel"><h3>Næste regnskabsår</h3>
-      <p class="hjaelp">Når regnskabet er færdigt og godkendt, kan du oprette næste års regnskab med dette års ultimotal som primotal. Sidste års resultat lægges i sammenligningskolonnen, og nøgletallene for tidligere år flyttes automatisk.</p>
-      <button class="knap" data-action="overfoer-primo">Opret regnskab for ${S.aar + 1} med primotal fra ${S.aar}</button>
+    <div class="panel"><h3>Regnskabsår i programmet</h3>
+      <p class="hjaelp">Programmet indeholder følgende regnskabsår: <b>${aarListe(this.samling).join(', ')}</b>. Skift år i topbjælken. "⇐" betyder, at årets primotal hentes automatisk fra det foregående år.</p>
+      ${this.koblingHtml()}
+      <div class="knapper"><button class="knap" data-action="nyt-aar">${this.samling.regnskaber[S.aar + 1] ? 'Gå til ' + (S.aar + 1) : '+ Opret regnskabsåret ' + (S.aar + 1) + ' med primotal fra ' + S.aar}</button><button class="knap slet" data-action="slet-aar">Slet regnskabsåret ${S.aar}</button></div>
     </div>`;
+  }
+
+  koblingHtml() {
+    const S = this.state;
+    if (this.erKoblet()) return `<div class="koblet-info">Primotal, sidste års resultat og tidligere års nøgletal for ${S.aar} hentes automatisk fra regnskabet for ${S.aar - 1} og kan ikke redigeres her. Ret i stedet tallene i ${S.aar - 1}. <button class="knap lille" data-action="kobling-fra">Afbryd kobling (indtast primotal manuelt)</button></div>`;
+    if (this.samling.regnskaber[S.aar - 1]) return `<div class="koblet-info">Primotallene for ${S.aar} indtastes manuelt. <button class="knap lille" data-action="kobling-til">Hent primotal automatisk fra ${S.aar - 1}</button></div>`;
+    return '';
   }
 
   kontoOptions() { return this.state.kontoplan.slice().sort((a, b) => a.nr - b.nr).map(k => ({ id: k.nr, label: `${k.nr} ${k.navn}` })); }
@@ -374,6 +397,7 @@ export class App {
     const balanceposter = [{ id: 'forud', label: 'Forudmodtaget boligafgift' }, ...S.andenGaeld.map(a => ({ id: 'ag:' + a.id, label: 'Anden gæld: ' + a.tekst })), ...S.tilgodehavender.map(t => ({ id: 'tg:' + t.id, label: 'Tilgodehavende: ' + t.tekst }))];
     return `<h2>Primo, ejendom, egenkapital og lån</h2>
     <p class="hjaelp">Primotal er sidste års ultimotal (fra årsrapporten for ${S.aar - 1}). Kontrolsiden tjekker, at primobalancen balancerer.</p>
+    ${this.koblingHtml()}
     <div class="panel"><h3>Likvide beholdninger</h3>
       ${this.tabel('likvidkonti', [{ key: 'navn', label: 'Konto (som vist i noten)' }, { key: 'primo', label: `Saldo primo 1/1 ${S.aar}`, type: 'num', width: 'w-beloeb' }, { key: 'kontoudtog', label: `Saldo iflg. kontoudtog 31/12 ${S.aar} (til afstemning)`, type: 'num', width: 'w-beloeb' }], { beregnet: [{ label: 'Beregnet ultimo', value: (it) => fmtKr(e.get(`likvid.${it.id}.ultimo`)) }], tilfoejLabel: 'Tilføj likvid konto' })}
     </div>
@@ -438,6 +462,7 @@ export class App {
     }).join('');
     return `<h2>Budget ${S.aar + 1} og sammenligningstal ${S.aar - 1}</h2>
     <p class="hjaelp">Budgettet vises i resultatopgørelsens højre kolonne. Omkostninger indtastes med minus. Sidste års tal kan vises som ekstra kolonne.</p>
+    ${this.koblingHtml()}
     <div class="panel">
       ${this.felt('', 'sidsteAar.vis', 'bool', { checkLabel: `Vis kolonnen "Regnskab ${S.aar - 1}" i resultatopgørelse og noter` })}
       <div class="knapper"><button class="knap" data-action="kopier-budget">Kopiér årets tal til budgettet (afrundet)</button></div>
@@ -525,7 +550,8 @@ export class App {
       <li><b>Kontrolside</b>: alle afstemninger. Regnskabet er klar, når alle kontroller er grønne (advarsler bør gennemgås).</li>
       <li><b>Excel</b>: eksporterer hele regnskabet som projektmappe med rigtige formler på tværs af arkene (Grunddata og Kasserapport er kilderne). <b>Udskriv / PDF</b>: åbner browserens udskrift, hvor du vælger "Gem som PDF".</li>
     </ol>
-    <p>Data gemmes automatisk i browseren. Brug <b>Gem fil</b> for at gemme en kopi (.json), som kan åbnes igen på en anden computer.</p>
+    <p><b>Flere regnskabsår</b>: Når 2025 er indtastet, klikker du <b>+ Nyt år</b> i topbjælken. 2026 oprettes med 2025's ultimotal som primotal, 2025's resultat i sammenligningskolonnen og nøgletallene forskudt. Koblingen er levende: retter du noget i 2025, følger 2026's primotal med. Skift mellem årene i topbjælkens årsvælger; regnskab, kontrolside, Excel og PDF gælder altid det valgte år.</p>
+    <p>Data gemmes automatisk i browseren. Brug <b>Gem fil</b> for at gemme en kopi (.json) med alle regnskabsår, som kan åbnes igen på en anden computer.</p>
     </div>
     <div class="panel"><h3>Regelgrundlag (2026)</h3>
     <ul>
