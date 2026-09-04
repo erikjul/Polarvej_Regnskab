@@ -6,6 +6,7 @@ Programmet er en ren webapplikation (HTML/JavaScript) uden server. Det kan køre
 
 ## Funktioner
 
+* **Vedtægter**: fanen Aktuelle vedtægter viser vedtægterne, de regnskabsrelevante bestemmelser og et automatisk vedtægtstjek (bestyrelse, revision, frister, indskud, fordelingstal, andelsværdi, henlæggelsesfond, fremlejedepositum, forsikringsnote). Regnskabspraksis forklarer henlæggelser (§ 30, stk. 3) og andelshavernes egne forbedringer (§ 10 og § 14). Se [docs/vedtaegter.md](docs/vedtaegter.md).
 * **Vurdering af robusthed**: sidste side i årsrapporten sammenfatter automatisk styrker, opmærksomhedspunkter og advarselstegn (belåning, likviditet, dækning af afdrag, låneydelsernes andel, vedligeholdelse, andelsværdiens buffer, restancer m.m.) med en samlet konklusion. Grænseværdier i [docs/vurdering.md](docs/vurdering.md).
 * **Boligafgift pr. andel**: måned-for-måned-oversigt på tværs af alle år med restancer og forudbetalinger; indbetalinger genkendes på mønstre pr. andel.
 * **Arkiv**: de aflagte årsrapporter, DLR's låneafregning, bankens kontoudtog og dokumentationen ligger i mappen `arkiv/` og vises i fanen Arkiv.
@@ -56,6 +57,7 @@ js/engine.js          – regnskabsmotor (alle beregninger)
 js/report.js          – årsrapportens sider og noter
 js/controls.js        – kontrolsiden (afstemninger)
 js/vurdering.js       – vurdering af regnskabets robusthed (sidste side)
+js/vedtaegter.js      – vedtægtstjek
 js/excel.js           – Excel-eksport med formler (ExcelJS)
 js/ui.js, js/app.js   – brugerflade
 js/eksempel.js        – eksempeldata (Polarvej I, 2025)

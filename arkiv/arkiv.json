@@ -11,6 +11,12 @@
       ]
     },
     {
+      "titel": "Vedtægter",
+      "filer": [
+        { "titel": "Vedtægter for Polarvejens Andelsboligforening I (senest ændret 25. marts 2019)", "fil": "vedtaegter.pdf", "note": "Vises også i fanen Aktuelle vedtægter med vedtægtstjek." }
+      ]
+    },
+    {
       "titel": "Lån",
       "filer": [
         { "titel": "DLR Kredit – låneafregning 6. juli 2017", "fil": "dlr-laaneafregning-2017.pdf", "note": "Obligationslån 950.000 kr., 1,5 %, 81 kvartårlige terminer. Betalingsplanen er indlæst på lånet i programmet." }
@@ -34,7 +40,8 @@
         { "titel": "Programmets tal mod årsrapporterne (tabel)", "fil": "../docs/afvigelser-tabel.md" },
         { "titel": "Regelgrundlag 2026", "fil": "../docs/regelgrundlag.md" },
         { "titel": "Kontrolsidens afstemninger", "fil": "../docs/kontroller.md" },
-        { "titel": "Vurdering af robusthed – punkter og grænseværdier", "fil": "../docs/vurdering.md" }
+        { "titel": "Vurdering af robusthed – punkter og grænseværdier", "fil": "../docs/vurdering.md" },
+        { "titel": "Vedtægterne og regnskabet (vedtægtstjek)", "fil": "../docs/vedtaegter.md" }
       ]
     }
   ]

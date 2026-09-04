@@ -10,6 +10,7 @@ import { nySamling, migrer, aarListe, erKoblet, engineFor, opretNytAar, PRIMO_ST
 import { parseBetalingsplan, planAar, aarAf, sorter, sidsteTermin, restloebetid } from './betalingsplan.js';
 import { parseBankCsv, forberedImport } from './import.js';
 import { boligafgiftOversigt, MAANEDER, STANDARD_ANDELSHAVERE } from './boligafgift.js';
+import { vedtaegtstjek } from './vedtaegter.js';
 import { STANDARD_IMPORTREGLER } from './model.js';
 import { eksporterExcel } from './excel.js';
 
@@ -102,7 +103,10 @@ export class App {
     try {
       this.engine = engineFor(this.samling, this.state.aar);
       this.kontrol = kontroller(this.engine);
-      this.rapport = byggeRapport(this.engine, { kontrol: this.kontrol, samling: this.samling });
+      let restancer;
+      if ((this.state.andelshavere || []).length) { const ov = boligafgiftOversigt(this.samling, this.state.andelshavere, `${this.state.aar}-12`); restancer = ov.andele.reduce((s, r) => s + (r.saldo < 0 ? -r.saldo : 0), 0); }
+      this.vedtaegter = vedtaegtstjek(this.engine, { restancer });
+      this.rapport = byggeRapport(this.engine, { kontrol: this.kontrol, samling: this.samling, vedtaegter: this.vedtaegter });
       this.fejl = null;
     } catch (e) {
       console.error(e);
@@ -144,6 +148,7 @@ export class App {
       case 'tekster': el.innerHTML = this.htmlTekster(); break;
       case 'rapport': this.renderRapport(); return;
       case 'kontrol': this.renderKontrol(); return;
+      case 'vedtaegter': this.renderVedtaegter(el); return;
       case 'arkiv': this.renderArkiv(el); return;
       case 'hjaelp': el.innerHTML = this.htmlHjaelp(); return;
     }
@@ -344,6 +349,19 @@ export class App {
       ${this.felt('Bilagskontrol', 'ledelse.datoBilagskontrol', 'date')}
       ${this.felt('Ordinær generalforsamling', 'ledelse.datoGeneralforsamling', 'date')}
     </div></div>
+    <div class="panel"><h3>Forsikringer (vedtægternes § 29, stk. 5)</h3>
+      <p class="hjaelp">Vedtægterne kræver, at foreningen tegner bestyrelsesansvars- og besvigelsesforsikring, og at forsikringssummen oplyses i en note til årsrapporten.</p>
+      <div class="grid">
+      ${this.felt('Forsikringsselskab', 'forsikring.selskab')}
+      ${this.felt('Bestyrelsesansvarsforsikring, forsikringssum (kr.)', 'forsikring.bestyrelsesansvar', 'num')}
+      ${this.felt('Besvigelsesforsikring, forsikringssum (kr.)', 'forsikring.besvigelse', 'num')}
+      ${this.felt('Bygningsforsikring, forsikringssum (kr., valgfrit)', 'forsikring.bygning', 'num')}
+      ${this.felt('Bemærkning til noten', 'forsikring.bemaerkning', 'textarea', { wide: true, rows: 2 })}
+      </div></div>
+    <div class="panel"><h3>Fremleje (vedtægternes § 11)</h3><div class="grid">
+      ${this.felt('Antal fremlejede boliger pr. 31/12', 'fremleje.antal', 'int', { hint: 'Hver kræver 20.000 kr. depositum på lukket konto' })}
+      ${this.felt('Hvilke boliger', 'fremleje.boliger')}
+    </div></div>
     <div class="panel"><h3>Regnskabsår i programmet</h3>
       <p class="hjaelp">Programmet indeholder følgende regnskabsår: <b>${aarListe(this.samling).join(', ')}</b>. Skift år i topbjælken. "⇐" betyder, at årets primotal hentes automatisk fra det foregående år.</p>
       ${this.koblingHtml()}
@@ -482,6 +500,21 @@ export class App {
       <p class="hjaelp">Mønstre adskilles med semikolon og matches mod posteringsteksten (inkl. modpart fra banken). Første andel, hvis mønster passer, får betalingen. "Fra" er første måned, der regnes som forfalden; "primosaldo" er evt. forudbetaling (+) eller restance (−) før den måned.</p>
       ${this.tabel('andelshavere', [{ key: 'adresse', label: 'Andel' }, { key: 'navn', label: 'Andelshaver' }, { key: 'afgift', label: 'Afgift pr. md.', type: 'num', width: 'w-beloeb' }, { key: 'moenstre', label: 'Mønstre (tekst indeholder; adskil med ;)' }, { key: 'fra', label: 'Fra (ÅÅÅÅ-MM)', width: 'w-bilag' }, { key: 'primoSaldo', label: 'Primosaldo', type: 'num', width: 'w-beloeb' }], { tilfoejLabel: 'Tilføj andel', ekstraKnapper: '<button class="knap" data-action="standard-andelshavere">Standardliste (Polarvej I)</button>' })}
     </div>`;
+  }
+
+  async renderVedtaegter(el) {
+    const v = this.vedtaegter || { punkter: [], antal: {} };
+    const status = v.antal.fejl ? `<div class="kontrol-banner fejl">${v.antal.fejl} vedtægtsbestemmelse(r) er ikke opfyldt i regnskabet for ${this.state.aar}.</div>` : v.antal.advarsel ? `<div class="kontrol-banner advarsel">Vedtægterne er opfyldt med ${v.antal.advarsel} bemærkning(er).</div>` : `<div class="kontrol-banner ok">Regnskabet for ${this.state.aar} opfylder vedtægternes krav.</div>`;
+    const tjek = v.punkter.map(x => `<div class="kontrol ${x.status}"><div class="k-titel"><span class="k-status">${x.status}</span>${esc(x.paragraf)} · ${esc(x.titel)}</div><div class="k-fork">${esc(x.tekst)}</div></div>`).join('');
+    el.innerHTML = `<h2>Aktuelle vedtægter</h2><p class="hjaelp">Henter vedtægterne …</p>`;
+    let meta = null;
+    try { const r = await fetch('arkiv/vedtaegter.json', { cache: 'no-cache' }); if (r.ok) meta = await r.json(); } catch (e) { /* ignorer */ }
+    const best = meta ? `<div class="panel"><h3>Regnskabsrelevante bestemmelser</h3><p class="hjaelp">${esc(meta.titel)}, vedtaget ${esc(meta.vedtaget)}, senest ændret ${esc(meta.senestAendret)}. ${esc(meta.grundlag)}.</p><table class="vedt"><thead><tr><th>Paragraf</th><th>Emne</th><th>Bestemmelse</th><th>Sådan håndteres det i regnskabet</th></tr></thead><tbody>${meta.bestemmelser.map(b => `<tr><td class="par">${esc(b.paragraf)}</td><td><b>${esc(b.emne)}</b></td><td>${esc(b.tekst)}</td><td>${esc(b.program)}</td></tr>`).join('')}</tbody></table></div>` : '';
+    const fil = meta ? 'arkiv/' + meta.fil : 'arkiv/vedtaegter.pdf';
+    el.innerHTML = `<h2>Aktuelle vedtægter</h2>
+      <div class="panel"><h3>Vedtægtstjek af regnskabet for ${this.state.aar}</h3>${status}${tjek}</div>
+      ${best}
+      <div class="panel"><h3>Vedtægterne</h3><p class="hjaelp"><a href="${fil}" target="_blank" rel="noopener">Åbn vedtægterne i nyt vindue (PDF)</a>. Nye vedtægter lægges i mappen arkiv/ og registreres i arkiv/vedtaegter.json.</p><iframe class="vedt-pdf" src="${fil}" title="Vedtægter"></iframe></div>`;
   }
 
   async renderArkiv(el) {
@@ -638,6 +671,7 @@ export class App {
       <div class="knapper"><button class="knap" data-action="kopier-budget">Kopiér årets tal til budgettet (afrundet)</button></div>
       <table class="edit"><thead><tr><th>Linje</th><th class="num">Regnskab ${S.aar}</th><th class="num">Budget ${S.aar + 1}</th><th class="num">Regnskab ${S.aar - 1}</th></tr></thead><tbody>${rows}
       <tr class="sum"><td style="text-align:left">Årets resultat</td><td data-calc="res.resultat">${fmtKr(e.get('res.resultat'))}</td><td data-calc="bud.res.resultat">${fmtKr(e.get('bud.res.resultat'))}</td><td data-calc="prev.res.resultat">${fmtKr(e.get('prev.res.resultat'))}</td></tr>
+      <tr><td>Henlæggelse til vedligeholdelsesfond (vedtægternes § 30, stk. 3)</td><td style="text-align:right" data-calc="disp.vedligehold">${fmtKr(e.get('disp.vedligehold'))}</td><td class="num"><input type="text" inputmode="decimal" class="num" data-path="budgetHenlaeggelse" data-type="num" value="${fmtKr(S.budgetHenlaeggelse || 0)}"></td><td></td></tr>
       <tr class="sum"><td style="text-align:left">Heraf afdrag på prioritetsgæld</td><td data-calc="disp.afdrag">${fmtKr(e.get('disp.afdrag'))}</td><td data-calc="bud.disp.afdrag">${fmtKr(e.get('bud.disp.afdrag'))}</td><td></td></tr>
       <tr class="sum"><td style="text-align:left">Overført restandel</td><td data-calc="disp.rest">${fmtKr(e.get('disp.rest'))}</td><td data-calc="bud.disp.rest">${fmtKr(e.get('bud.disp.rest'))}</td><td></td></tr>
       </tbody></table></div>`;
@@ -702,6 +736,9 @@ export class App {
     ${t('praksis', 'Anvendt regnskabspraksis')}
     ${t('pantsaetning', 'Note: Pantsætninger og sikkerhedsstillelser')}
     ${t('eventualforpligtelser', 'Note: Eventualforpligtelser')}
+    ${t('vedligeholdBegrundelse', 'Note: Reserve til vedligeholdelse – generalforsamlingens beslutning og begrundelse (vedtægternes § 30, stk. 3)', 'Skriv, hvad generalforsamlingen har besluttet om årets henlæggelse, og hvorfor. Teksten vises under noten om reserve til vedligeholdelse.')}
+    ${t('forbedringer', 'Note: Andelsværdi – andelshavernes egne forbedringer (vedtægternes § 14)')}
+    ${t('forsikringer', 'Note: Forsikringer – indledning (vedtægternes § 29, stk. 5)')}
     ${t('andelsvaerdiIntro', 'Note: Beregning af andelsværdi – indledning')}
     ${t('noegleIntro', 'Note: Nøgleoplysninger – indledning')}`;
   }
@@ -721,6 +758,7 @@ export class App {
       <li><b>Kontrolside</b>: alle afstemninger. Regnskabet er klar, når alle kontroller er grønne (advarsler bør gennemgås).</li>
       <li><b>Excel</b>: eksporterer hele regnskabet som projektmappe med rigtige formler på tværs af arkene (Grunddata og Kasserapport er kilderne). <b>Udskriv / PDF</b>: åbner browserens udskrift, hvor du vælger "Gem som PDF".</li>
     </ol>
+    <p><b>Aktuelle vedtægter</b>: fanen viser vedtægterne, de regnskabsrelevante bestemmelser og et automatisk vedtægtstjek af det valgte regnskabsår (bestyrelse, revision, frister, indskud, fordelingstal, andelsværdi, henlæggelsesfond, fremlejedepositum, forsikringsnote).</p>
     <p><b>Arkiv</b>: fanen Arkiv viser de aflagte årsrapporter, lånedokumenter og kontoudtog, som ligger i mappen arkiv/ i repoet.</p>
     <p><b>Flere regnskabsår</b>: Når 2025 er indtastet, klikker du <b>+ Nyt år</b> i topbjælken. 2026 oprettes med 2025's ultimotal som primotal, 2025's resultat i sammenligningskolonnen og nøgletallene forskudt. Koblingen er levende: retter du noget i 2025, følger 2026's primotal med. Skift mellem årene i topbjælkens årsvælger; regnskab, kontrolside, Excel og PDF gælder altid det valgte år.</p>
     <p>Data gemmes automatisk i browseren. Brug <b>Gem fil</b> for at gemme en kopi (.json) med alle regnskabsår, som kan åbnes igen på en anden computer.</p>

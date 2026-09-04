@@ -32,6 +32,10 @@ export function eksempelPolarvej2025() {
     datoGeneralforsamling: '2026-03-17',
   };
   s.tekster = { ...STANDARD_TEKSTER };
+  s.tekster.vedligeholdBegrundelse = 'Generalforsamlingen har fastsat årets henlæggelse til vedligeholdelsesfonden til 0 kr. Begrundelsen er, at vedtægternes § 9 pålægger den enkelte andelshaver al indvendig og udvendig vedligeholdelse af egen bolig, haveareal og bygninger på andelens matrikel, herunder udskiftning af vinduer, døre og bygningsdele. Foreningens egen vedligeholdelse omfatter derfor alene fælles arbejder, som generalforsamlingen beslutter (i {{aar}} algebehandling og tagarbejde), og som finansieres af årets driftsoverskud og foreningens frie likviditet på {{likvid.fri}} kr. Bestyrelsen vurderer årligt, om der er behov for at foreslå en henlæggelse, jf. vedtægternes § 30, stk. 3.';
+  s.forsikring = { selskab: '', bestyrelsesansvar: '', besvigelse: '', bygning: '', bemaerkning: '' };
+  s.fremleje = { antal: 1, boliger: 'Polarvej 64' };
+  s.budgetHenlaeggelse = 0;
   s.likvidkonti = [
     { id: 'bank', navn: 'Middelfart Sparekasse, forretningskonto', primo: 208611.97, kontoudtog: 212846.55 },
     { id: 'depo', navn: 'Middelfart Sparekasse, deponeringskonto (hensat fremlejedepositum)', primo: 20000, kontoudtog: 20000 },

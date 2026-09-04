@@ -99,7 +99,8 @@ export function vurdering(engine, ctx = {}) {
   const opf = Number((S.forening || {}).opfoerelsesaar) || 0;
   const alder = opf ? y - opf : 0;
   const vt = `Vedligeholdelse har de sidste tre år udgjort ${m3.map(v => fmtInt(v)).join(', ')} kr. pr. m² (gennemsnit ${fmtInt(mAvg)} kr. pr. m²). Generalforsamlingsbestemte reserver til vedligeholdelse udgør ${fmtKr(reserver, 0)} kr.${alder ? ` Ejendommen er ${alder} år gammel.` : ''}`;
-  if (mAvg < G.vedligeholdPrM2Gul && reserver <= 0) add('opmaerksomhed', 'Lav vedligeholdelse og ingen henlæggelser', vt + ' Andelshaverne bør sikre sig, at der findes en vedligeholdelsesplan, og at større arbejder (tag, vinduer, installationer) kan finansieres uden pludselige stigninger i boligafgiften.');
+  const begr = ((S.tekster || {}).vedligeholdBegrundelse || '').trim();
+  if (mAvg < G.vedligeholdPrM2Gul && reserver <= 0) add('opmaerksomhed', 'Lav vedligeholdelse og ingen henlæggelser', vt + (begr ? ' Efter vedtægternes § 9 påhviler vedligeholdelsen af den enkelte bolig, have og bygninger på matriklen andelshaveren selv, og generalforsamlingen har begrundet, at der ikke henlægges (se noten om reserve til vedligeholdelse). Andelshaverne bør alligevel sikre sig, at fælles arbejder som tage kan finansieres uden pludselige stigninger i boligafgiften.' : ' Andelshaverne bør sikre sig, at der findes en vedligeholdelsesplan, og at større arbejder (tag, vinduer, installationer) kan finansieres uden pludselige stigninger i boligafgiften.'));
   else add('styrke', 'Vedligeholdelse og henlæggelser', vt);
 
   // 9. Andelsværdi: lovlighed og buffer
@@ -146,6 +147,14 @@ export function vurdering(engine, ctx = {}) {
     if (budRes < 0) add('advarsel', 'Budgettet viser underskud', bt);
     else if (budRest < 0) add('opmaerksomhed', 'Budgettet dækker ikke afdragene fuldt ud', bt + ' Overvej en regulering af boligafgiften.');
     else add('styrke', 'Budgettet hænger sammen', bt);
+  }
+
+  // 14. Vedtægter
+  if (ctx.vedtaegter) {
+    const v = ctx.vedtaegter;
+    if (v.antal.fejl) add('advarsel', 'Vedtægtsbestemmelser er ikke opfyldt', v.punkter.filter(x => x.status === 'fejl').map(x => `${x.paragraf}: ${x.titel}`).join('; ') + '. Se fanen Aktuelle vedtægter.');
+    else if (v.antal.advarsel) add('opmaerksomhed', 'Vedtægtstjek med bemærkninger', v.punkter.filter(x => x.status === 'advarsel').map(x => `${x.paragraf}: ${x.titel}`).join('; ') + '.');
+    else add('styrke', 'Vedtægternes krav til regnskabet er opfyldt', `${v.punkter.length} kontroller mod vedtægterne (bestyrelse, revision, frister, indskud, fordelingstal, andelsværdi, henlæggelser, depositum, forsikring) er opfyldt.`);
   }
 
   const advarsler = p.filter(x => x.kategori === 'advarsel').length;

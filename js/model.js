@@ -226,6 +226,12 @@ Prioritetsgælden er således værdiansat til amortiseret kostpris, der for kont
 ### Øvrige gældsforpligtelser
 Øvrige gældsforpligtelser værdiansættes til nominel værdi.
 
+### Henlæggelser til vedligeholdelse (vedtægternes § 30, stk. 3)
+Vedtægterne bestemmer, at der hvert år i budget og balance medtages et beløb til henlæggelse i en fond som en særlig post, og at beløbet fastsættes af generalforsamlingen. Henlæggelsen vises under "Reserve til vedligeholdelse af ejendommen" i balancen og i resultatdisponeringen og indgår ikke i beregningen af andelsværdien. Generalforsamlingens beslutning om årets henlæggelse og begrundelsen herfor fremgår af noten om reserve til vedligeholdelse.
+
+### Andelshavernes egne forbedringer (vedtægternes § 10 og § 14)
+Forbedringer, forandringer, haveanlæg og særligt tilpasset inventar, som en andelshaver selv har bekostet, tilhører andelshaveren og indregnes hverken i foreningens balance eller i andelsværdien. De værdiansættes alene ved overdragelse af andelsboligen efter vedtægternes § 14, stk. 1, litra b–d, og stk. 2: anskaffelsesprisen med fradrag for værdiforringelse på grund af alder og slitage efter det forbedringskatalog og de værdiforringelseskurver, som Andelsboligforeningernes Fællesrepræsentation har fastlagt som vejledende; eget arbejde ansættes til svendeløn ekskl. avance og offentlige afgifter. Opgørelsen udarbejdes af den fraflyttende andelshaver og godkendes af bestyrelsen; uenighed afgøres af en voldgiftsmand udpeget af ABF. Forbedringer af ejendommen, som foreningen bekoster, indregnes derimod i ejendommens kostpris.
+
 ## Øvrige noter
 
 ### Nøgleoplysninger
@@ -244,6 +250,14 @@ Vedtægterne bestemmer desuden i § 14, at selvom der lovligt kan vedtages en h�
 
   andelsvaerdiIntro:
 `Bestyrelsen foreslår følgende værdiansættelse i henhold til andelsboligforeningslovens § 5, stk. 2, litra {{av.litra}} ({{av.princip}}), samt vedtægternes § 6, stk. 1:`,
+
+  vedligeholdBegrundelse: '',
+
+  forbedringer:
+`Andelsværdien ovenfor er værdien af selve andelen. Ved overdragelse tillægges værdien af andelshaverens egne forbedringer, haveanlæg og særligt tilpasset inventar opgjort efter vedtægternes § 14 (anskaffelsespris med fradrag for alder og slitage efter ABF's forbedringskatalog og værdiforringelseskurver) samt eventuelt tillæg eller nedslag for vedligeholdelsesstand. Disse beløb indgår ikke i foreningens regnskab.`,
+
+  forsikringer:
+`I henhold til vedtægternes § 29, stk. 5, oplyses forsikringssummen for foreningens bestyrelsesansvars- og besvigelsesforsikring.`,
 
   noegleIntro:
 `Nøgletallene viser centrale dele af foreningens økonomi og er primært udregnet på baggrund af arealer. I {{forening.navn}} anvendes andelsindskuddene som fordelingsnøgle, og de arealbaserede nøgletal for andelsværdi og boligafgift svarer derfor ikke til de, der konkret gælder for den enkelte andelshaver.
@@ -278,6 +292,9 @@ export function tomState(aar = new Date().getFullYear() - 1) {
       datoPaategning: '', datoBilagskontrol: '', datoGeneralforsamling: '',
     },
     tekster: { ...STANDARD_TEKSTER },
+    forsikring: { selskab: '', bestyrelsesansvar: '', besvigelse: '', bygning: '', bemaerkning: '' },
+    fremleje: { antal: 0, boliger: '' },
+    budgetHenlaeggelse: 0,
     likvidkonti: [
       { id: 'bank', navn: 'Pengeinstitut, forretningskonto', primo: 0, kontoudtog: null },
       { id: 'kasse', navn: 'Kontanter', primo: 0, kontoudtog: null },

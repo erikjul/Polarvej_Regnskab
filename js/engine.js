@@ -199,8 +199,13 @@ export class Engine {
     this.def('disp.total', 'I alt', 'disp.vedligehold + disp.andre + disp.genopretning + disp.anvendt + disp.afdrag + disp.rest');
     // Budget-disponering: næste års afdrag = kortfristet del af gælden
     this.def('bud.disp.afdrag', 'Budget: prioritetsafdrag', 'laan.total.kortfristet');
-    this.def('bud.disp.rest', 'Budget: overført restandel', 'bud.res.resultat - bud.disp.afdrag');
-    this.def('bud.disp.total', 'Budget: I alt', 'bud.disp.afdrag + bud.disp.rest');
+    this.input('bud.disp.vedligehold', `Budget ${y + 1}: henlæggelse til vedligeholdelsesfond (vedtægternes § 30, stk. 3)`, S.budgetHenlaeggelse, { group: 'Budget ' + (y + 1) });
+    this.def('bud.disp.rest', 'Budget: overført restandel', 'bud.res.resultat - bud.disp.afdrag - bud.disp.vedligehold');
+    this.def('bud.disp.total', 'Budget: I alt', 'bud.disp.vedligehold + bud.disp.afdrag + bud.disp.rest');
+    const F = S.forsikring || {};
+    this.input('forsikring.bestyrelsesansvar', 'Bestyrelsesansvarsforsikring, forsikringssum', F.bestyrelsesansvar, { group: 'Forsikringer' });
+    this.input('forsikring.besvigelse', 'Besvigelsesforsikring, forsikringssum', F.besvigelse, { group: 'Forsikringer' });
+    this.input('forsikring.bygning', 'Bygningsforsikring, forsikringssum', F.bygning, { group: 'Forsikringer' });
 
     // ---- Ejendom ----
     const E = S.ejendom || {};

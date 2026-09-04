@@ -10,7 +10,7 @@ test('vurdering 2025: robust med opmærksomhedspunkter, ingen advarsler', () => 
   const sam = eksempelSamling();
   const e = engineFor(sam, 2025);
   const v = vurdering(e, { kontrol: kontroller(e), samling: sam });
-  assert.equal(v.antal.advarsel, 0);
+  assert.equal(v.antal.advarsel, 0, 'uden vedtægtstjek ingen advarsler');
   assert.equal(v.niveau, 'opmaerksomhed');
   const titler = v.punkter.map(p => p.titel);
   assert.ok(titler.includes('Regnskabet er afstemt'));

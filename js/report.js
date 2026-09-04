@@ -28,6 +28,7 @@ export function byggeRapport(engine, opts = {}) {
     aar: y, aarNaeste: y + 1, aarForrige: y - 1,
     forening: F,
     laan: { restgaeld: fmtKr(engine.get('laan.total.restgaeldUltimo')), kursvaerdi: fmtKr(engine.get('laan.total.kursvaerdi')) },
+    likvid: { total: fmtKr(engine.get('likvid.total.ultimo'), 0), fri: fmtKr(engine.get('likvid.total.ultimo') - engine.get('ag.total.ultimo'), 0) },
     ejendom: { bogfoert: fmtKr(engine.get('ejendom.bogfoert.ultimo')), vurdering: fmtKr(engine.get('ejendom.vurdering')) },
     av: { litra: princip.litra, princip: princip.label.toLowerCase(), prKrone: fmtKr(engine.get('av.prKrone')), prAndel: fmtInt(engine.get('av.prAndel')) },
     dato: { paategning: fmtDatoLang(L.datoPaategning), bilagskontrol: fmtDatoLang(L.datoBilagskontrol), generalforsamling: fmtDatoLang(L.datoGeneralforsamling) },
@@ -86,7 +87,7 @@ export function byggeRapport(engine, opts = {}) {
   resRows.push(row('blank'));
   resRows.push(row('head', 'Årets resultat fordeles således:'));
   const dc = (id, budId) => { const c = [N(id), budId ? N(budId) : T('')]; if (visPrev) c.push(T('')); return c; };
-  resRows.push(row('line', 'Overført til "Reserve til vedligeholdelse af ejendommen"', dc('disp.vedligehold')));
+  resRows.push(row('line', 'Overført til "Reserve til vedligeholdelse af ejendommen"', dc('disp.vedligehold', 'bud.disp.vedligehold')));
   resRows.push(row('line', 'Overført til "Andre reserver"', dc('disp.andre')));
   resRows.push(row('line', 'Overført til "Genopretningskonto"', dc('disp.genopretning')));
   if (engine.get('disp.anvendt') !== 0) resRows.push(row('line', 'Anvendt af reserver i året', dc('disp.anvendt')));
@@ -120,6 +121,7 @@ export function byggeRapport(engine, opts = {}) {
   NN.ag = addNote('ag', 'Anden gæld');
   NN.pant = addNote('pant', 'Pantsætninger og sikkerhedsstillelser');
   NN.eventual = addNote('eventual', 'Eventualforpligtelser');
+  NN.forsikring = addNote('forsikring', 'Forsikringer');
   NN.av = addNote('av', 'Beregning af andelsværdi');
   NN.nk = addNote('nk', 'Nøgleoplysninger');
 
@@ -170,6 +172,7 @@ export function byggeRapport(engine, opts = {}) {
   bal.push(row('blank'));
   bal.push(row('note', 'Pantsætninger og sikkerhedsstillelser', [], NN.pant));
   bal.push(row('note', 'Eventualforpligtelser', [], NN.eventual));
+  bal.push(row('note', 'Forsikringer', [], NN.forsikring));
   bal.push(row('note', 'Beregning af andelsværdi', [], NN.av));
   bal.push(row('note', 'Nøgleoplysninger', [], NN.nk));
   pages.push({ id: 'balance', titel: 'Balance', header, blocks: [
@@ -248,6 +251,7 @@ export function byggeRapport(engine, opts = {}) {
     nb.push(row('line', 'Henlagt ifølge resultatdisponering', [N(`ek.${key}.henlagt`), T('')]));
     nb.push(row('line', 'Anvendt i året', [{ node: `ek.${key}.anvendt`, neg: true }, T('')]));
     nb.push(row('total', titel + ' i alt', bc(`ek.${key}`)));
+    if (key === 'vedligehold' && (S.tekster || {}).vedligeholdBegrundelse) nb.push(row('text', skabelon(S.tekster.vedligeholdBegrundelse, ctx)));
     nb.push(row('blank'));
   }
   nb.push(row('notehead', 'Gæld til realkreditinstitutter', [], NN.laan));
@@ -286,6 +290,16 @@ export function byggeRapport(engine, opts = {}) {
   nb.push(row('blank'));
   nb.push(row('notehead', 'Eventualforpligtelser', [], NN.eventual));
   nb.push(row('text', tx('eventualforpligtelser')));
+  nb.push(row('blank'));
+  nb.push(row('notehead', 'Forsikringer', [], NN.forsikring));
+  nb.push(row('text', tx('forsikringer')));
+  const Fo = S.forsikring || {};
+  if (engine.get('forsikring.bestyrelsesansvar') > 0 || engine.get('forsikring.besvigelse') > 0) {
+    nb.push(row('line', `Bestyrelsesansvarsforsikring, forsikringssum${Fo.selskab ? ' (' + Fo.selskab + ')' : ''}`, [N('forsikring.bestyrelsesansvar'), T('')]));
+    nb.push(row('line', 'Besvigelsesforsikring, forsikringssum', [N('forsikring.besvigelse'), T('')]));
+  } else nb.push(row('text', 'Foreningen har ikke oplyst en forsikringssum for bestyrelsesansvars- og besvigelsesforsikring. Vedtægternes § 29, stk. 5, kræver, at forsikringen tegnes, og at summen oplyses.'));
+  if (engine.get('forsikring.bygning') > 0) nb.push(row('line', 'Bygningsforsikring, forsikringssum', [N('forsikring.bygning'), T('')]));
+  if (Fo.bemaerkning) nb.push(row('text', Fo.bemaerkning));
   pages.push({ id: 'noter-balance', titel: 'Noter til balancen', header, blocks: [
     { type: 'title', text: 'Noter til balancen' },
     { type: 'table', columns: nbCols, rows: nb },
@@ -316,7 +330,8 @@ export function byggeRapport(engine, opts = {}) {
     { type: 'table', columns: avCols2, rows: av2 },
   ];
   if ((S.ejendom || {}).fastholdt) avBlocks.push({ type: 'para', text: 'Ejendommens værdi er fastholdt i henhold til andelsboligforeningslovens § 5, stk. 3 (fastholdt vurdering foretaget før 1. juli 2020).' });
-  avBlocks.push({ type: 'para', text: 'Vedtægterne bestemmer, at selvom der lovligt kan vedtages en højere andelsværdi, er det den på generalforsamlingen vedtagne andelsværdi, der er gældende. Andelsværdien må ikke overstige den ovenfor beregnede maksimale værdi.' });
+  avBlocks.push({ type: 'para', text: 'Vedtægterne bestemmer (§ 14, stk. 1, litra a), at selvom der lovligt kan vedtages en højere andelsværdi, er det den på generalforsamlingen vedtagne andelsværdi, der er gældende. Andelsværdien må ikke overstige den ovenfor beregnede maksimale værdi.' });
+  if ((S.tekster || {}).forbedringer) avBlocks.push({ type: 'para', text: tx('forbedringer') });
   pages.push({ id: 'andelsvaerdi', titel: 'Beregning af andelsværdi', header, blocks: avBlocks });
 
   // ---------- Nøgleoplysninger ----------
