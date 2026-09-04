@@ -27,7 +27,7 @@ Fejlene ligger i **resultatopgørelsens linjer, resultatdisponeringen, lånenote
 | 13 | 2022–2023 | **Negative indlånsrenter** (2.521,05 kr. i 2022) ført som "diverse" administration. | note 5 | note 7 finansielle omkostninger | Konteringsregel: renter → note 7 (ud) / note 2 (ind). |
 | 14 | 2024 | **Boligafgift** 197.000 medregner ikke tilbagebetalt 1.000 kr. ("For megen betalt husleje"). | 197.000 | 196.000 | Bankimport. |
 | 15 | 2023 | **Overført resultat primo** (1.806.974,50) afviger fra 2022-rapportens ultimo (1.793.650,64) med 13.323,86 kr.; 2022-tallene er ændret uden forklaring. | | | Historisk; nettoudlignet senest i 2025. |
-| 16 | 2025 | **Regnskabspraksis og nøgleoplysninger** henviser til bekendtgørelse nr. 2/2015. | bek. 2/2015 | bek. nr. 336 af 20. marts 2025 (i kraft 1.7.2025); nøgletal P udgået, M1–M3 | Standardtekster og nøgleoplysningsnote i programmet er opdateret. |
+| 16 | 2022–2025 | **Regnskabspraksis og nøgleoplysninger** henviser til bekendtgørelse nr. 2/2015 (afløst af bek. 1392/2021 og nu bek. 336/2025) og til andelsboliglovens § 5, stk. 11, som ved lov nr. 819/2020 blev forskudt til stk. 12. | bek. 2/2015; § 5, stk. 11 | bek. nr. 336 af 20. marts 2025, § 3 og bilag 1; § 5, stk. 12 | Standardtekster, påtegning og nøgleoplysningsnote i programmet er opdateret; C3 og E2 vises med gældende ordlyd. |
 
 ## Hvad der skal ske i regnskabet for 2026
 

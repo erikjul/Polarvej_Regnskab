@@ -270,6 +270,7 @@ export class App {
       case 'ledelse.bestyrelse': arr.push({ navn: '', titel: 'Bestyrelsesmedlem' }); break;
       case 'ledelse.bilagskontrolloerer': arr.push({ navn: '' }); break;
       case 'importRegler': arr.push({ moenster: '', retning: '', beloeb: '', konto: '' }); break;
+      case 'noegle.ekstra': arr.push({ felt: '', tekst: '', svar: '' }); break;
       case 'andelshavere': arr.push({ id: nyId('a'), adresse: '', navn: '', afgift: 2000, moenstre: '', fra: `${S.aar}-01`, primoSaldo: 0 }); break;
       default:
         if (/^laan\.\d+\.betalingsplan$/.test(basePath)) { const sidste = arr[arr.length - 1]; arr.push({ dato: sidste ? sidste.dato : '', rente: 0, afdrag: 0 }); }
@@ -693,14 +694,14 @@ export class App {
     <div class="panel"><h3>C. Fordelingstal</h3><div class="grid">
       ${this.felt('C1 Fordelingstal ved opgørelse af andelsværdien', 'noegle.fordelingstalAndelsvaerdi', 'select', { options: ft })}
       ${this.felt('C2 Fordelingstal ved opgørelse af boligafgiften', 'noegle.fordelingstalBoligafgift', 'select', { options: ft })}
-      ${this.felt('C3 Tekst (feltets ordlyd fra bilag 1 – udfyld hvis relevant)', 'noegle.c3Tekst', 'text', { hint: 'Kontrollér ordlyden af felt C3 i bilag 1 til bekendtgørelse nr. 336/2025' })}
-      ${this.felt('C3 Svar', 'noegle.c3Svar')}
+      ${this.felt('C3 Feltets ordlyd (bilag 1, bek. 336/2025)', 'noegle.c3Tekst', 'text', { hint: 'Officiel ordlyd: "Hvis andet eller flere fordelingsnøgler/fordelingsprincipper, beskrives det her:"' })}
+      ${this.felt('C3 Svar (tomt = "–", når kun ét fordelingsprincip anvendes)', 'noegle.c3Svar')}
     </div></div>
     <div class="panel"><h3>E. Hæftelse</h3><div class="grid">
       ${this.felt('', 'noegle.haefter', 'bool', { checkLabel: 'E1 Andelshaverne hæfter for mere end deres indskud' })}
       ${this.felt('E1 Uddybning (fx "personligt og solidarisk for realkreditlån")', 'noegle.haefterTekst')}
-      ${this.felt('E2 Tekst (feltets ordlyd fra bilag 1 – udfyld hvis relevant)', 'noegle.e2Tekst', 'text', { hint: 'Kontrollér ordlyden af felt E2 i bilag 1 til bekendtgørelse nr. 336/2025' })}
-      ${this.felt('E2 Svar', 'noegle.e2Svar')}
+      ${this.felt('E2 Feltets ordlyd (bilag 1, bek. 336/2025)', 'noegle.e2Tekst', 'text', { hint: 'Hæftelsen beskrives, hvis andelshaverne hæfter ud over indskuddet' })}
+      ${this.felt('E2 Svar (beskrivelse af hæftelsen, hvis E1 = ja)', 'noegle.e2Svar')}
     </div></div>
     <div class="panel"><h3>G. Tilskud og klausuler</h3>
       ${this.felt('', 'noegle.g1', 'bool', { checkLabel: 'G1 Foreningen har modtaget offentligt tilskud, som skal tilbagebetales ved foreningens opløsning' })}
@@ -722,6 +723,10 @@ export class App {
       ${this.felt(`R Årets afdrag pr. m² ${y - 2}`, 'noegle.afdragPrM2.y2', 'int')}
       ${this.felt(`R Årets afdrag pr. m² ${y - 1}`, 'noegle.afdragPrM2.y1', 'int')}
     </div></div>
+    <div class="panel"><h3>Øvrige felter i bilag 1 (fx F1b, F2b, F2c, L5)</h3>
+      <p class="hjaelp">Bekendtgørelse nr. 336/2025 har ændret og tilføjet felter i bilag 1 ud over dem, programmet beregner (bl.a. F1b, F2b, F2c og L5 i forbindelse med indekseret offentlig vurdering). Indtast feltnummer, feltets ordlyd og oplysningen her, så de kommer med i noten.</p>
+      ${this.tabel('noegle.ekstra', [{ key: 'felt', label: 'Feltnr.', width: 'w-bilag' }, { key: 'tekst', label: 'Feltets ordlyd' }, { key: 'svar', label: 'Oplysning' }], { tilfoejLabel: 'Tilføj felt' })}
+    </div>
     <div class="panel"><h3>Frivilligt</h3>
       ${this.felt('', 'noegle.visP', 'bool', { checkLabel: 'Vis nøgletal P (friværdi) – udgået af bekendtgørelsen pr. 1. juli 2025, kan medtages frivilligt' })}
     </div>`;
@@ -766,8 +771,8 @@ export class App {
     <div class="panel"><h3>Regelgrundlag (2026)</h3>
     <ul>
       <li>Årsregnskabsloven, regnskabsklasse A (andelsboligforeninger aflægger efter klasse A, jf. andelsboligforeningslovens § 6, stk. 2).</li>
-      <li>Andelsboligforeningsloven § 5 (andelsværdi: litra a anskaffelsespris, b valuarvurdering, c offentlig vurdering, d nettoprisindekseret offentlig vurdering; § 5, stk. 3 fastholdt vurdering) og § 6 (årsregnskab, note om andelsværdi og nøgleoplysninger).</li>
-      <li>Bekendtgørelse nr. 336 af 20. marts 2025 om oplysningspligt ved salg af andelsboliger m.v. samt om bestyrelsens pligt til at fremlægge skema over centrale nøgleoplysninger (i kraft 1. juli 2025). § 3: felterne B1–B6, C1–C3, D1–D2, E1–E2, F1–F4, G1–G3, H1–H3, J, K1–K3, M1–M3 og R fra bilag 1 skal være noter i årsregnskabet. Nøgletal P (friværdi) er udgået.</li>
+      <li>Andelsboligforeningsloven § 5 (andelsværdi: stk. 2 litra a anskaffelsespris, b valuarvurdering (højst 42 måneder gammel, lov nr. 330/2024), c offentlig vurdering, d nettoprisindekseret offentlig vurdering; stk. 3 fastholdt vurdering; stk. 12 note om tilbagebetalingspligtig offentlig støtte) og § 6 (stk. 2 nøgleoplysninger som noter, stk. 8 andelens værdi på statusdagen). Bemærk: den tidligere henvisning til § 5, stk. 11, blev forskudt til stk. 12 ved lov nr. 819/2020.</li>
+      <li>Bekendtgørelse nr. 336 af 20. marts 2025 (i kraft 1. juli 2025, afløser bek. nr. 1392/2021). § 3: felterne B1–B6, C1–C3, D1–D2, E1–E2, F1–F4, G1–G3, H1–H3, J, K1–K3, M1–M3 og R fra bilag 1 skal være noter i årsregnskabet. C3 fik ny ordlyd i 2025 (flere fordelingsnøgler), E2 og M1–M3 er uændrede, nøgletal P er udgået, og der er tilføjet felter om indekseret offentlig vurdering (bl.a. F1b, F2b, F2c, L5), som indtastes under Nøgleoplysninger → Øvrige felter.</li>
       <li>Erhvervsstyrelsens "Regnskabsvejledning for andelsboligforeninger" (december 2021) og modelregnskab: opstilling af resultatopgørelse, balance, noter, resultatdisponering, kortfristet del af prioritetsgæld, egenkapital med generalforsamlingsbestemte reserver.</li>
     </ul></div>`;
   }

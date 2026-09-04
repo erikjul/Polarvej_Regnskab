@@ -160,7 +160,7 @@ export const STANDARD_TEKSTER = {
   paategning:
 `Bestyrelsen har dags dato aflagt årsrapporten for {{aar}} for {{forening.navn}}.
 
-Årsrapporten er aflagt i overensstemmelse med årsregnskabslovens bestemmelser for regnskabsklasse A, andelsboligforeningslovens § 5, stk. 11, og § 6, stk. 2 og 8, samt foreningens vedtægter.
+Årsrapporten er aflagt i overensstemmelse med årsregnskabslovens bestemmelser for regnskabsklasse A, andelsboligforeningslovens § 5, stk. 12, og § 6, stk. 2 og 8, samt foreningens vedtægter.
 
 Vi anser den valgte regnskabspraksis for hensigtsmæssig, og efter vor opfattelse giver årsregnskabet et retvisende billede af andelsboligforeningens aktiver og passiver, finansielle stilling samt resultat.
 
@@ -174,11 +174,11 @@ Der er efter regnskabsårets afslutning ikke indtruffet begivenheder, der væsen
 `Undertegnede bilagskontrollører har foretaget bilagskontrol i overensstemmelse med vedtægternes § 31. Bilagskontrollen har ikke givet anledning til bemærkninger.`,
 
   praksis:
-`Årsrapporten for {{forening.navn}} er aflagt i overensstemmelse med årsregnskabslovens bestemmelser for regnskabsklasse A, andelsboligforeningslovens § 5, stk. 11, og § 6, stk. 2 og 8, samt bekendtgørelse nr. 336 af 20. marts 2025 om oplysningspligt ved salg af andelsboliger m.v. samt om bestyrelsens pligt til at fremlægge skema over centrale nøgleoplysninger.
+`Årsrapporten for {{forening.navn}} er aflagt i overensstemmelse med årsregnskabslovens bestemmelser for regnskabsklasse A, andelsboligforeningslovens § 5, stk. 12, og § 6, stk. 2 og 8, samt bekendtgørelse nr. 336 af 20. marts 2025 om oplysningspligt ved salg af andelsboliger m.v. samt om bestyrelsens pligt til at fremlægge skema over centrale nøgleoplysninger, herunder § 3 og bilag 1.
 
 Formålet med årsrapporten er at give et retvisende billede af foreningens aktiviteter for regnskabsperioden og at vise, om den budgetterede og hos medlemmerne opkrævede boligafgift er tilstrækkelig.
 
-Endvidere er formålet at give de krævede nøgleoplysninger, at give oplysning om andelenes værdi og at give oplysninger om tilbagebetalingspligt vedrørende modtaget støtte.
+Endvidere er formålet at give de krævede nøgleoplysninger (§ 6, stk. 2), at give oplysning om andelenes værdi på statusdagen (§ 6, stk. 8) og at give oplysninger om tilbagebetalingspligt vedrørende modtaget offentlig støtte (§ 5, stk. 12).
 
 ## Resultatopgørelsen
 
@@ -323,9 +323,10 @@ export function tomState(aar = new Date().getFullYear() - 1) {
       antal: { b1: 0, b2: 0, b3: 0, b4: 0, b5: 0 },
       fordelingstalAndelsvaerdi: 'indskud',
       fordelingstalBoligafgift: 'indskud',
-      c3Tekst: '', c3Svar: '',
+      c3Tekst: 'Hvis andet eller flere fordelingsnøgler/fordelingsprincipper, beskrives det her:', c3Svar: '',
       haefter: false, haefterTekst: '',
-      e2Tekst: '', e2Svar: '',
+      e2Tekst: 'Hvis ja, beskrives hæftelsen her:', e2Svar: '',
+      ekstra: [],
       g1: false, g2: false, g3: false,
       boligafgiftDecember: 0, erhvervslejeDecember: 0, boliglejeDecember: 0,
       resultatPrM2: { y2: 0, y1: 0 },

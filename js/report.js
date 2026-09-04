@@ -344,13 +344,13 @@ export function byggeRapport(engine, opts = {}) {
     row('line', 'Hvilket fordelingstal benyttes ved opgørelse af andelsværdien?', ft(K.fordelingstalAndelsvaerdi), 'C1'),
     row('line', 'Hvilket fordelingstal benyttes ved opgørelse af boligafgiften?', ft(K.fordelingstalBoligafgift), 'C2'),
   ];
-  if (K.c3Tekst) nkC.push(row('line', K.c3Tekst, [T(K.c3Svar || ''), T(''), T(''), T('')], 'C3'));
+  nkC.push(row('line', K.c3Tekst || 'Hvis andet eller flere fordelingsnøgler/fordelingsprincipper, beskrives det her:', [T(K.c3Svar || '–'), T(''), T(''), T('')], 'C3'));
   const nkD = [
     row('line', 'Foreningens stiftelsesår', [T(String(F.stiftelsesaar || ''))], 'D1'),
     row('line', 'Ejendommens opførelsesår', [T(String(F.opfoerelsesaar || ''))], 'D2'),
   ];
   const nkE = [row('line', 'Hæfter andelshaverne for mere end deres indskud?' + (K.haefter && K.haefterTekst ? ' ' + K.haefterTekst : ''), [X(K.haefter), X(!K.haefter)], 'E1')];
-  if (K.e2Tekst) nkE.push(row('line', K.e2Tekst, [T(K.e2Svar || ''), T('')], 'E2'));
+  nkE.push(row('line', K.e2Tekst || 'Hvis ja, beskrives hæftelsen her:', [T(K.e2Svar || (K.haefter ? '' : '–')), T('')], 'E2'));
   const nkF1 = [row('line', 'Anvendt vurderingsprincip til beregning af andelsværdien', VURDERINGSPRINCIPPER.map(v => X(v.id === princip.id)), 'F1')];
   const nkF2 = [
     row('line', 'Ejendommens værdi ved det anvendte vurderingsprincip', [N('nk.f2'), T('Ejendomsværdi (F2) / m² ultimo året i alt (B6)'), N('nk.f2.m2')], 'F2'),
@@ -395,6 +395,7 @@ export function byggeRapport(engine, opts = {}) {
   ];
   if (K.visP) nkBlocks.push({ type: 'table', columns: [{ label: 'Feltnr.' }, { label: '' }, { label: '%', num: true }], rows: [row('line', 'Friværdi (gældsforpligtelser sammenholdt med ejendommens regnskabsmæssige værdi)', [N('nk.p')], 'P')], note: 'Frivilligt nøgletal (udgået af bekendtgørelsen pr. 1. juli 2025): (regnskabsmæssig værdi af ejendom − gældsforpligtelser i alt) × 100 / regnskabsmæssig værdi.' });
   nkBlocks.push({ type: 'table', columns: yrCols, rows: nkR, note: 'Forklaring på udregning: Årets afdrag / m² på balancedagen for andelsboliger (B1 + B2)' });
+  if ((K.ekstra || []).filter(x => x.felt || x.tekst).length) nkBlocks.push({ type: 'table', columns: [{ label: 'Feltnr.' }, { label: 'Øvrige felter i bilag 1' }, { label: 'Oplysning' }], rows: K.ekstra.filter(x => x.felt || x.tekst).map(x => row('line', x.tekst || '', [T(x.svar || '')], x.felt || '')) });
   pages.push({ id: 'noegle', titel: 'Nøgleoplysninger', header, blocks: nkBlocks });
 
   // ---------- Vurdering af regnskabets robusthed ----------
