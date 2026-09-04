@@ -35,14 +35,34 @@ test('DLR-ydelserne i banken svarer til betalingsplanen hvert år', () => {
   naer(engineFor(sam, 2024, memo).get('laan.dlr.restgaeldUltimo'), 627230.91, 'restgæld ultimo 2024');
 });
 
-test('andelsoverdragelser går gennem mellemregningskontoen', () => {
+test('andelsoverdragelser går gennem mellemregningskontoen og restbeløbet indtægtsføres', () => {
   const sam = eksempelSamling();
   const memo = {};
-  naer(engineFor(sam, 2022, memo).get('ag.handel.bev'), 24000, '2022: købesummer − provenu (rest 24.000 uafklaret)');
-  naer(engineFor(sam, 2024, memo).get('ag.handel.bev'), 6400, '2024: købesum − provenu − transporterklæring');
-  // gennemløb påvirker ikke resultatet
-  const e22 = engineFor(sam, 2022, memo);
+  const e22 = engineFor(sam, 2022, memo), e24 = engineFor(sam, 2024, memo);
+  naer(e22.get('n2.andelshandel'), 24000, '2022: foreningens andel af overdragelsessummer');
+  naer(e22.get('ag.handel.ultimo'), 0, '2022: mellemregning afregnet');
+  naer(e24.get('n2.andelshandel'), 6400, '2024: foreningens andel');
+  naer(e24.get('ag.handel.ultimo'), 0, '2024: mellemregning afregnet');
   assert.ok(Math.abs(e22.get('res.indtaegter')) < 300000, 'købesummer må ikke være indtægt');
+});
+
+test('kæden 2021–2026 balancerer, og egenkapitalen ultimo 2025 svarer til den aflagte årsrapport', () => {
+  const sam = eksempelSamling();
+  const memo = {};
+  for (const y of [2021, 2022, 2023, 2024, 2025, 2026]) {
+    const e = engineFor(sam, y, memo);
+    naer(e.get('bal.diff.primo'), 0, `primobalance ${y}`);
+    naer(e.get('bal.diff.ultimo'), 0, `balance ${y}`);
+  }
+  const e25 = engineFor(sam, 2025, memo);
+  naer(e25.get('ek.overfoert.ultimo'), 1945307.74, 'overført resultat ultimo 2025 = årsrapport 2025');
+  naer(e25.get('res.resultat'), 50152.68, 'resultat 2025');
+  naer(engineFor(sam, 2023, memo).get('res.resultat'), 36488.92, 'resultat 2023 = årsrapport 2023');
+  naer(engineFor(sam, 2024, memo).get('res.resultat'), 70188.21, 'resultat 2024 = årsrapport 2024');
+  naer(engineFor(sam, 2023, memo).get('laan.dlr.restgaeldUltimo') - 653970.08, 18496.57, '2023-rapportens restgæld var 18.496,57 for lav');
+  const e26 = engineFor(sam, 2026, memo);
+  naer(e26.get('ek.overfoert.korrektion'), 0, 'ingen egenkapitalkorrektion i 2026');
+  naer(e26.get('laan.dlr.restgaeldPrimo'), 581312.81, 'restgæld primo 2026');
 });
 
 test('boligafgift pr. år fra banken', () => {

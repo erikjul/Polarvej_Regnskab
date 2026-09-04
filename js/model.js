@@ -286,7 +286,7 @@ export function tomState(aar = new Date().getFullYear() - 1) {
     reguleringer: [],
     ejendom: { kostprisPrimo: 0, opskrivningPrimo: 0, opskrivningAaret: 0, vurderingsprincip: 'offentlig', vurdering: 0, vurderingTekst: '', fastholdt: false },
     andele: { antal: 0, indskudPrAndel: 0, fordelingstalType: 'indskud', fordelingstalAndet: 0, senestVedtagetPrKrone: 0, senestVedtagetAar: '', andreReguleringer: 0 },
-    egenkapitalPrimo: { overfoertResultat: 0, genopretning: 0, vedligehold: 0, andreReserver: 0 },
+    egenkapitalPrimo: { overfoertResultat: 0, genopretning: 0, vedligehold: 0, andreReserver: 0, overfoertIflgRapport: '', korrektionTekst: '' },
     disponering: { tilVedligehold: 0, tilAndreReserver: 0, tilGenopretning: 0, anvendtVedligehold: 0, anvendtAndreReserver: 0, anvendtGenopretning: 0 },
     laan: [],
     andenGaeld: [],

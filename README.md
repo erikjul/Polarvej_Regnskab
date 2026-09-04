@@ -76,29 +76,11 @@ node --test tests/*.test.mjs
 
 Testene kontrollerer formelsproget, at eksempeldataene giver samme resultatopgørelse som årsrapporten for 2025, at balancen altid balancerer, når primobalancen gør, og at kontrolsiden opdager fejl.
 
-## Eksempeldata: Polarvej I 2021–2025
+## Eksempeldata: Polarvej I 2021–2026
 
-Programmet starter med foreningens egne tal. Alle posteringer på forretningskontoen i Middelfart Sparekasse for 2021–2025 er importeret fra bankens CSV-eksporter (`data/bank-eksport-ÅÅÅÅ.csv`) og konteret af `scripts/byg-historik.mjs` efter konteringsreglerne (resultatet ligger i `js/data-historik.js`). Bankens saldo pr. 31/12 er regnet baglæns fra den kendte saldo ultimo 2024 (208.611,97 kr.), og bankafstemningen stemmer for alle fem år:
+Programmet starter med foreningens egne tal for 2021–2026. Alle posteringer på forretningskontoen 2021–2025 er importeret fra bankens CSV-eksporter (`data/bank-eksport-ÅÅÅÅ.csv`) og konteret af `scripts/byg-historik.mjs`; DLR-lånet følger betalingsplanen fra låneafregningen; primo 2021 er udledt af bankens saldo pr. 31. december 2020. Årene er kædet, så alle primotal er beregnede, og 2026 er oprettet med korrigeret primo og korrigerede sammenligningstal.
 
-| År | Saldo 31/12 | Boligafgift | DLR-ydelser | Bemærkning |
-|---|---|---|---|---|
-| 2020 | 212.736,17 | | | udledt |
-| 2021 | 200.997,98 | 172.000 | 62.161,19 | 20.000 kr. fremlejedepositum modtaget 22.11.2021 |
-| 2022 | 191.734,10 | 190.000 | 61.769,76 | to andelsoverdragelser (Polarvej 62 og 43), depositum flyttet til deponeringskonto 19.04.2022 |
-| 2023 | 183.659,50 | 192.000 | 61.372,42 | |
-| 2024 | 208.611,97 | 196.000 | 60.969,09 | andelsoverdragelse Polarvej 31 |
-| 2025 | 212.846,55 | 190.000 | 60.559,68 | |
-
-DLR-ydelserne stemmer krone for krone med betalingsplanen i alle årene. Andelsoverdragelser bogføres som gennemløb på konto 85 (mellemregning under anden gæld): købesummen ind, provenuet til sælger ud. Restbeløbene (24.000 kr. i 2022 og 6.400 kr. i 2024) er ikke afklaret endnu og afventer årsrapporterne for 2022–2024, ligesom egenkapitalen primo 2021. Indtil da er 2025's primotal taget fra årsrapporten for 2024 (koblingen fra 2024 er slået fra), og 2021–2024 viser en balancedifference.
-
-### Fund i årsrapporten for 2025
-
-1. **Bankafstemning**: Rapportens kasserapport gav 214.946,55 kr. ultimo mod bankens 212.846,55 kr. Differencen på 2.100 kr. er Totalalgeservice 5.500 kr. (rapporten: 5.400) og 95 boligafgiftsindbetalinger à 2.000 kr. (190.000 kr., rapporten: 192.000). Én andelshaver mangler én måned.
-2. **Primobalancen (31/12 2024) balancerer ikke**: Balancen for 2024 viser gæld i alt 628.734,34 kr., mens posterne giver 646.548,55 kr., og lånenoten viser en restgæld på 627.230,91 kr. Differencen på 18.496,57 kr. er i 2025-rapporten udlignet med en uforklaret post på −19.504,80 kr. i overført resultat.
-3. **Prioritetslånet**: Ifølge DLR's betalingsplan er 2025-tallene: ydelser 60.559,68 kr. = renter og bidrag 14.641,58 kr. + afdrag 45.918,10 kr.; restgæld 627.230,91 kr. primo og 581.312,81 kr. ultimo; afdrag i 2026 (kortfristet del) 46.610,76 kr. Rapporten brugte 2024-tallene for renter (15.733,35 kr.) og afdrag (60.969,09 kr.). Lånet er et obligationslån, ikke et kontantlån, med restløbetid 11,75 år pr. 31/12 2025.
-4. **Vedligeholdelse**: Algebehandling og tagarbejde (10.350 kr.) vises som vedligeholdelse (note 4, nøgletal M1) i stedet for diverse omkostninger.
-
-**Fremlejedepositum**: Depositummet på 20.000 kr. for fremlejen af Polarvej 64 står på en særskilt deponeringskonto (modtaget 22.11.2021, overført 19.04.2022). Det indgår som likvid beholdning (aktiv) og som anden gæld (passiv). Når fremlejen ophører, bogføres tilbagebetalingen på konto 80 med deponeringskontoen som likvid konto.
+Resultatet stemmer med de aflagte årsrapporter, hvor de er rigtige (resultat 2023 og 2024, likvider 2022–2025, restgæld 2024–2025, egenkapital ultimo 2025), og afviger, hvor rapporterne har fejl. Fejlene, deres årsag og rettelsen er beskrevet i [docs/afvigelser.md](docs/afvigelser.md) med tal år for år i [docs/afvigelser-tabel.md](docs/afvigelser-tabel.md). Kort: balancen pr. 31. december 2025 er korrekt, men prioritetsafdrag, renter, restgæld i tidligere år, boligafgift 2025 og andelshandlernes præsentation var forkerte, og en uforklaret primopost på −19.504,80 kr. udlignede det i 2025. Der er ingen egenkapitalkorrektion i 2026.
 
 ## Licens
 

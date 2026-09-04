@@ -34,7 +34,7 @@ export function overfoerPrimo(n, e, forrige) {
   n.likvidkonti.forEach(k => { if (e.has(`likvid.${k.id}.ultimo`)) k.primo = e.get(`likvid.${k.id}.ultimo`); });
   n.ejendom.kostprisPrimo = e.get('ejendom.kostpris.ultimo');
   n.ejendom.opskrivningPrimo = e.get('ek.opskrivning.ultimo');
-  n.egenkapitalPrimo = { overfoertResultat: e.get('ek.overfoert.ultimo'), genopretning: e.get('ek.genopretning.ultimo'), vedligehold: e.get('ek.vedligehold.ultimo'), andreReserver: e.get('ek.andre.ultimo') };
+  n.egenkapitalPrimo = { ...(n.egenkapitalPrimo || {}), overfoertResultat: e.get('ek.overfoert.ultimo'), genopretning: e.get('ek.genopretning.ultimo'), vedligehold: e.get('ek.vedligehold.ultimo'), andreReserver: e.get('ek.andre.ultimo') };
   n.laan.forEach(l => { if (e.has(`laan.${l.id}.restgaeldUltimo`)) { l.restgaeldPrimo = e.get(`laan.${l.id}.restgaeldUltimo`); l.kortfristetPrimo = e.get(`laan.${l.id}.kortfristet`); } });
   n.andenGaeld.forEach(a => { if (e.has(`ag.${a.id}.ultimo`)) a.primo = e.get(`ag.${a.id}.ultimo`); });
   n.tilgodehavender.forEach(t => { if (e.has(`tg.${t.id}.ultimo`)) t.primo = e.get(`tg.${t.id}.ultimo`); });
@@ -80,6 +80,7 @@ export function opretNytAar(samling, fraAar) {
   n.andele.senestVedtagetAar = String(fraAar + 1);
   n.sidsteAar = { vis: true, linjer: {} };
   n.budget = {};
+  n.egenkapitalPrimo.overfoertIflgRapport = ''; n.egenkapitalPrimo.korrektionTekst = '';
   n.noegle.boligafgiftDecember = S.noegle.boligafgiftDecember;
   n.ledelse.datoPaategning = ''; n.ledelse.datoBilagskontrol = ''; n.ledelse.datoGeneralforsamling = '';
   overfoerPrimo(n, e, S);

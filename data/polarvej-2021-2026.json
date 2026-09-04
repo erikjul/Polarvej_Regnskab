@@ -1555,10 +1555,12 @@
     "andreReguleringer": 0
    },
    "egenkapitalPrimo": {
-    "overfoertResultat": 0,
+    "overfoertResultat": 1722329.84,
     "genopretning": 0,
     "vedligehold": 0,
-    "andreReserver": 0
+    "andreReserver": 0,
+    "overfoertIflgRapport": 1702318.84,
+    "korrektionTekst": "Primo 2021 er opgjort ud fra bankens saldo pr. 31. december 2020 og DLR Kredits betalingsplan (restgæld 804.180,33 kr.). Differencen til den aflagte årsrapport skyldes forkert opgjort restgæld på prioritetsgælden i tidligere år."
    },
    "disponering": {
     "tilVedligehold": 0,
@@ -2077,8 +2079,7 @@
      "y1": 0
     },
     "visP": false
-   },
-   "primoBemaerkning": "Egenkapital primo 2021 mangler – udfyldes fra årsrapporten for 2020/2021."
+   }
   },
   "2022": {
    "version": 1,
@@ -2135,7 +2136,7 @@
     {
      "id": "bank",
      "navn": "Middelfart Sparekasse, forretningskonto",
-     "primo": 200997.98,
+     "primo": 200997.97999999998,
      "kontoudtog": 191734.1
     },
     {
@@ -3823,7 +3824,15 @@
      "ud": 500
     }
    ],
-   "reguleringer": [],
+   "reguleringer": [
+    {
+     "id": "r2022handel",
+     "tekst": "Foreningens andel af overdragelsessummer (Polarvej 62 og 43) indtægtsføres",
+     "beloeb": -24000,
+     "linje": "n2.andelshandel",
+     "balancepost": "ag:handel"
+    }
+   ],
    "ejendom": {
     "kostprisPrimo": 3000000,
     "opskrivningPrimo": 7300000,
@@ -3843,10 +3852,12 @@
     "andreReguleringer": 0
    },
    "egenkapitalPrimo": {
-    "overfoertResultat": 1913651.63,
+    "overfoertResultat": 1733840.5300000003,
     "genopretning": 0,
     "vedligehold": 0,
-    "andreReserver": 0
+    "andreReserver": 0,
+    "overfoertIflgRapport": "",
+    "korrektionTekst": ""
    },
    "disponering": {
     "tilVedligehold": 0,
@@ -4271,8 +4282,8 @@
        "afdrag": 744.95
       }
      ],
-     "restgaeldPrimo": 627230.91,
-     "kortfristetPrimo": 45918.1,
+     "restgaeldPrimo": 760931.45,
+     "kortfristetPrimo": 43901.28,
      "renter": 14641.58,
      "afdragIflg": "",
      "restgaeldUltimoIflg": "",
@@ -4301,7 +4312,39 @@
    "budget": {},
    "sidsteAar": {
     "vis": false,
-    "linjer": {}
+    "linjer": {
+     "n1.boligafgift": 172000,
+     "n1.boligleje": 0,
+     "n1.erhvervsleje": 0,
+     "n1.oevrig": 0,
+     "n2.bonus": 642.29,
+     "n2.uforudset": 0,
+     "n2.andelshandel": 0,
+     "n2.rente": 100.52,
+     "n2.andet": 0,
+     "n3.ejendomsskat": -113093.83,
+     "n3.renovation": 0,
+     "n3.forsikring": -12956.32,
+     "n3.andet": 0,
+     "n4.loebende": 0,
+     "n4.genopretning": 0,
+     "n5.revisor": 0,
+     "n5.administrator": 0,
+     "n5.gebyrbank": -2218.75,
+     "n5.gebyrkredit": 0,
+     "n5.generalforsamling": -2500,
+     "n5.andelshandel": 0,
+     "n5.diverse": -2683.63,
+     "n6.honorar": 0,
+     "n6.abf": -1728,
+     "n6.grundejer": -6400,
+     "n6.andet": 0,
+     "n7.renter": -18912.309999999998,
+     "n7.kurstab": 0,
+     "n7.laaneomk": 0,
+     "n7.tinglysning": 0,
+     "n7.andet": -739.28
+    }
    },
    "noegle": {
     "arealer": {
@@ -4350,7 +4393,7 @@
     "boliglejeDecember": 0,
     "resultatPrM2": {
      "y2": 0,
-     "y1": 0
+     "y1": 13
     },
     "vedligeholdLoebende": {
      "y2": 0,
@@ -4362,7 +4405,7 @@
     },
     "afdragPrM2": {
      "y2": 0,
-     "y1": 0
+     "y1": 49
     },
     "visP": false
    }
@@ -4422,7 +4465,7 @@
     {
      "id": "bank",
      "navn": "Middelfart Sparekasse, forretningskonto",
-     "primo": 191734.1,
+     "primo": 191734.1000000001,
      "kontoudtog": 183659.5
     },
     {
@@ -6050,10 +6093,12 @@
     "andreReguleringer": 0
    },
    "egenkapitalPrimo": {
-    "overfoertResultat": 1913651.63,
+    "overfoertResultat": 1788477.9300000004,
     "genopretning": 0,
     "vedligehold": 0,
-    "andreReserver": 0
+    "andreReserver": 0,
+    "overfoertIflgRapport": "",
+    "korrektionTekst": ""
    },
    "disponering": {
     "tilVedligehold": 0,
@@ -6478,8 +6523,8 @@
        "afdrag": 744.95
       }
      ],
-     "restgaeldPrimo": 627230.91,
-     "kortfristetPrimo": 45918.1,
+     "restgaeldPrimo": 717030.1699999999,
+     "kortfristetPrimo": 44563.520000000004,
      "renter": 14641.58,
      "afdragIflg": "",
      "restgaeldUltimoIflg": "",
@@ -6508,7 +6553,39 @@
    "budget": {},
    "sidsteAar": {
     "vis": false,
-    "linjer": {}
+    "linjer": {
+     "n1.boligafgift": 190000,
+     "n1.boligleje": 0,
+     "n1.erhvervsleje": 0,
+     "n1.oevrig": 0,
+     "n2.bonus": 1020.47,
+     "n2.uforudset": 0,
+     "n2.andelshandel": 24000,
+     "n2.rente": 0,
+     "n2.andet": 0,
+     "n3.ejendomsskat": -113059.02,
+     "n3.renovation": 0,
+     "n3.forsikring": -13264.89,
+     "n3.andet": 0,
+     "n4.loebende": 0,
+     "n4.genopretning": 0,
+     "n5.revisor": 0,
+     "n5.administrator": 0,
+     "n5.gebyrbank": -3283.99,
+     "n5.gebyrkredit": 0,
+     "n5.generalforsamling": 0,
+     "n5.andelshandel": 0,
+     "n5.diverse": -3309.64,
+     "n6.honorar": -500,
+     "n6.abf": -1776,
+     "n6.grundejer": -4800,
+     "n6.andet": 0,
+     "n7.renter": -17868.480000000003,
+     "n7.kurstab": 0,
+     "n7.laaneomk": 0,
+     "n7.tinglysning": 0,
+     "n7.andet": -2521.0500000000006
+    }
    },
    "noegle": {
     "arealer": {
@@ -6556,8 +6633,8 @@
     "erhvervslejeDecember": 0,
     "boliglejeDecember": 0,
     "resultatPrM2": {
-     "y2": 0,
-     "y1": 0
+     "y2": 13,
+     "y1": 61
     },
     "vedligeholdLoebende": {
      "y2": 0,
@@ -6568,8 +6645,8 @@
      "y1": 0
     },
     "afdragPrM2": {
-     "y2": 0,
-     "y1": 0
+     "y2": 49,
+     "y1": 49
     },
     "visP": false
    }
@@ -6629,7 +6706,7 @@
     {
      "id": "bank",
      "navn": "Middelfart Sparekasse, forretningskonto",
-     "primo": 183659.5,
+     "primo": 183659.50000000003,
      "kontoudtog": 208611.97
     },
     {
@@ -8317,7 +8394,15 @@
      "ud": 520
     }
    ],
-   "reguleringer": [],
+   "reguleringer": [
+    {
+     "id": "r2024handel",
+     "tekst": "Foreningens andel af overdragelsessum (Polarvej 31) indtægtsføres",
+     "beloeb": -6400,
+     "linje": "n2.andelshandel",
+     "balancepost": "ag:handel"
+    }
+   ],
    "ejendom": {
     "kostprisPrimo": 3000000,
     "opskrivningPrimo": 7300000,
@@ -8337,10 +8422,12 @@
     "andreReguleringer": 0
    },
    "egenkapitalPrimo": {
-    "overfoertResultat": 1913651.63,
+    "overfoertResultat": 1824966.8500000003,
     "genopretning": 0,
     "vedligehold": 0,
-    "andreReserver": 0
+    "andreReserver": 0,
+    "overfoertIflgRapport": "",
+    "korrektionTekst": ""
    },
    "disponering": {
     "tilVedligehold": 0,
@@ -8765,8 +8852,8 @@
        "afdrag": 744.95
       }
      ],
-     "restgaeldPrimo": 627230.91,
-     "kortfristetPrimo": 45918.1,
+     "restgaeldPrimo": 672466.6499999999,
+     "kortfristetPrimo": 45235.74,
      "renter": 14641.58,
      "afdragIflg": "",
      "restgaeldUltimoIflg": "",
@@ -8795,7 +8882,39 @@
    "budget": {},
    "sidsteAar": {
     "vis": false,
-    "linjer": {}
+    "linjer": {
+     "n1.boligafgift": 192000,
+     "n1.boligleje": 0,
+     "n1.erhvervsleje": 0,
+     "n1.oevrig": 0,
+     "n2.bonus": 784.87,
+     "n2.uforudset": 0,
+     "n2.andelshandel": 0,
+     "n2.rente": 1017.4699999999999,
+     "n2.andet": 0,
+     "n3.ejendomsskat": -112395.35,
+     "n3.renovation": 0,
+     "n3.forsikring": -14455.85,
+     "n3.andet": 0,
+     "n4.loebende": 0,
+     "n4.genopretning": 0,
+     "n5.revisor": 0,
+     "n5.administrator": 0,
+     "n5.gebyrbank": -2245,
+     "n5.gebyrkredit": 0,
+     "n5.generalforsamling": -3750,
+     "n5.andelshandel": 0,
+     "n5.diverse": 0,
+     "n6.honorar": -1800,
+     "n6.abf": -1856,
+     "n6.grundejer": -4000,
+     "n6.andet": 0,
+     "n7.renter": -16808.9,
+     "n7.kurstab": 0,
+     "n7.laaneomk": 0,
+     "n7.tinglysning": 0,
+     "n7.andet": -2.32
+    }
    },
    "noegle": {
     "arealer": {
@@ -8843,8 +8962,8 @@
     "erhvervslejeDecember": 0,
     "boliglejeDecember": 0,
     "resultatPrM2": {
-     "y2": 0,
-     "y1": 0
+     "y2": 61,
+     "y1": 41
     },
     "vedligeholdLoebende": {
      "y2": 0,
@@ -8855,8 +8974,8 @@
      "y1": 0
     },
     "afdragPrM2": {
-     "y2": 0,
-     "y1": 0
+     "y2": 49,
+     "y1": 50
     },
     "visP": false
    }
@@ -8864,7 +8983,7 @@
   "2025": {
    "version": 1,
    "aar": 2025,
-   "primoKilde": "manuel",
+   "primoKilde": "forrigeAar",
    "forening": {
     "navn": "Andelsboligforeningen Polarvej I",
     "kortnavn": "Polarvejens Andelsboligforening I",
@@ -8916,7 +9035,7 @@
     {
      "id": "bank",
      "navn": "Middelfart Sparekasse, forretningskonto",
-     "primo": 208611.97,
+     "primo": 208611.96999999997,
      "kontoudtog": 212846.55
     },
     {
@@ -10574,10 +10693,12 @@
     "andreReguleringer": 0
    },
    "egenkapitalPrimo": {
-    "overfoertResultat": 1913651.63,
+    "overfoertResultat": 1895155.0600000003,
     "genopretning": 0,
     "vedligehold": 0,
-    "andreReserver": 0
+    "andreReserver": 0,
+    "overfoertIflgRapport": "",
+    "korrektionTekst": ""
    },
    "disponering": {
     "tilVedligehold": 0,
@@ -11002,7 +11123,7 @@
        "afdrag": 744.95
       }
      ],
-     "restgaeldPrimo": 627230.91,
+     "restgaeldPrimo": 627230.9099999999,
      "kortfristetPrimo": 45918.1,
      "renter": 14641.58,
      "afdragIflg": "",
@@ -11045,7 +11166,39 @@
    },
    "sidsteAar": {
     "vis": false,
-    "linjer": {}
+    "linjer": {
+     "n1.boligafgift": 196000,
+     "n1.boligleje": 0,
+     "n1.erhvervsleje": 0,
+     "n1.oevrig": 0,
+     "n2.bonus": 858.21,
+     "n2.uforudset": 0,
+     "n2.andelshandel": 6400,
+     "n2.rente": 0,
+     "n2.andet": 0,
+     "n3.ejendomsskat": -59246.57,
+     "n3.renovation": 0,
+     "n3.forsikring": -15161.22,
+     "n3.andet": 0,
+     "n4.loebende": 0,
+     "n4.genopretning": 0,
+     "n5.revisor": 0,
+     "n5.administrator": 0,
+     "n5.gebyrbank": -2140,
+     "n5.gebyrkredit": 0,
+     "n5.generalforsamling": -3000,
+     "n5.andelshandel": 0,
+     "n5.diverse": -28352.86,
+     "n6.honorar": -3500,
+     "n6.abf": -1936,
+     "n6.grundejer": -4000,
+     "n6.andet": 0,
+     "n7.renter": -15733.349999999999,
+     "n7.kurstab": 0,
+     "n7.laaneomk": 0,
+     "n7.tinglysning": 0,
+     "n7.andet": 0
+    }
    },
    "noegle": {
     "arealer": {
@@ -11105,8 +11258,1038 @@
      "y1": 0
     },
     "afdragPrM2": {
-     "y2": 69,
-     "y1": 69
+     "y2": 50,
+     "y1": 51
+    },
+    "visP": false
+   }
+  },
+  "2026": {
+   "version": 1,
+   "aar": 2026,
+   "primoKilde": "forrigeAar",
+   "forening": {
+    "navn": "Andelsboligforeningen Polarvej I",
+    "kortnavn": "Polarvejens Andelsboligforening I",
+    "adresse": "Polarvej 23",
+    "postnrBy": "7100 Vejle",
+    "by": "Vejle",
+    "cvr": "29 05 06 43",
+    "stiftelsesaar": 1983,
+    "opfoerelsesaar": 1983
+   },
+   "ledelse": {
+    "bestyrelse": [
+     {
+      "navn": "Heidi Jensen",
+      "titel": "Formand"
+     },
+     {
+      "navn": "Erik Jul Nielsen",
+      "titel": "Kasserer"
+     },
+     {
+      "navn": "Tina Qualmann",
+      "titel": "Bestyrelsesmedlem"
+     }
+    ],
+    "dirigent": "Tina Qualmann",
+    "bilagskontrolloerer": [
+     {
+      "navn": "Amal Mehdi"
+     },
+     {
+      "navn": "Jette Bruun"
+     }
+    ],
+    "datoPaategning": "",
+    "datoBilagskontrol": "",
+    "datoGeneralforsamling": ""
+   },
+   "tekster": {
+    "paategning": "Bestyrelsen har dags dato aflagt årsrapporten for {{aar}} for {{forening.navn}}.\n\nÅrsrapporten er aflagt i overensstemmelse med årsregnskabslovens bestemmelser for regnskabsklasse A, andelsboligforeningslovens § 5, stk. 11, og § 6, stk. 2 og 8, samt foreningens vedtægter.\n\nVi anser den valgte regnskabspraksis for hensigtsmæssig, og efter vor opfattelse giver årsregnskabet et retvisende billede af andelsboligforeningens aktiver og passiver, finansielle stilling samt resultat.\n\nIngen af andelsboligforeningens aktiver er pantsat eller behæftet med ejendomsforbehold ud over de anførte, og der påhviler ikke andelsboligforeningen eventualforpligtelser, som ikke fremgår af årsregnskabet.\n\nDer er efter regnskabsårets afslutning ikke indtruffet begivenheder, der væsentligt vil kunne påvirke vurderingen af andelsboligforeningens finansielle stilling.\n\nÅrsrapporten indstilles til generalforsamlingens godkendelse.",
+    "bilagskontrol": "Undertegnede bilagskontrollører har foretaget bilagskontrol i overensstemmelse med vedtægternes § 31. Bilagskontrollen har ikke givet anledning til bemærkninger.",
+    "praksis": "Årsrapporten for {{forening.navn}} er aflagt i overensstemmelse med årsregnskabslovens bestemmelser for regnskabsklasse A, andelsboligforeningslovens § 5, stk. 11, og § 6, stk. 2 og 8, samt bekendtgørelse nr. 336 af 20. marts 2025 om oplysningspligt ved salg af andelsboliger m.v. samt om bestyrelsens pligt til at fremlægge skema over centrale nøgleoplysninger.\n\nFormålet med årsrapporten er at give et retvisende billede af foreningens aktiviteter for regnskabsperioden og at vise, om den budgetterede og hos medlemmerne opkrævede boligafgift er tilstrækkelig.\n\nEndvidere er formålet at give de krævede nøgleoplysninger, at give oplysning om andelenes værdi og at give oplysninger om tilbagebetalingspligt vedrørende modtaget støtte.\n\n## Resultatopgørelsen\n\n### Opstillingsform\nResultatopgørelsen er opstillet, så denne bedst viser andelsboligforeningens aktivitet i det forløbne regnskabsår.\n\n### Indtægter\nBoligafgift og lejeindtægt vedrørende regnskabsperioden indgår i resultatopgørelsen.\n\n### Omkostninger\nOmkostninger vedrørende regnskabsperioden indgår i resultatopgørelsen.\n\n### Finansielle poster\nFinansielle indtægter og omkostninger indregnes i resultatopgørelsen med de beløb, der vedrører regnskabsperioden. Finansielle omkostninger består af regnskabsperiodens renteomkostninger og bidrag vedrørende prioritetsgæld.\n\n## Balancen\n\n### Materielle anlægsaktiver\nAndelsboligforeningens ejendom (grund og bygning) indregnes på anskaffelsestidspunktet og værdiansættes til kostpris.\n\nVed efterfølgende indregninger værdiansættes foreningens ejendom til dagsværdien på balancedagen. Opskrivninger i forhold til seneste indregning føres direkte på foreningens egenkapital på en særskilt opskrivningshenlæggelse.\n\nVurderes det, at ejendommens værdi på balancedagen er lavere end dagsværdi, nedskrives ejendommen til denne lavere værdi. Nedskrivningen indregnes i resultatopgørelsen.\n\nDer afskrives ikke på andelsboligforeningens ejendom.\n\n### Tilgodehavender\nTilgodehavender værdiansættes til nominel værdi.\n\n### Likvide beholdninger\nLikvide beholdninger omfatter indeståender i pengeinstitut samt kontantbeholdning.\n\n### Egenkapital\nUnder andelsboligforeningens egenkapital indregnes medlemmernes andelsindskud.\n\n\"Overført resultat m.v.\" indeholder akkumuleret resultat, tillægsværdi ved nyudstedelse af andele samt resterende overførsel af årets resultat.\n\nUnder \"andre reserver\" indregnes beløb reserveret til fremtidig vedligeholdelse samt reservation til imødegåelse af værdiforringelse af andelsboligforeningens ejendom, kursreguleringer m.v. i overensstemmelse med generalforsamlingsbeslutning. I henhold til vedtægterne indgår de reserverede beløb ikke i beregningen af andelsværdien.\n\n### Prioritetsgæld\nPrioritetsgæld indregnes ved låneoptagelsen til kostpris, svarende til det modtagne provenu efter fradrag af afholdte transaktionsomkostninger. I efterfølgende perioder værdiansættes prioritetsgælden til amortiseret kostpris svarende til den kapitaliserede værdi ved anvendelse af den effektive rente. Forskellen mellem provenuet og den nominelle værdi indregnes dermed i resultatopgørelsen over lånets løbetid.\n\nPrioritetsgælden er således værdiansat til amortiseret kostpris, der for kontantlån svarer til lånets restgæld. For obligationslån svarer amortiseret kostpris til en restgæld, der opgøres som det oprindeligt modtagne provenu ved låneoptagelsen reduceret med betalte afdrag og korrigeret for en over afdragstiden foretagen afskrivning af lånets kurstab og låneomkostninger på optagelsestidspunktet.\n\n### Øvrige gældsforpligtelser\nØvrige gældsforpligtelser værdiansættes til nominel værdi.\n\n## Øvrige noter\n\n### Nøgleoplysninger\nDe i noten \"Nøgleoplysninger\" anførte nøgleoplysninger har til formål at leve op til de krav, der følger af § 3 i bekendtgørelse nr. 336 af 20. marts 2025 fra Social- og Boligministeriet om oplysningspligt ved salg af andelsboliger m.v. samt om bestyrelsens pligt til at fremlægge skema over centrale nøgleoplysninger.\n\n### Andelsværdi\nBestyrelsens forslag til andelsværdi fremgår af noten \"Beregning af andelsværdi\". Andelsværdien opgøres i henhold til andelsboligforeningsloven samt vedtægternes § 6 og § 14.\n\nVedtægterne bestemmer desuden i § 14, at selvom der lovligt kan vedtages en højere andelsværdi, er det den på generalforsamlingen vedtagne andelsværdi, der er gældende.",
+    "pantsaetning": "Til sikkerhed for gæld til realkreditinstitut, restgæld {{laan.restgaeld}} kr., er der givet pant i grund og bygninger, hvis regnskabsmæssige værdi pr. 31. december {{aar}} udgør {{ejendom.bogfoert}} kr.",
+    "eventualforpligtelser": "Andelsboligforeningen har modtaget ydelsesstøtte til lån i realkreditinstitut fra staten og kommunen til etablering af andelsboligforeningen. Ydelsesstøtten kan kræves tilbagebetalt ved opløsning af foreningen efter almenboliglovens § 160 k. Den samlede modtagne ydelsesstøtte udgør pr. seneste opgørelse 2.167 t.kr.",
+    "andelsvaerdiIntro": "Bestyrelsen foreslår følgende værdiansættelse i henhold til andelsboligforeningslovens § 5, stk. 2, litra {{av.litra}} ({{av.princip}}), samt vedtægternes § 6, stk. 1:",
+    "noegleIntro": "Nøgletallene viser centrale dele af foreningens økonomi og er primært udregnet på baggrund af arealer. I {{forening.navn}} anvendes andelsindskuddene som fordelingsnøgle, og de arealbaserede nøgletal for andelsværdi og boligafgift svarer derfor ikke til de, der konkret gælder for den enkelte andelshaver.\n\nI bilag 1 til bekendtgørelse nr. 336 af 20. marts 2025 er opregnet en række nøgleoplysninger om foreningens økonomi, der skal optages som noter til årsregnskabet (§ 3). Disse nøgleoplysninger følger her:"
+   },
+   "likvidkonti": [
+    {
+     "id": "bank",
+     "navn": "Middelfart Sparekasse, forretningskonto",
+     "primo": 212846.54999999993,
+     "kontoudtog": ""
+    },
+    {
+     "id": "depo",
+     "navn": "Middelfart Sparekasse, deponeringskonto (hensat fremlejedepositum)",
+     "primo": 20000,
+     "kontoudtog": ""
+    },
+    {
+     "id": "henl",
+     "navn": "Middelfart Sparekasse, henlæggelseskonto",
+     "primo": 0,
+     "kontoudtog": ""
+    },
+    {
+     "id": "kasse",
+     "navn": "Kontanter",
+     "primo": 174,
+     "kontoudtog": ""
+    }
+   ],
+   "kontoplan": [
+    {
+     "nr": 10,
+     "navn": "Boligafgift / husleje",
+     "linje": "n1.boligafgift"
+    },
+    {
+     "nr": 20,
+     "navn": "Forsikringsbonus",
+     "linje": "n2.bonus"
+    },
+    {
+     "nr": 30,
+     "navn": "Gebyr ved andelshandel (indtægt)",
+     "linje": "n2.andelshandel"
+    },
+    {
+     "nr": 40,
+     "navn": "Uforudsete indtægter",
+     "linje": "n2.uforudset"
+    },
+    {
+     "nr": 45,
+     "navn": "Renteindtægter, bank",
+     "linje": "n2.rente"
+    },
+    {
+     "nr": 46,
+     "navn": "Negative renter, bank",
+     "linje": "n7.andet"
+    },
+    {
+     "nr": 50,
+     "navn": "Diverse omkostninger",
+     "linje": "n5.diverse"
+    },
+    {
+     "nr": 80,
+     "navn": "Fremlejedepositum modtaget/tilbagebetalt",
+     "linje": "ag:depositum"
+    },
+    {
+     "nr": 85,
+     "navn": "Andelsoverdragelser, gennemløb (købesum ind / provenu ud)",
+     "linje": "ag:handel"
+    },
+    {
+     "nr": 90,
+     "navn": "Ejendomsskat",
+     "linje": "n3.ejendomsskat"
+    },
+    {
+     "nr": 95,
+     "navn": "Renovation og rottebekæmpelse",
+     "linje": "n3.renovation"
+    },
+    {
+     "nr": 100,
+     "navn": "Forsikring",
+     "linje": "n3.forsikring"
+    },
+    {
+     "nr": 105,
+     "navn": "Vedligeholdelse, løbende",
+     "linje": "n4.loebende"
+    },
+    {
+     "nr": 106,
+     "navn": "Vedligeholdelse, genopretning/renovering",
+     "linje": "n4.genopretning"
+    },
+    {
+     "nr": 110,
+     "navn": "Grundejerforening",
+     "linje": "n6.grundejer"
+    },
+    {
+     "nr": 120,
+     "navn": "DLR Kredit, låneydelse (renter + afdrag)",
+     "linje": "laan:dlr"
+    },
+    {
+     "nr": 130,
+     "navn": "ABF kontingent",
+     "linje": "n6.abf"
+    },
+    {
+     "nr": 140,
+     "navn": "Bestyrelseshonorar",
+     "linje": "n6.honorar"
+    },
+    {
+     "nr": 150,
+     "navn": "Generalforsamling og møder",
+     "linje": "n5.generalforsamling"
+    },
+    {
+     "nr": 160,
+     "navn": "Revisor",
+     "linje": "n5.revisor"
+    },
+    {
+     "nr": 170,
+     "navn": "Gebyrer, bank",
+     "linje": "n5.gebyrbank"
+    },
+    {
+     "nr": 180,
+     "navn": "Gebyrer, realkredit",
+     "linje": "n5.gebyrkredit"
+    },
+    {
+     "nr": 190,
+     "navn": "Omkostninger ved andelshandel",
+     "linje": "n5.andelshandel"
+    },
+    {
+     "nr": 300,
+     "navn": "Overførsel mellem konti",
+     "linje": "bal.overfoersel"
+    },
+    {
+     "nr": 310,
+     "navn": "Andelsindskud, nye andele",
+     "linje": "bal.indskud"
+    },
+    {
+     "nr": 320,
+     "navn": "Forudmodtaget boligafgift",
+     "linje": "bal.forud"
+    }
+   ],
+   "importRegler": [
+    {
+     "moenster": "DLR KREDIT",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 120
+    },
+    {
+     "moenster": "ALKA",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 100
+    },
+    {
+     "moenster": "FORSIKRING",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 100
+    },
+    {
+     "moenster": "VEJLE KOMMUNE",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 90
+    },
+    {
+     "moenster": "SKATTEKONTOEN",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 90
+    },
+    {
+     "moenster": "GÆLDST",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 50
+    },
+    {
+     "moenster": "Overdragelsessum",
+     "retning": "ind",
+     "beloeb": "",
+     "konto": 85
+    },
+    {
+     "moenster": "Købesum",
+     "retning": "ind",
+     "beloeb": "",
+     "konto": 85
+    },
+    {
+     "moenster": "Provenu",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 85
+    },
+    {
+     "moenster": "Transporterklæring",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 85
+    },
+    {
+     "moenster": "Gebyr",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 170
+    },
+    {
+     "moenster": "Nets",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 170
+    },
+    {
+     "moenster": "fuldmagt",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 170
+    },
+    {
+     "moenster": "ABF",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 130
+    },
+    {
+     "moenster": "Grundejerforening",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 110
+    },
+    {
+     "moenster": "Kontingent",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 110
+    },
+    {
+     "moenster": "Madpartner",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 150
+    },
+    {
+     "moenster": "honorar",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 140
+    },
+    {
+     "moenster": "Erik jul Nielsen",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 140
+    },
+    {
+     "moenster": "Heidi Jensen",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 140
+    },
+    {
+     "moenster": "Tina Qualmann",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 140
+    },
+    {
+     "moenster": "Totalalgeservice",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 105
+    },
+    {
+     "moenster": "Tagbearbejdning",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 105
+    },
+    {
+     "moenster": "Byggesagkyndig",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 50
+    },
+    {
+     "moenster": "Lasertryk",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 50
+    },
+    {
+     "moenster": "Intrum",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 50
+    },
+    {
+     "moenster": "Til 2440",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 50
+    },
+    {
+     "moenster": "Returnering af overførsel",
+     "retning": "ind",
+     "beloeb": "",
+     "konto": 50
+    },
+    {
+     "moenster": "sumrente",
+     "retning": "ind",
+     "beloeb": "",
+     "konto": 45
+    },
+    {
+     "moenster": "rente",
+     "retning": "ind",
+     "beloeb": "",
+     "konto": 45
+    },
+    {
+     "moenster": "rente",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 46
+    },
+    {
+     "moenster": "Bonus",
+     "retning": "ind",
+     "beloeb": "",
+     "konto": 20
+    },
+    {
+     "moenster": "Police",
+     "retning": "ind",
+     "beloeb": "",
+     "konto": 40
+    },
+    {
+     "moenster": "SKAT Inddrivelse",
+     "retning": "ind",
+     "beloeb": "",
+     "konto": 40
+    },
+    {
+     "moenster": "For megen betalt",
+     "retning": "ud",
+     "beloeb": "",
+     "konto": 10
+    },
+    {
+     "moenster": "Husleje",
+     "retning": "ind",
+     "beloeb": "",
+     "konto": 10
+    },
+    {
+     "moenster": "Boligafgift",
+     "retning": "ind",
+     "beloeb": "",
+     "konto": 10
+    },
+    {
+     "moenster": "Advis",
+     "retning": "ind",
+     "beloeb": "",
+     "konto": 10
+    },
+    {
+     "moenster": "",
+     "retning": "ind",
+     "beloeb": 2000,
+     "konto": 10
+    },
+    {
+     "moenster": "Polarvej",
+     "retning": "ind",
+     "beloeb": "",
+     "konto": 10
+    }
+   ],
+   "posteringer": [],
+   "reguleringer": [],
+   "ejendom": {
+    "kostprisPrimo": 3000000,
+    "opskrivningPrimo": 7300000,
+    "opskrivningAaret": 0,
+    "vurderingsprincip": "offentlig",
+    "vurdering": 10300000,
+    "vurderingTekst": "pr. 1. oktober 2017",
+    "fastholdt": false
+   },
+   "andele": {
+    "antal": 8,
+    "indskudPrAndel": 85800,
+    "fordelingstalType": "indskud",
+    "fordelingstalAndet": 0,
+    "senestVedtagetPrKrone": 15.32,
+    "senestVedtagetAar": "2026",
+    "andreReguleringer": 0
+   },
+   "egenkapitalPrimo": {
+    "overfoertResultat": 1945307.7400000005,
+    "genopretning": 0,
+    "vedligehold": 0,
+    "andreReserver": 0,
+    "overfoertIflgRapport": 1945307.74,
+    "korrektionTekst": "Egenkapitalen pr. 31. december 2025 er afstemt til bankens kontoudtog og DLR Kredits betalingsplan og svarer til den aflagte årsrapport for 2025. Sammenligningstallene for 2025 er dog korrigeret i forhold til den aflagte årsrapport: boligafgift 190.000 kr. (aflagt 192.000), renter og bidrag 14.641,58 kr. (aflagt 15.733,35), betalte afdrag 45.918,10 kr. (aflagt 60.969,09), vedligeholdelse 10.350 kr. (aflagt under diverse omkostninger) og årets resultat 50.152,68 kr. (aflagt 51.160,91). Korrektionerne påvirker ikke egenkapitalen."
+   },
+   "disponering": {
+    "tilVedligehold": 0,
+    "tilAndreReserver": 0,
+    "tilGenopretning": 0,
+    "anvendtVedligehold": 0,
+    "anvendtAndreReserver": 0,
+    "anvendtGenopretning": 0
+   },
+   "laan": [
+    {
+     "id": "dlr",
+     "navn": "DLR Kredit, obligationslån (lån nr. 20)",
+     "kreditor": "DLR Kredit A/S",
+     "hovedstol": 950000,
+     "optagetTekst": "udbetalt 5. juli 2017",
+     "kilde": "plan",
+     "betalingsplan": [
+      {
+       "dato": "2017-09-01",
+       "rente": 5390.22,
+       "afdrag": 9650.15
+      },
+      {
+       "dato": "2017-12-01",
+       "rente": 5642.1,
+       "afdrag": 10240.96
+      },
+      {
+       "dato": "2018-03-01",
+       "rente": 5580.66,
+       "afdrag": 10279.36
+      },
+      {
+       "dato": "2018-06-01",
+       "rente": 5518.98,
+       "afdrag": 10317.91
+      },
+      {
+       "dato": "2018-09-01",
+       "rente": 5457.07,
+       "afdrag": 10356.6
+      },
+      {
+       "dato": "2018-12-01",
+       "rente": 5394.93,
+       "afdrag": 10395.44
+      },
+      {
+       "dato": "2019-03-01",
+       "rente": 5332.56,
+       "afdrag": 10434.42
+      },
+      {
+       "dato": "2019-06-01",
+       "rente": 5269.95,
+       "afdrag": 10473.55
+      },
+      {
+       "dato": "2019-09-01",
+       "rente": 5207.11,
+       "afdrag": 10512.83
+      },
+      {
+       "dato": "2019-12-01",
+       "rente": 5144.03,
+       "afdrag": 10552.25
+      },
+      {
+       "dato": "2020-03-01",
+       "rente": 5080.72,
+       "afdrag": 10591.82
+      },
+      {
+       "dato": "2020-06-01",
+       "rente": 5017.17,
+       "afdrag": 10631.54
+      },
+      {
+       "dato": "2020-09-01",
+       "rente": 4953.38,
+       "afdrag": 10671.41
+      },
+      {
+       "dato": "2020-12-01",
+       "rente": 4889.35,
+       "afdrag": 10711.43
+      },
+      {
+       "dato": "2021-03-01",
+       "rente": 4825.09,
+       "afdrag": 10751.59
+      },
+      {
+       "dato": "2021-06-01",
+       "rente": 4760.57,
+       "afdrag": 10791.91
+      },
+      {
+       "dato": "2021-09-01",
+       "rente": 4695.82,
+       "afdrag": 10832.38
+      },
+      {
+       "dato": "2021-12-01",
+       "rente": 4630.83,
+       "afdrag": 10873
+      },
+      {
+       "dato": "2022-03-01",
+       "rente": 4565.59,
+       "afdrag": 10913.78
+      },
+      {
+       "dato": "2022-06-01",
+       "rente": 4500.11,
+       "afdrag": 10954.7
+      },
+      {
+       "dato": "2022-09-01",
+       "rente": 4434.38,
+       "afdrag": 10995.78
+      },
+      {
+       "dato": "2022-12-01",
+       "rente": 4368.4,
+       "afdrag": 11037.02
+      },
+      {
+       "dato": "2023-03-01",
+       "rente": 4302.18,
+       "afdrag": 11078.41
+      },
+      {
+       "dato": "2023-06-01",
+       "rente": 4235.71,
+       "afdrag": 11119.95
+      },
+      {
+       "dato": "2023-09-01",
+       "rente": 4168.99,
+       "afdrag": 11161.65
+      },
+      {
+       "dato": "2023-12-01",
+       "rente": 4102.02,
+       "afdrag": 11203.51
+      },
+      {
+       "dato": "2024-03-01",
+       "rente": 4034.8,
+       "afdrag": 11245.52
+      },
+      {
+       "dato": "2024-06-01",
+       "rente": 3967.33,
+       "afdrag": 11287.69
+      },
+      {
+       "dato": "2024-09-01",
+       "rente": 3899.6,
+       "afdrag": 11330.02
+      },
+      {
+       "dato": "2024-12-01",
+       "rente": 3831.62,
+       "afdrag": 11372.51
+      },
+      {
+       "dato": "2025-03-01",
+       "rente": 3763.39,
+       "afdrag": 11415.15
+      },
+      {
+       "dato": "2025-06-01",
+       "rente": 3694.9,
+       "afdrag": 11457.96
+      },
+      {
+       "dato": "2025-09-01",
+       "rente": 3626.15,
+       "afdrag": 11500.93
+      },
+      {
+       "dato": "2025-12-01",
+       "rente": 3557.14,
+       "afdrag": 11544.06
+      },
+      {
+       "dato": "2026-03-01",
+       "rente": 3487.87,
+       "afdrag": 11587.35
+      },
+      {
+       "dato": "2026-06-01",
+       "rente": 3418.35,
+       "afdrag": 11630.8
+      },
+      {
+       "dato": "2026-09-01",
+       "rente": 3348.56,
+       "afdrag": 11674.42
+      },
+      {
+       "dato": "2026-12-01",
+       "rente": 3278.53,
+       "afdrag": 11718.19
+      },
+      {
+       "dato": "2027-03-01",
+       "rente": 3208.21,
+       "afdrag": 11762.14
+      },
+      {
+       "dato": "2027-06-01",
+       "rente": 3137.63,
+       "afdrag": 11806.25
+      },
+      {
+       "dato": "2027-09-01",
+       "rente": 3066.8,
+       "afdrag": 11850.52
+      },
+      {
+       "dato": "2027-12-01",
+       "rente": 2995.7,
+       "afdrag": 11894.96
+      },
+      {
+       "dato": "2028-03-01",
+       "rente": 2924.33,
+       "afdrag": 11939.56
+      },
+      {
+       "dato": "2028-06-01",
+       "rente": 2852.69,
+       "afdrag": 11984.34
+      },
+      {
+       "dato": "2028-09-01",
+       "rente": 2780.78,
+       "afdrag": 12029.28
+      },
+      {
+       "dato": "2028-12-01",
+       "rente": 2708.61,
+       "afdrag": 12074.39
+      },
+      {
+       "dato": "2029-03-01",
+       "rente": 2636.16,
+       "afdrag": 12119.67
+      },
+      {
+       "dato": "2029-06-01",
+       "rente": 2563.44,
+       "afdrag": 12165.12
+      },
+      {
+       "dato": "2029-09-01",
+       "rente": 2490.45,
+       "afdrag": 12210.74
+      },
+      {
+       "dato": "2029-12-01",
+       "rente": 2417.19,
+       "afdrag": 12256.53
+      },
+      {
+       "dato": "2030-03-01",
+       "rente": 2343.65,
+       "afdrag": 12302.49
+      },
+      {
+       "dato": "2030-06-01",
+       "rente": 2269.84,
+       "afdrag": 12348.62
+      },
+      {
+       "dato": "2030-09-01",
+       "rente": 2195.74,
+       "afdrag": 12394.93
+      },
+      {
+       "dato": "2030-12-01",
+       "rente": 2121.38,
+       "afdrag": 12441.41
+      },
+      {
+       "dato": "2031-03-01",
+       "rente": 2046.72,
+       "afdrag": 12488.07
+      },
+      {
+       "dato": "2031-06-01",
+       "rente": 1971.79,
+       "afdrag": 12534.9
+      },
+      {
+       "dato": "2031-09-01",
+       "rente": 1896.59,
+       "afdrag": 12581.9
+      },
+      {
+       "dato": "2031-12-01",
+       "rente": 1821.1,
+       "afdrag": 12629.08
+      },
+      {
+       "dato": "2032-03-01",
+       "rente": 1745.33,
+       "afdrag": 12676.44
+      },
+      {
+       "dato": "2032-06-01",
+       "rente": 1669.26,
+       "afdrag": 12723.98
+      },
+      {
+       "dato": "2032-09-01",
+       "rente": 1592.93,
+       "afdrag": 12771.69
+      },
+      {
+       "dato": "2032-12-01",
+       "rente": 1516.29,
+       "afdrag": 12819.59
+      },
+      {
+       "dato": "2033-03-01",
+       "rente": 1439.37,
+       "afdrag": 12867.66
+      },
+      {
+       "dato": "2033-06-01",
+       "rente": 1362.16,
+       "afdrag": 12915.92
+      },
+      {
+       "dato": "2033-09-01",
+       "rente": 1284.67,
+       "afdrag": 12964.35
+      },
+      {
+       "dato": "2033-12-01",
+       "rente": 1206.88,
+       "afdrag": 13012.97
+      },
+      {
+       "dato": "2034-03-01",
+       "rente": 1128.8,
+       "afdrag": 13061.77
+      },
+      {
+       "dato": "2034-06-01",
+       "rente": 1050.43,
+       "afdrag": 13110.75
+      },
+      {
+       "dato": "2034-09-01",
+       "rente": 971.77,
+       "afdrag": 13159.91
+      },
+      {
+       "dato": "2034-12-01",
+       "rente": 892.81,
+       "afdrag": 13209.26
+      },
+      {
+       "dato": "2035-03-01",
+       "rente": 813.55,
+       "afdrag": 13258.8
+      },
+      {
+       "dato": "2035-06-01",
+       "rente": 734,
+       "afdrag": 13308.52
+      },
+      {
+       "dato": "2035-09-01",
+       "rente": 658.85,
+       "afdrag": 13358.42
+      },
+      {
+       "dato": "2035-12-01",
+       "rente": 608.75,
+       "afdrag": 13408.52
+      },
+      {
+       "dato": "2036-03-01",
+       "rente": 558.47,
+       "afdrag": 13458.8
+      },
+      {
+       "dato": "2036-06-01",
+       "rente": 508,
+       "afdrag": 13509.27
+      },
+      {
+       "dato": "2036-09-01",
+       "rente": 457.34,
+       "afdrag": 13559.93
+      },
+      {
+       "dato": "2036-12-01",
+       "rente": 406.49,
+       "afdrag": 13610.78
+      },
+      {
+       "dato": "2037-03-01",
+       "rente": 355.45,
+       "afdrag": 13661.82
+      },
+      {
+       "dato": "2037-06-01",
+       "rente": 304.22,
+       "afdrag": 13713.05
+      },
+      {
+       "dato": "2037-09-01",
+       "rente": 252.79,
+       "afdrag": 744.95
+      }
+     ],
+     "restgaeldPrimo": 581312.8099999999,
+     "kortfristetPrimo": 46610.76,
+     "renter": 14641.58,
+     "afdragIflg": "",
+     "restgaeldUltimoIflg": "",
+     "kortfristet": 46610.76,
+     "kursvaerdi": 0,
+     "kursvaerdiTekst": "",
+     "beskrivelse": "Lånet er et konverterbart obligationslån (annuitetslån, 20 år, 81 kvartårlige terminer) med en nominel rente på 1,5 % p.a. og administrationsbidrag på 0,9 % p.a. af obligationsrestgælden. Obligationsserie 42.s.A 2037, fondskode DK000633801-7."
+    }
+   ],
+   "andenGaeld": [
+    {
+     "id": "depositum",
+     "tekst": "Depositum fra fremlejer, Polarvej 64 (hensat på deponeringskonto)",
+     "primo": 20000
+    },
+    {
+     "id": "handel",
+     "tekst": "Mellemregning, andelsoverdragelser (købesum modtaget, endnu ikke afregnet)",
+     "primo": 0
+    }
+   ],
+   "tilgodehavender": [],
+   "forudmodtaget": {
+    "primo": 0
+   },
+   "budget": {},
+   "sidsteAar": {
+    "vis": true,
+    "linjer": {
+     "n1.boligafgift": 190000,
+     "n1.boligleje": 0,
+     "n1.erhvervsleje": 0,
+     "n1.oevrig": 0,
+     "n2.bonus": 894.71,
+     "n2.uforudset": 25882.37,
+     "n2.andelshandel": 0,
+     "n2.rente": 0,
+     "n2.andet": 0,
+     "n3.ejendomsskat": -81312.22,
+     "n3.renovation": -1545.12,
+     "n3.forsikring": -15552.78,
+     "n3.andet": 0,
+     "n4.loebende": -10350,
+     "n4.genopretning": 0,
+     "n5.revisor": 0,
+     "n5.administrator": 0,
+     "n5.gebyrbank": -2070,
+     "n5.gebyrkredit": 0,
+     "n5.generalforsamling": -3000,
+     "n5.andelshandel": 0,
+     "n5.diverse": -28636.7,
+     "n6.honorar": -3500,
+     "n6.abf": -2016,
+     "n6.grundejer": -4000,
+     "n6.andet": 0,
+     "n7.renter": -14641.58,
+     "n7.kurstab": 0,
+     "n7.laaneomk": 0,
+     "n7.tinglysning": 0,
+     "n7.andet": 0
+    }
+   },
+   "noegle": {
+    "arealer": {
+     "y2": {
+      "b1": 889,
+      "b2": 0,
+      "b3": 0,
+      "b4": 0,
+      "b5": 0
+     },
+     "y1": {
+      "b1": 889,
+      "b2": 0,
+      "b3": 0,
+      "b4": 0,
+      "b5": 0
+     },
+     "y0": {
+      "b1": 889,
+      "b2": 0,
+      "b3": 0,
+      "b4": 0,
+      "b5": 0
+     }
+    },
+    "antal": {
+     "b1": 8,
+     "b2": 0,
+     "b3": 0,
+     "b4": 0,
+     "b5": 0
+    },
+    "fordelingstalAndelsvaerdi": "indskud",
+    "fordelingstalBoligafgift": "indskud",
+    "c3Tekst": "",
+    "c3Svar": "",
+    "haefter": false,
+    "haefterTekst": "",
+    "e2Tekst": "",
+    "e2Svar": "",
+    "g1": true,
+    "g2": false,
+    "g3": false,
+    "boligafgiftDecember": 16000,
+    "erhvervslejeDecember": 0,
+    "boliglejeDecember": 0,
+    "resultatPrM2": {
+     "y2": 79,
+     "y1": 56
+    },
+    "vedligeholdLoebende": {
+     "y2": 0,
+     "y1": 12
+    },
+    "vedligeholdGenopretning": {
+     "y2": 0,
+     "y1": 0
+    },
+    "afdragPrM2": {
+     "y2": 51,
+     "y1": 52
     },
     "visP": false
    }

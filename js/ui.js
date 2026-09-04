@@ -154,7 +154,7 @@ export class App {
     const v = getPath(this.state, path);
     const id = 'f_' + path.replace(/[^a-zA-Z0-9]/g, '_');
     let input;
-    if (type === 'num' || type === 'int') input = `<input type="text" inputmode="decimal" class="num" id="${id}" data-path="${path}" data-type="${type}" value="${v === null || v === undefined || v === '' ? '' : (type === 'int' ? fmtInt(v) : fmtKr(v))}" ${opts.placeholder ? `placeholder="${esc(opts.placeholder)}"` : ''}>`;
+    if (type === 'num' || type === 'int') input = `<input type="text" inputmode="decimal" class="num" id="${id}" data-path="${path}" data-type="${type}" ${/IflgRapport|kontoudtog|Iflg$/.test(path) ? 'data-allow-empty="1"' : ''} value="${v === null || v === undefined || v === '' ? '' : (type === 'int' ? fmtInt(v) : fmtKr(v))}" ${opts.placeholder ? `placeholder="${esc(opts.placeholder)}"` : ''}>`;
     else if (type === 'bool') input = `<label class="check"><input type="checkbox" id="${id}" data-path="${path}" data-type="bool" ${v ? 'checked' : ''}> ${esc(opts.checkLabel || '')}</label>`;
     else if (type === 'date') input = `<input type="date" id="${id}" data-path="${path}" data-type="text" value="${esc(v || '')}">`;
     else if (type === 'select') input = `<select id="${id}" data-path="${path}" data-type="${opts.numeric ? 'numsel' : 'text'}" ${opts.rerender ? 'data-rerender="1"' : ''}>${opts.options.map(o => `<option value="${esc(o.id)}" ${String(o.id) === String(v) ? 'selected' : ''}>${esc(o.label)}</option>`).join('')}</select>`;
@@ -535,6 +535,8 @@ export class App {
       ${this.felt('Genopretningskonto primo', 'egenkapitalPrimo.genopretning', 'num')}
       ${this.felt('Reserve til vedligeholdelse primo', 'egenkapitalPrimo.vedligehold', 'num')}
       ${this.felt('Andre reserver primo', 'egenkapitalPrimo.andreReserver', 'num')}
+      ${this.felt(`Overført resultat primo iflg. den aflagte årsrapport for ${S.aar - 1} (tomt = ingen korrektion)`, 'egenkapitalPrimo.overfoertIflgRapport', 'num', { hint: 'Afviger det fra det korrigerede primo, viser noten en "korrektion vedrørende tidligere år"' })}
+      ${this.felt('Forklaring på korrektionen (vises i noten)', 'egenkapitalPrimo.korrektionTekst', 'textarea', { wide: true, rows: 3 })}
     </div><p class="hjaelp">Andelsindskud primo beregnes som antal × indskud fratrukket indskud fra nye andele i året.</p></div>
     <div class="panel"><h3>Resultatdisponering (bestyrelsens forslag)</h3><div class="grid">
       ${this.felt('Overført til reserve til vedligeholdelse', 'disponering.tilVedligehold', 'num')}

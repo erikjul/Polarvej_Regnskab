@@ -219,7 +219,11 @@ export class Engine {
     this.def('ek.indskud.ultimo', 'Andelsindskud', 'andele.antal * andele.indskud');
     this.def('ek.indskud.bev', 'Indskud fra nye andele i året', `${K(kontoSum('bal.indskud'))}`);
     this.def('ek.indskud.primo', 'Andelsindskud primo', 'ek.indskud.ultimo - ek.indskud.bev');
-    this.input('ek.overfoert.primo', 'Overført resultat primo', P.overfoertResultat, { group: 'Egenkapital primo' });
+    this.input('ek.overfoert.primo', 'Overført resultat primo (korrigeret)', P.overfoertResultat, { group: 'Egenkapital primo' });
+    if (P.overfoertIflgRapport !== '' && P.overfoertIflgRapport !== null && P.overfoertIflgRapport !== undefined) {
+      this.input('ek.overfoert.primoRapport', `Overført resultat primo iflg. årsrapport ${y - 1}`, P.overfoertIflgRapport, { group: 'Egenkapital primo' });
+      this.def('ek.overfoert.korrektion', 'Korrektion vedrørende tidligere år', 'ek.overfoert.primo - ek.overfoert.primoRapport');
+    }
     this.def('ek.overfoert.aaret', 'Årets overførte overskud eller underskud', 'disp.rest');
     this.def('ek.overfoert.afdrag', 'Afdrag på prioritetsgæld', 'disp.afdrag');
     this.def('ek.overfoert.anvendt', 'Overført fra reserver (anvendt i året)', '-disp.anvendt');

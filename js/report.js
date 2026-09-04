@@ -230,11 +230,16 @@ export function byggeRapport(engine) {
   nb.push(row('total', 'Reserve for opskrivning af ejendommen i alt', bc('ek.opskrivning')));
   nb.push(row('blank'));
   nb.push(row('notehead', 'Overført resultat', [], NN.overfoert));
-  nb.push(row('line', 'Overført resultat primo', [N('ek.overfoert.primo'), T('')]));
+  if (engine.has('ek.overfoert.korrektion')) {
+    nb.push(row('line', `Overført resultat primo iflg. årsrapport ${y - 1}`, [N('ek.overfoert.primoRapport'), T('')]));
+    nb.push(row('line', 'Korrektion vedrørende tidligere år' + ((S.egenkapitalPrimo || {}).korrektionTekst ? ' (se nedenfor)' : ''), [N('ek.overfoert.korrektion'), T('')]));
+    nb.push(row('total', 'Overført resultat primo, korrigeret', [N('ek.overfoert.primo'), T('')]));
+  } else nb.push(row('line', 'Overført resultat primo', [N('ek.overfoert.primo'), T('')]));
   nb.push(row('line', 'Årets overførte overskud eller underskud', [N('ek.overfoert.aaret'), T('')]));
   nb.push(row('line', 'Afdrag på prioritetsgæld', [N('ek.overfoert.afdrag'), T('')]));
   if (engine.get('ek.overfoert.anvendt') !== 0) nb.push(row('line', 'Overført fra reserver (anvendt i året)', [N('ek.overfoert.anvendt'), T('')]));
   nb.push(row('total', 'Overført resultat i alt', bc('ek.overfoert')));
+  if (engine.has('ek.overfoert.korrektion') && (S.egenkapitalPrimo || {}).korrektionTekst) nb.push(row('text', S.egenkapitalPrimo.korrektionTekst));
   nb.push(row('blank'));
   for (const [key, titel] of [['genopretning', 'Genopretningskonto'], ['vedligehold', 'Reserve til vedligeholdelse af ejendommen'], ['andre', 'Andre reserver']]) {
     nb.push(row('notehead', titel, [], NN[key]));

@@ -3,6 +3,7 @@
 import { tomState, STANDARD_TEKSTER } from './model.js';
 import { DLR_BETALINGSPLAN } from './data-dlr-betalingsplan.js';
 import { POSTERINGER, BANK_ULTIMO } from './data-historik.js';
+import { opretNytAar } from './samling.js';
 
 
 export function eksempelPolarvej2025() {
@@ -120,8 +121,22 @@ export function eksempelPolarvej2025() {
   return s;
 }
 
-// Samling med alle regnskabsår 2021–2025: bankens posteringer for hvert år, kædede primotal fra 2022.
-// Egenkapital primo 2021 og andre primotal for 2021 kendes ikke endnu (udfyldes fra årsrapporten for 2021/2022).
+// Samling med alle regnskabsår 2021–2026: bankens posteringer for hvert år og kædede primotal.
+// Primo 2021 er udledt af bankens saldo 31/12 2020 (regnet baglæns), DLR's betalingsplan og de faste poster.
+// Rapporterede tal fra de aflagte årsrapporter bruges kun til sammenligning (se docs/afvigelser.md).
+export const RAPPORTERET = {
+  // Overført resultat ultimo iflg. de aflagte årsrapporter (note 12)
+  overfoert: { 2020: 1702318.84, 2021: 1736513.16, 2022: 1793650.64, 2023: 1843463.42, 2024: 1913651.63, 2025: 1945307.74 },
+  resultat: { 2021: 34194.32, 2022: 57137.48, 2023: 36488.92, 2024: 70188.21, 2025: 51160.91 },
+  restgaeld: { 2021: 796127.30, 2022: 711857.46, 2023: 653970.08, 2024: 627230.91, 2025: 581312.81 },
+  kortfristet: { 2021: 61769.76, 2022: 44563.52, 2023: 45235.74, 2024: 45918.10, 2025: 46610.76 },
+  renter: { 2021: 0, 2022: 17868.48, 2023: 16808.90, 2024: 15733.35, 2025: 15733.35 },
+  afdragDisp: { 2021: 62161.19, 2022: 61769.76, 2023: 61769.76, 2024: 60969.09, 2025: 60969.09 },
+  boligafgift: { 2021: 0, 2022: 190000, 2023: 190000, 2024: 197000, 2025: 192000 },
+  likvider: { 2021: 221171.98, 2022: 211908.10, 2023: 203833.50, 2024: 228785.97, 2025: 233020.55 },
+  andelskrone: { 2022: 14.05, 2023: 14.04, 2024: 14.10, 2025: 14.08 },
+};
+
 export function eksempelSamling() {
   const regnskaber = {};
   for (const y of [2021, 2022, 2023, 2024, 2025]) {
@@ -133,22 +148,31 @@ export function eksempelSamling() {
     const depo = st.likvidkonti.find(k => k.id === 'depo');
     depo.primo = y <= 2022 ? 0 : 20000; depo.kontoudtog = y <= 2021 ? 0 : 20000;
     st.andenGaeld.find(a => a.id === 'depositum').primo = y <= 2021 ? 0 : 20000;
+    st.reguleringer = [];
+    if (y === 2022) st.reguleringer.push({ id: 'r2022handel', tekst: 'Foreningens andel af overdragelsessummer (Polarvej 62 og 43) indtægtsføres', beloeb: -24000, linje: 'n2.andelshandel', balancepost: 'ag:handel' });
+    if (y === 2024) st.reguleringer.push({ id: 'r2024handel', tekst: 'Foreningens andel af overdragelsessum (Polarvej 31) indtægtsføres', beloeb: -6400, linje: 'n2.andelshandel', balancepost: 'ag:handel' });
     if (y < 2025) {
       st.budget = {};
       st.ledelse.datoPaategning = ''; st.ledelse.datoBilagskontrol = ''; st.ledelse.datoGeneralforsamling = '';
       st.noegle.resultatPrM2 = { y2: 0, y1: 0 }; st.noegle.afdragPrM2 = { y2: 0, y1: 0 };
     }
     if (y === 2021) {
-      // Primotal 2021 kendes ikke endnu – sættes fra årsrapporten
+      // Primo 2021 (= 31/12 2020): bank 212.736,17 + kontanter 174 + ejendom 10.300.000 − DLR-restgæld 804.180,33 − indskud − opskrivning
       st.primoKilde = 'manuel';
-      st.egenkapitalPrimo = { overfoertResultat: 0, genopretning: 0, vedligehold: 0, andreReserver: 0 };
-      st.primoBemaerkning = 'Egenkapital primo 2021 mangler – udfyldes fra årsrapporten for 2020/2021.';
-    } else if (y === 2025) {
-      st.primoKilde = 'manuel'; // beholder primotallene fra årsrapporten 2024, indtil 2021–2024 er afstemt
+      const overfoert = Math.round((BANK_ULTIMO[2020] + 174 + 10300000 - 804180.33 - 686400 - 7300000) * 100) / 100;
+      st.egenkapitalPrimo = { overfoertResultat: overfoert, genopretning: 0, vedligehold: 0, andreReserver: 0, overfoertIflgRapport: RAPPORTERET.overfoert[2020], korrektionTekst: 'Primo 2021 er opgjort ud fra bankens saldo pr. 31. december 2020 og DLR Kredits betalingsplan (restgæld 804.180,33 kr.). Differencen til den aflagte årsrapport skyldes forkert opgjort restgæld på prioritetsgælden i tidligere år.' };
     } else {
       st.primoKilde = 'forrigeAar';
+      st.egenkapitalPrimo.overfoertIflgRapport = ''; st.egenkapitalPrimo.korrektionTekst = '';
     }
     regnskaber[y] = st;
   }
-  return { version: 2, aktivAar: 2025, regnskaber };
+  const samling = { version: 2, aktivAar: 2025, regnskaber };
+  // 2026: nyt år med korrigeret primo; den aflagte årsrapport for 2025 viser overført resultat 1.945.307,74
+  const st26 = opretNytAar(samling, 2025);
+  st26.egenkapitalPrimo.overfoertIflgRapport = RAPPORTERET.overfoert[2025];
+  st26.egenkapitalPrimo.korrektionTekst = 'Egenkapitalen pr. 31. december 2025 er afstemt til bankens kontoudtog og DLR Kredits betalingsplan og svarer til den aflagte årsrapport for 2025. Sammenligningstallene for 2025 er dog korrigeret i forhold til den aflagte årsrapport: boligafgift 190.000 kr. (aflagt 192.000), renter og bidrag 14.641,58 kr. (aflagt 15.733,35), betalte afdrag 45.918,10 kr. (aflagt 60.969,09), vedligeholdelse 10.350 kr. (aflagt under diverse omkostninger) og årets resultat 50.152,68 kr. (aflagt 51.160,91). Korrektionerne påvirker ikke egenkapitalen.';
+  st26.andele.senestVedtagetAar = '2026';
+  samling.aktivAar = 2025;
+  return samling;
 }
