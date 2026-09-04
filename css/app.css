@@ -135,6 +135,8 @@ table.rpt .tabelnote { font-size: .78rem; color: var(--muted); }
 .toast.show { opacity: 1; }
 .kontoplan-hint { font-size: .8rem; color: var(--muted); }
 .hidden { display: none !important; }
+label.knap { display: inline-block; }
+tr.dublet td { text-decoration: line-through; }
 
 @media (max-width: 900px) {
   .layout { flex-direction: column; }

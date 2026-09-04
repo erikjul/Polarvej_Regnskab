@@ -104,6 +104,29 @@ export const STANDARD_KONTOPLAN = [
   { nr: 320, navn: 'Forudmodtaget boligafgift', linje: 'bal.forud' },
 ];
 
+// Standardregler for automatisk kontering ved bankimport (første match vinder; mest specifikke først)
+export const STANDARD_IMPORTREGLER = [
+  { moenster: 'DLR KREDIT', retning: 'ud', beloeb: '', konto: 120 },
+  { moenster: 'ALKA', retning: 'ud', beloeb: '', konto: 100 },
+  { moenster: 'FORSIKRING', retning: 'ud', beloeb: '', konto: 100 },
+  { moenster: 'Aftalenr. 122473449', retning: 'ud', beloeb: '', konto: 95 },
+  { moenster: 'VEJLE KOMMUNE', retning: 'ud', beloeb: '', konto: 90 },
+  { moenster: 'SKATTEKONTOEN', retning: 'ud', beloeb: '', konto: 90 },
+  { moenster: 'GÆLDST', retning: 'ud', beloeb: '', konto: 50 },
+  { moenster: 'Gebyr', retning: 'ud', beloeb: '', konto: 170 },
+  { moenster: 'ABF', retning: 'ud', beloeb: '', konto: 130 },
+  { moenster: 'Grundejerforening', retning: 'ud', beloeb: '', konto: 110 },
+  { moenster: 'Madpartner', retning: 'ud', beloeb: '', konto: 150 },
+  { moenster: 'Totalalgeservice', retning: 'ud', beloeb: '', konto: 105 },
+  { moenster: 'Tagbearbejdning', retning: 'ud', beloeb: '', konto: 105 },
+  { moenster: 'Bonus', retning: 'ind', beloeb: '', konto: 20 },
+  { moenster: 'Police', retning: 'ind', beloeb: '', konto: 40 },
+  { moenster: 'SKAT Inddrivelse', retning: 'ind', beloeb: '', konto: 40 },
+  { moenster: 'Husleje', retning: 'ind', beloeb: '', konto: 10 },
+  { moenster: 'Boligafgift', retning: 'ind', beloeb: '', konto: 10 },
+  { moenster: '', retning: 'ind', beloeb: 2000, konto: 10 },
+];
+
 export const STANDARD_TEKSTER = {
   paategning:
 `Bestyrelsen har dags dato aflagt årsrapporten for {{aar}} for {{forening.navn}}.
@@ -231,6 +254,7 @@ export function tomState(aar = new Date().getFullYear() - 1) {
       { id: 'kasse', navn: 'Kontanter', primo: 0, kontoudtog: null },
     ],
     kontoplan: STANDARD_KONTOPLAN.map(k => ({ ...k })),
+    importRegler: STANDARD_IMPORTREGLER.map(r => ({ ...r })),
     posteringer: [],
     reguleringer: [],
     ejendom: { kostprisPrimo: 0, opskrivningPrimo: 0, opskrivningAaret: 0, vurderingsprincip: 'offentlig', vurdering: 0, vurderingTekst: '', fastholdt: false },

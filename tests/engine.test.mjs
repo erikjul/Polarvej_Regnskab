@@ -38,26 +38,28 @@ test('dansk talparsing', () => {
 
 test('eksempel 2025: resultatopgørelsen svarer til årsrapporten', () => {
   const e = new Engine(eksempelPolarvej2025());
-  naer(e.get('n1.total'), 192000, 'note 1');
+  naer(e.get('n1.total'), 190000, 'note 1 (95 indbetalinger à 2.000 iflg. banken)');
   naer(e.get('n2.total'), 26777.08, 'note 2');
   naer(e.get('n3.total'), -98410.12, 'note 3');
-  naer(e.get('n5.total'), -43956.70, 'note 5');
+  naer(e.get('n4.total'), -10350, 'note 4 (algebehandling og tagarbejde)');
+  naer(e.get('n5.total'), -33706.70, 'note 5');
   naer(e.get('n6.total'), -9516, 'note 6');
   naer(e.get('n7.total'), -14641.58, 'note 7 (renter og bidrag iflg. DLR betalingsplan)');
-  naer(e.get('res.indtaegter'), 218777.08);
-  naer(e.get('res.omkostninger'), -151882.82);
-  naer(e.get('res.resultat'), 52252.68);
+  naer(e.get('res.indtaegter'), 216777.08);
+  naer(e.get('res.omkostninger'), -151982.82);
+  naer(e.get('res.resultat'), 50152.68);
+  naer(e.get('likvid.bank.ultimo'), 212846.55, 'bank ultimo = kontoudtog');
   naer(e.get('disp.total'), e.get('res.resultat'), 'disponering');
 });
 
 test('eksempel 2025: kasserapport, lån og likvider', () => {
   const e = new Engine(eksempelPolarvej2025());
-  naer(e.get('likvid.total.ind'), 218777.08);
-  naer(e.get('likvid.total.ud'), 212442.50);
+  naer(e.get('likvid.total.ind'), 216777.08);
+  naer(e.get('likvid.total.ud'), 212542.50);
   naer(e.get('laan.dlr.ydelser'), 60559.68);
   naer(e.get('laan.dlr.afdrag'), 60559.68 - 14641.58);
   naer(e.get('laan.dlr.restgaeldUltimo'), 627230.91 - 45918.10);
-  naer(e.get('likvid.bank.ultimo'), 208611.97 + 218777.08 - 212442.50);
+  naer(e.get('likvid.bank.ultimo'), 208611.97 + 216777.08 - 212542.50);
   naer(e.get('cf.diff'), 0, 'pengestrøm');
   naer(e.get('ek.total.ultimo'), e.get('ek.total.primo') + e.get('res.resultat'), 'egenkapital');
 });
@@ -68,7 +70,7 @@ test('eksempel 2025: andelsværdi og nøgletal', () => {
   naer(e.get('av.prKrone'), Math.round(e.get('av.vaerdi') / 686400 * 100) / 100);
   assert.equal(e.get('nk.f2.m2'), 11586);
   assert.equal(e.get('nk.h1'), 216);
-  assert.equal(e.get('nk.j.y0'), 59);
+  assert.equal(e.get('nk.j.y0'), 56);
   assert.equal(e.get('nk.k3'), e.get('nk.k1') + e.get('nk.k2'));
 });
 
@@ -112,8 +114,7 @@ test('kontrolsiden finder uoverensstemmelserne i 2025-rapporten', () => {
   const by = Object.fromEntries(k.kontroller.map(c => [c.id, c]));
   assert.equal(by['bal.primo'].status, 'fejl');
   naer(by['bal.primo'].diff, -18496.57);
-  assert.equal(by['bank.bank'].status, 'fejl');
-  naer(by['bank.bank'].diff, 2100);
+  assert.equal(by['bank.bank'].status, 'ok');
   assert.equal(by['post.kontering'].status, 'ok');
   assert.equal(by['cf'].status, 'ok');
 });

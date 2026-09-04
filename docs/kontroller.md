@@ -10,6 +10,7 @@ Kontrolsiden viser en grøn banner, når regnskabet balancerer og alle afstemnin
 | Posteringernes kvalitet | Dato inden for regnskabsåret, ét beløb pr. postering, ingen negative beløb, entydige bilagsnumre | Advarsel |
 | Pengestrømsafstemning | Ændring i likvide beholdninger = årets resultat (korrigeret for reguleringer) − afdrag + bevægelser på balancekonti | Fejl |
 | Overførsler mellem likvide konti | Summen af posteringer på overførselskontoen er 0 | Fejl |
+| Lån – betalingsplan | Bogførte ydelser = årets terminer i kreditforeningens betalingsplan | Fejl |
 | Bankafstemning pr. likvid konto | Primo + indbetalinger − udbetalinger = saldo iflg. kontoudtog | Fejl (info hvis kontoudtogssaldo ikke er indtastet) |
 | Resultatdisponering | Summen af disponeringen = årets resultat | Fejl |
 | Resultatopgørelsen | Indtægter + omkostninger + finansielle poster = årets resultat | Fejl |

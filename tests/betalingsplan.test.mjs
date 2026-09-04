@@ -41,13 +41,13 @@ test('motoren bruger betalingsplanen: renter, afdrag, kortfristet del og restgæ
   naer(e.get('laan.dlr.restgaeldUltimo'), 581312.81, 'ultimo');
   naer(e.get('laan.dlr.kortfristet'), 46610.76, 'kortfristet');
   naer(e.get('laan.dlr.langfristet'), 534702.05, 'langfristet');
-  naer(e.get('res.resultat'), 52252.68, 'resultat med korrekte renter');
+  naer(e.get('res.resultat'), 50152.68, 'resultat med korrekte renter');
   const k = kontroller(e);
   const yd = k.kontroller.find(c => c.id === 'laan.dlr.ydelser');
   assert.equal(yd.status, 'ok');
   // manglende ydelse opdages
   const s = eksempelPolarvej2025();
-  s.posteringer = s.posteringer.filter(p => p.bilag !== '40.25');
+  s.posteringer = s.posteringer.filter(p => !(p.dato === '2025-12-30' && /DLR/i.test(p.tekst)));
   const k2 = kontroller(new Engine(s));
   assert.equal(k2.kontroller.find(c => c.id === 'laan.dlr.ydelser').status, 'fejl');
   naer(k2.kontroller.find(c => c.id === 'laan.dlr.ydelser').diff, -15101.20, 'difference = manglende termin');

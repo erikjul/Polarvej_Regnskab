@@ -8,6 +8,8 @@ import { fmtKr, fmtInt, fmtBy, parseTal, num } from './format.js';
 import { gemLokalt, hentLokalt, gemSomFil, laesFil } from './storage.js';
 import { nySamling, migrer, aarListe, erKoblet, engineFor, opretNytAar, PRIMO_STI } from './samling.js';
 import { parseBetalingsplan, planAar, aarAf, sorter, sidsteTermin, restloebetid } from './betalingsplan.js';
+import { parseBankCsv, forberedImport } from './import.js';
+import { STANDARD_IMPORTREGLER } from './model.js';
 import { eksporterExcel } from './excel.js';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -132,7 +134,7 @@ export class App {
     const el = document.getElementById('tab-' + id);
     switch (id) {
       case 'stamdata': el.innerHTML = this.htmlStamdata(); break;
-      case 'kasserapport': el.innerHTML = this.htmlKasserapport(); break;
+      case 'kasserapport': el.innerHTML = this.htmlKasserapport(); this.bindImport(el); break;
       case 'kontoplan': el.innerHTML = this.htmlKontoplan(); break;
       case 'balance': el.innerHTML = this.htmlBalance(); break;
       case 'budget': el.innerHTML = this.htmlBudget(); break;
@@ -170,7 +172,7 @@ export class App {
         const p = `${basePath}.${i}.${c.key}`;
         const v = it[c.key];
         let inp;
-        if (c.type === 'num' || c.type === 'int') inp = `<input type="text" inputmode="decimal" class="num" data-path="${p}" data-type="${c.type}" value="${v === null || v === undefined || v === '' ? '' : (c.type === 'int' ? fmtInt(v) : fmtKr(v))}">`;
+        if (c.type === 'num' || c.type === 'int') inp = `<input type="text" inputmode="decimal" class="num" data-path="${p}" data-type="${c.type}" ${basePath === 'importRegler' || c.key === 'kontoudtog' || c.key === 'afdragIflg' || c.key === 'restgaeldUltimoIflg' ? 'data-allow-empty="1"' : ''} value="${v === null || v === undefined || v === '' ? '' : (c.type === 'int' ? fmtInt(v) : fmtKr(v))}">`;
         else if (c.type === 'date') inp = `<input type="date" data-path="${p}" data-type="text" value="${esc(v || '')}">`;
         else if (c.type === 'select') { const o = typeof c.options === 'function' ? c.options(it) : c.options; inp = `<select data-path="${p}" data-type="${c.numeric ? 'numsel' : 'text'}"><option value="">–</option>${o.map(x => `<option value="${esc(x.id)}" ${String(x.id) === String(v ?? '') ? 'selected' : ''}>${esc(x.label)}</option>`).join('')}</select>`; }
         else if (c.type === 'bool') inp = `<input type="checkbox" data-path="${p}" data-type="bool" ${v ? 'checked' : ''}>`;
@@ -257,6 +259,7 @@ export class App {
       case 'reguleringer': arr.push({ id: nyId('r'), tekst: '', beloeb: 0, linje: '', balancepost: '' }); break;
       case 'ledelse.bestyrelse': arr.push({ navn: '', titel: 'Bestyrelsesmedlem' }); break;
       case 'ledelse.bilagskontrolloerer': arr.push({ navn: '' }); break;
+      case 'importRegler': arr.push({ moenster: '', retning: '', beloeb: '', konto: '' }); break;
       default:
         if (/^laan\.\d+\.betalingsplan$/.test(basePath)) { const sidste = arr[arr.length - 1]; arr.push({ dato: sidste ? sidste.dato : '', rente: 0, afdrag: 0 }); }
         else arr.push({});
@@ -289,6 +292,18 @@ export class App {
       this.toast(`${terminer.length} terminer indlæst${adv ? ` (${adv} med ydelse ≠ rente + afdrag)` : ''}`);
     }
     if (name.startsWith('plan-slet:')) { const i = Number(name.slice(10)); if (confirm('Slet betalingsplanen for lånet?')) { S.laan[i].betalingsplan = []; S.laan[i].kilde = 'manuel'; this.recompute(); this.renderTab(this.tab); } }
+    if (name === 'import-udfoer' && this.import) {
+      const valgte = this.import.rows.filter(r => r.medtag && r.konto !== '');
+      let n = S.posteringer.length;
+      valgte.forEach(r => { n++; S.posteringer.push({ id: nyId('p'), dato: r.dato, bilag: `${String(n).padStart(2, '0')}.${String(S.aar).slice(2)}`, tekst: r.tekst + (r.modpart ? ' (' + r.modpart + ')' : ''), konto: r.konto, likvid: r.likvid, ind: r.beloeb > 0 ? r.beloeb : 0, ud: r.beloeb < 0 ? -r.beloeb : 0 }); });
+      S.posteringer.sort((a, b) => (a.dato || '').localeCompare(b.dato || '') || String(a.bilag).localeCompare(String(b.bilag), 'da', { numeric: true }));
+      S.posteringer.forEach((p, i) => { p.bilag = `${String(i + 1).padStart(2, '0')}.${String(S.aar).slice(2)}`; });
+      this.import = null;
+      this.recompute(); this.renderTab(this.tab);
+      this.toast(`${valgte.length} posteringer importeret`);
+    }
+    if (name === 'import-annuller') { this.import = null; this.renderTab(this.tab); }
+    if (name === 'standard-importregler') { if (confirm('Erstat konteringsreglerne med standardreglerne?')) { S.importRegler = STANDARD_IMPORTREGLER.map(r => ({ ...r })); this.recompute(); this.renderTab(this.tab); } }
     if (name === 'slet-aar') this.sletAar();
     if (name === 'nyt-aar') this.nytAar();
     if (name === 'kobling-fra') { if (confirm(`Afbryd koblingen til ${S.aar - 1}? Primotallene beholdes som de er nu, men følger ikke længere med, hvis ${S.aar - 1} rettes.`)) { S.primoKilde = 'manuel'; this.recompute(); this.renderTab(this.tab); } }
@@ -365,6 +380,7 @@ export class App {
     }).join('');
     const ukendte = Object.keys(grupper).filter(nr => !S.kontoplan.some(k => String(k.nr) === String(nr)));
     return `<h2>Kasserapport ${S.aar}</h2>
+    ${this.htmlImport()}
     <p class="hjaelp">Indtast alle ind- og udbetalinger i regnskabsåret. Vælg for hver postering en konto fra kontoplanen (bestemmer hvor beløbet lander i regnskabet) og hvilken likvid konto pengene gik ind på/ud fra. Låneydelser bogføres med det fulde beløb på lånekontoen – motoren deler i renter og afdrag ud fra kreditforeningens årsopgørelse (fanen Primo &amp; lån).</p>
     <div class="panel">${this.tabel('posteringer', cols, { sum, tilfoejLabel: 'Tilføj postering', ekstraKnapper: ekstra })}</div>
     <div class="panel"><h3>Likvide konti – bevægelser</h3>
@@ -375,6 +391,54 @@ export class App {
       ${ukendte.length ? `<p class="hjaelp" style="color:var(--fejl)">Posteringer på konti der ikke findes i kontoplanen: ${ukendte.join(', ')}</p>` : ''}
       ${kontokort || '<p class="hjaelp">Ingen posteringer endnu.</p>'}
     </div>`;
+  }
+
+  htmlImport() {
+    const S = this.state;
+    const imp = this.import;
+    const head = `<div class="panel"><h3>Importér posteringer fra bankens CSV-eksport</h3>
+      <p class="hjaelp">Eksportér kontoens posteringer fra netbanken som CSV og vælg filen her. Programmet foreslår konto ud fra konteringsreglerne (fanen Kontoplan) og tidligere posteringer, og springer posteringer over, der allerede findes (samme dato, beløb og tekst).</p>
+      <div class="knapper"><label class="knap">Vælg CSV-fil <input type="file" id="import-fil" accept=".csv,.txt,text/csv" class="hidden"></label>
+      <label>Likvid konto: <select id="import-likvid">${S.likvidkonti.map(k => `<option value="${esc(k.id)}" ${imp && imp.likvid === k.id ? 'selected' : ''}>${esc(k.navn)}</option>`).join('')}</select></label></div>`;
+    if (!imp) return head + '</div>';
+    const kontoOpts = this.kontoOptions();
+    const rows = imp.rows.map((r, i) => `<tr class="${r.dublet ? 'dublet' : ''}" style="${r.dublet || r.udenforAar ? 'color:var(--muted)' : ''}">
+      <td><input type="checkbox" data-imp="medtag" data-i="${i}" ${r.medtag ? 'checked' : ''}></td>
+      <td>${esc(r.dato)}</td><td>${esc(r.tekst)}${r.modpart ? `<div class="kontoplan-hint">${esc(r.modpart)}</div>` : ''}</td>
+      <td style="text-align:right">${r.beloeb > 0 ? fmtKr(r.beloeb) : ''}</td><td style="text-align:right">${r.beloeb < 0 ? fmtKr(-r.beloeb) : ''}</td>
+      <td><select data-imp="konto" data-i="${i}" style="${r.konto === '' ? 'border-color:var(--fejl)' : ''}"><option value="">– vælg konto –</option>${kontoOpts.map(o => `<option value="${o.id}" ${String(o.id) === String(r.konto) ? 'selected' : ''}>${esc(o.label)}</option>`).join('')}</select><div class="kontoplan-hint">${esc(r.kilde)}</div></td>
+      <td class="kontoplan-hint">${r.dublet ? 'findes allerede' : r.udenforAar ? 'uden for ' + S.aar : ''}</td></tr>`).join('');
+    const valgte = imp.rows.filter(r => r.medtag);
+    const mangler = valgte.filter(r => r.konto === '').length;
+    return head + `<p class="hjaelp"><b>${imp.rows.length} linjer</b> læst fra ${esc(imp.filnavn)} (${imp.rows.filter(r => r.dublet).length} dubletter, ${imp.rows.filter(r => r.udenforAar).length} uden for regnskabsåret). Indbetalinger ${fmtKr(valgte.reduce((a, r) => a + (r.beloeb > 0 ? r.beloeb : 0), 0))}, udbetalinger ${fmtKr(valgte.reduce((a, r) => a + (r.beloeb < 0 ? -r.beloeb : 0), 0))} for de valgte.</p>
+      <div style="max-height:420px;overflow:auto"><table class="edit"><thead><tr><th></th><th>Dato</th><th>Tekst</th><th class="num">Indsat</th><th class="num">Hævet</th><th>Konto</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>
+      <div class="knapper"><button class="knap primary" data-action="import-udfoer" ${mangler ? 'disabled title="Vælg konto på alle valgte linjer"' : ''}>Importér ${valgte.length} posteringer${mangler ? ` (${mangler} mangler konto)` : ''}</button><button class="knap" data-action="import-annuller">Annuller</button></div>
+      ${imp.fejl.length ? `<p class="hjaelp" style="color:var(--fejl)">${imp.fejl.map(esc).join('<br>')}</p>` : ''}
+    </div>`;
+  }
+
+  bindImport(el) {
+    const fil = el.querySelector('#import-fil');
+    if (fil) fil.addEventListener('change', async (e) => {
+      const f = e.target.files[0]; if (!f) return;
+      const tekst = await f.text();
+      const parsed = parseBankCsv(tekst);
+      const likvid = el.querySelector('#import-likvid').value;
+      this.import = { filnavn: f.name, likvid, fejl: parsed.fejl || [], rows: forberedImport(parsed, this.state, likvid, this.state.importRegler || STANDARD_IMPORTREGLER) };
+      this.renderTab('kasserapport');
+      e.target.value = '';
+    });
+    const lk = el.querySelector('#import-likvid');
+    if (lk) lk.addEventListener('change', () => { if (this.import) { this.import.likvid = lk.value; this.import.rows.forEach(r => { r.likvid = lk.value; }); } });
+    el.querySelectorAll('[data-imp]').forEach(inp => inp.addEventListener('change', () => {
+      const r = this.import.rows[Number(inp.dataset.i)];
+      if (inp.dataset.imp === 'medtag') r.medtag = inp.checked;
+      else { r.konto = inp.value === '' ? '' : Number(inp.value); r.kilde = 'valgt manuelt'; }
+      const btn = el.querySelector('[data-action="import-udfoer"]');
+      const valgte = this.import.rows.filter(x => x.medtag); const mangler = valgte.filter(x => x.konto === '').length;
+      if (btn) { btn.disabled = mangler > 0; btn.textContent = `Importér ${valgte.length} posteringer${mangler ? ` (${mangler} mangler konto)` : ''}`; }
+      if (inp.dataset.imp === 'konto') inp.style.borderColor = inp.value === '' ? 'var(--fejl)' : '';
+    }));
   }
 
   htmlKontoplan() {
@@ -388,7 +452,11 @@ export class App {
     const beregnet = [{ label: `Bevægelse ${S.aar}`, value: (it) => fmtKr(this.engine.konto(Number(it.nr))) }];
     return `<h2>Kontoplan</h2>
     <p class="hjaelp">Kontoplanen bestemmer, hvor hver postering havner i årsregnskabet. Hver konto knyttes til en linje i noterne (indtægt/omkostning) eller til en balancepost (lån, anden gæld, tilgodehavender, andelsindskud, overførsel mellem likvide konti). Flere konti kan pege på samme linje.</p>
-    <div class="panel">${this.tabel('kontoplan', cols, { beregnet, tilfoejLabel: 'Tilføj konto', ekstraKnapper: '<button class="knap" data-action="standard-kontoplan">Tilføj manglende standardkonti</button>' })}</div>`;
+    <div class="panel">${this.tabel('kontoplan', cols, { beregnet, tilfoejLabel: 'Tilføj konto', ekstraKnapper: '<button class="knap" data-action="standard-kontoplan">Tilføj manglende standardkonti</button>' })}</div>
+    <div class="panel"><h3>Konteringsregler ved bankimport</h3>
+      <p class="hjaelp">Bruges når posteringer importeres fra bankens CSV-fil. Reglerne gennemgås oppefra – første regel der passer, bestemmer kontoen. En regel passer, når posteringsteksten indeholder mønsteret (og evt. retning og præcist beløb passer). Tomt mønster + beløb bruges fx til boligafgift på 2.000 kr.</p>
+      ${this.tabel('importRegler', [{ key: 'moenster', label: 'Tekst indeholder' }, { key: 'retning', label: 'Retning', type: 'select', options: [{ id: 'ind', label: 'Indbetaling' }, { id: 'ud', label: 'Udbetaling' }], width: 'w-likvid' }, { key: 'beloeb', label: 'Beløb (valgfrit)', type: 'num', width: 'w-beloeb' }, { key: 'konto', label: 'Konto', type: 'select', numeric: true, options: this.kontoOptions(), width: 'w-konto' }], { tilfoejLabel: 'Tilføj regel', ekstraKnapper: '<button class="knap" data-action="standard-importregler">Gendan standardregler</button>' })}
+    </div>`;
   }
 
   htmlBalance() {
@@ -583,7 +651,7 @@ export class App {
     <div class="panel">
     <ol>
       <li><b>Stamdata</b>: foreningens navn, CVR, bestyrelse, bilagskontrollører og datoer.</li>
-      <li><b>Kasserapport</b>: indtast alle årets ind- og udbetalinger med dato, bilagsnummer, tekst, konto og likvid konto. Kontokortet nederst viser posteringerne pr. konto.</li>
+      <li><b>Kasserapport</b>: importér bankens CSV-eksport (posteringerne konteres automatisk efter reglerne under Kontoplan) eller indtast ind- og udbetalinger manuelt med dato, bilagsnummer, tekst, konto og likvid konto. Kontokortet nederst viser posteringerne pr. konto.</li>
       <li><b>Kontoplan</b>: knyt hver konto til en linje i regnskabet. Standardkontoplanen dækker de fleste behov.</li>
       <li><b>Primo &amp; lån</b>: sidste års balancetal, ejendommens værdi, andele, resultatdisponering, lån, anden gæld og reguleringer. For lån kan kreditforeningens betalingsplan indsættes (kopieret fra låneafregningen eller årsopgørelsen); så beregnes renter, afdrag, kortfristet del og restgæld automatisk for hvert år, og de bogførte ydelser afstemmes mod planen.</li>
       <li><b>Budget &amp; sidste år</b>: budget for næste år (vises i resultatopgørelsen) og evt. sidste års tal.</li>
