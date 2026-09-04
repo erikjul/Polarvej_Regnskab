@@ -21,7 +21,12 @@ Programmet opstiller årsrapporten efter de regler, der gælder for danske andel
 * **E2** er uændret siden 2021: hæftelsen beskrives, hvis andelshaverne hæfter ud over indskuddet (E1 = ja).
 * **M1–M3** har uændret nummerering og indhold: løbende vedligeholdelse, genopretning/renovering og i alt, kr. pr. m² for tre år.
 * **Nøgletal P** (friværdi) er udgået.
-* **Nye/ændrede felter** som følge af lov nr. 330/2024 (indekseret offentlig vurdering, valuarvurderingens gyldighed 42 måneder): bl.a. F1b, F2b, F2c og L5. Disse indtastes under Nøgleoplysninger → "Øvrige felter i bilag 1" med feltnummer, ordlyd og oplysning, indtil de indbygges som faste felter. Ordlyden skal tages fra bilag 1.
+* **Nye/ændrede felter** som følge af lov nr. 330/2024 (indekseret offentlig vurdering, valuarvurderingens gyldighed 42 måneder): bl.a. F1b, F2b, F2c og L5. Beslutning for Polarvej I: foreningen anvender den offentlige vurdering uden nettoprisindeksering, så F1b/F2b/F2c er ikke relevante; noten oplyser det udtrykkeligt. L-felterne indgår ikke i § 3's liste over felter, der skal være noter i årsregnskabet, og udelades derfor; lånevilkårene fremgår i stedet af lånenoten. Skulle andre felter blive relevante, indtastes de under Nøgleoplysninger → "Øvrige felter i bilag 1".
+* **E2** vises med den forklarende tekst "Hvis ja, beskrives hæftelsen her:". Bekendtgørelsens ordrette tekst kan indsættes under Nøgleoplysninger, hvis den ønskes.
+
+## Kvadratmeterpris og handelsværdi pr. bolig
+
+Foreningen formidler andelsværdien som kr. pr. m² (formue til fordeling / boligernes BBR-areal, nøgletal K1), og handelsværdien af den enkelte bolig som areal × kr./m². Andelsværdinoten viser begge opgørelser. Efter vedtægternes § 6, stk. 1, og § 14 er den maksimalt lovlige pris værdien pr. andel efter indskud, så vedtægtstjekket advarer, hvis kvadratmeterprisen for en bolig overstiger den. Boligernes arealer indtastes på fanen Boligafgift (andelslisten).
 
 ## Lovhenvisninger i påtegning og praksis
 

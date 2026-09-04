@@ -180,7 +180,7 @@ export class App {
         const p = `${basePath}.${i}.${c.key}`;
         const v = it[c.key];
         let inp;
-        if (c.type === 'num' || c.type === 'int') inp = `<input type="text" inputmode="decimal" class="num" data-path="${p}" data-type="${c.type}" ${basePath === 'importRegler' || c.key === 'kontoudtog' || c.key === 'afdragIflg' || c.key === 'restgaeldUltimoIflg' ? 'data-allow-empty="1"' : ''} value="${v === null || v === undefined || v === '' ? '' : (c.type === 'int' ? fmtInt(v) : fmtKr(v))}">`;
+        if (c.type === 'num' || c.type === 'int') inp = `<input type="text" inputmode="decimal" class="num" data-path="${p}" data-type="${c.type}" ${basePath === 'importRegler' || c.key === 'areal' || c.key === 'kontoudtog' || c.key === 'afdragIflg' || c.key === 'restgaeldUltimoIflg' ? 'data-allow-empty="1"' : ''} value="${v === null || v === undefined || v === '' ? '' : (c.type === 'int' ? fmtInt(v) : fmtKr(v))}">`;
         else if (c.type === 'date') inp = `<input type="date" data-path="${p}" data-type="text" value="${esc(v || '')}">`;
         else if (c.type === 'select') { const o = typeof c.options === 'function' ? c.options(it) : c.options; inp = `<select data-path="${p}" data-type="${c.numeric ? 'numsel' : 'text'}"><option value="">–</option>${o.map(x => `<option value="${esc(x.id)}" ${String(x.id) === String(v ?? '') ? 'selected' : ''}>${esc(x.label)}</option>`).join('')}</select>`; }
         else if (c.type === 'bool') inp = `<input type="checkbox" data-path="${p}" data-type="bool" ${v ? 'checked' : ''}>`;
@@ -271,7 +271,7 @@ export class App {
       case 'ledelse.bilagskontrolloerer': arr.push({ navn: '' }); break;
       case 'importRegler': arr.push({ moenster: '', retning: '', beloeb: '', konto: '' }); break;
       case 'noegle.ekstra': arr.push({ felt: '', tekst: '', svar: '' }); break;
-      case 'andelshavere': arr.push({ id: nyId('a'), adresse: '', navn: '', afgift: 2000, moenstre: '', fra: `${S.aar}-01`, primoSaldo: 0 }); break;
+      case 'andelshavere': arr.push({ id: nyId('a'), adresse: '', navn: '', afgift: 2000, moenstre: '', fra: `${S.aar}-01`, primoSaldo: 0, areal: '' }); break;
       default:
         if (/^laan\.\d+\.betalingsplan$/.test(basePath)) { const sidste = arr[arr.length - 1]; arr.push({ dato: sidste ? sidste.dato : '', rente: 0, afdrag: 0 }); }
         else arr.push({});
@@ -499,7 +499,7 @@ export class App {
     <div class="panel"><h3>Måned for måned</h3>${matrix || '<p class="hjaelp">Opret andelene nedenfor.</p>'}</div>
     <div class="panel"><h3>Andele og genkendelse af indbetalinger</h3>
       <p class="hjaelp">Mønstre adskilles med semikolon og matches mod posteringsteksten (inkl. modpart fra banken). Første andel, hvis mønster passer, får betalingen. "Fra" er første måned, der regnes som forfalden; "primosaldo" er evt. forudbetaling (+) eller restance (−) før den måned.</p>
-      ${this.tabel('andelshavere', [{ key: 'adresse', label: 'Andel' }, { key: 'navn', label: 'Andelshaver' }, { key: 'afgift', label: 'Afgift pr. md.', type: 'num', width: 'w-beloeb' }, { key: 'moenstre', label: 'Mønstre (tekst indeholder; adskil med ;)' }, { key: 'fra', label: 'Fra (ÅÅÅÅ-MM)', width: 'w-bilag' }, { key: 'primoSaldo', label: 'Primosaldo', type: 'num', width: 'w-beloeb' }], { tilfoejLabel: 'Tilføj andel', ekstraKnapper: '<button class="knap" data-action="standard-andelshavere">Standardliste (Polarvej I)</button>' })}
+      ${this.tabel('andelshavere', [{ key: 'adresse', label: 'Andel' }, { key: 'navn', label: 'Andelshaver' }, { key: 'afgift', label: 'Afgift pr. md.', type: 'num', width: 'w-beloeb' }, { key: 'moenstre', label: 'Mønstre (tekst indeholder; adskil med ;)' }, { key: 'fra', label: 'Fra (ÅÅÅÅ-MM)', width: 'w-bilag' }, { key: 'primoSaldo', label: 'Primosaldo', type: 'num', width: 'w-beloeb' }, { key: 'areal', label: 'Areal m² (BBR)', type: 'int', width: 'w-bilag' }], { tilfoejLabel: 'Tilføj andel', ekstraKnapper: '<button class="knap" data-action="standard-andelshavere">Standardliste (Polarvej I)</button>' })}
     </div>`;
   }
 

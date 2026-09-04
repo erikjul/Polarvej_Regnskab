@@ -324,6 +324,15 @@ export class Engine {
     this.input('av.senest', 'Senest vedtagne andelsværdi pr. andelskrone', A.senestVedtagetPrKrone, { fmt: 'dec2', group: 'Andelsværdi' });
     this.def('av.senestPrAndel', 'Senest vedtagne andelsværdi pr. andel', 'ROUND(av.senest * andele.indskud, 0)', { fmt: 'int' });
     this.def('av.aendringPct', 'Ændring i forhold til senest vedtagne', 'ROUND(SAFEDIV(av.prKrone - av.senest, av.senest) * 100, 1)', { fmt: 'pct' });
+    this.def('av.prM2', 'Andelsværdi pr. m² boligareal (formue til fordeling / B1 + B2)', 'ROUND(SAFEDIV(av.vaerdi, nk.areal.y0.bolig), 0)', { fmt: 'int' });
+    this.def('av.senestPrM2', 'Senest vedtagne andelsværdi pr. m²', 'ROUND(SAFEDIV(av.senest * av.fordelingstal, nk.areal.y0.bolig), 0)', { fmt: 'int' });
+    (S.andelshavere || []).forEach(a => {
+      if (a.areal !== '' && a.areal !== null && a.areal !== undefined && Number(a.areal) > 0) {
+        this.input(`andel.${a.id}.areal`, `${a.adresse}, boligareal (BBR)`, a.areal, { fmt: 'int', group: 'Andele' });
+        this.def(`andel.${a.id}.vaerdiM2`, `${a.adresse}, handelsværdi efter kvadratmeterpris`, `ROUND(andel.${a.id}.areal * av.prM2, 0)`, { fmt: 'int' });
+        this.def(`andel.${a.id}.vaerdiSenestM2`, `${a.adresse}, senest vedtagne værdi efter kvadratmeterpris`, `ROUND(andel.${a.id}.areal * av.senestPrM2, 0)`, { fmt: 'int' });
+      }
+    });
 
     // ---- Nøgleoplysninger ----
     const N = S.noegle || {};

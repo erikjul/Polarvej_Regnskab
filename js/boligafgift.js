@@ -1,14 +1,14 @@
 // boligafgift.js – betalt boligafgift pr. andel, måned for måned, på tværs af regnskabsår.
 // Betalinger fyldes kronologisk på de forfaldne måneder (ældste først), så efter- og forudbetalinger håndteres.
 export const STANDARD_ANDELSHAVERE = [
-  { id: 'a23', adresse: 'Polarvej 23', navn: 'Jan Iversen (fra 2022; før: Jørgen Pedersen)', afgift: 2000, moenstre: 'Polarvej 23; Jan Iversen; Jørgen Pedersen', fra: '2021-01', primoSaldo: 0 },
-  { id: 'a31', adresse: 'Polarvej 31', navn: 'Mette Agerskov (fra okt. 2024; før: Jonna Frandsen)', afgift: 2000, moenstre: 'Polarvej 31; Jonna Frands; Mette Agerskov; Advis', fra: '2021-01', primoSaldo: 0 },
-  { id: 'a37', adresse: 'Polarvej 37', navn: 'Tina Qualmann', afgift: 2000, moenstre: 'Polarvej 37; Tina Qualmann', fra: '2021-01', primoSaldo: 0 },
-  { id: 'a43', adresse: 'Polarvej 43', navn: 'Jette Bruun (fra juni 2022; før: Ahmad Ziad Hussein)', afgift: 2000, moenstre: 'Polarvej 43; Jette Bruun; Ahmad', fra: '2021-01', primoSaldo: 0 },
-  { id: 'a49', adresse: 'Polarvej 49', navn: 'Anni Karna Bak (fra juli 2023; før: John Visti Bak)', afgift: 2000, moenstre: 'Polarvej 49', fra: '2021-01', primoSaldo: 0 },
-  { id: 'a55', adresse: 'Polarvej 55', navn: 'Heidi Jensen', afgift: 2000, moenstre: 'Polarvej 55; Heidi; nr 55', fra: '2021-01', primoSaldo: 0 },
-  { id: 'a62', adresse: 'Polarvej 62', navn: 'Muhanad Al Mubare / Amal Mehdi', afgift: 2000, moenstre: 'Polarvej 62; MUBARE; Mehdi', fra: '2021-01', primoSaldo: 0 },
-  { id: 'a64', adresse: 'Polarvej 64', navn: 'Lone Møller / Erik Jul Nielsen', afgift: 2000, moenstre: 'Polarvej 64', fra: '2021-01', primoSaldo: 0 },
+  { id: 'a23', adresse: 'Polarvej 23', navn: 'Jan Iversen (fra 2022; før: Jørgen Pedersen)', afgift: 2000, moenstre: 'Polarvej 23; Jan Iversen; Jørgen Pedersen', fra: '2021-01', primoSaldo: 0, areal: '' },
+  { id: 'a31', adresse: 'Polarvej 31', navn: 'Mette Agerskov (fra okt. 2024; før: Jonna Frandsen)', afgift: 2000, moenstre: 'Polarvej 31; Jonna Frands; Mette Agerskov; Advis', fra: '2021-01', primoSaldo: 0, areal: '' },
+  { id: 'a37', adresse: 'Polarvej 37', navn: 'Tina Qualmann', afgift: 2000, moenstre: 'Polarvej 37; Tina Qualmann', fra: '2021-01', primoSaldo: 0, areal: '' },
+  { id: 'a43', adresse: 'Polarvej 43', navn: 'Jette Bruun (fra juni 2022; før: Ahmad Ziad Hussein)', afgift: 2000, moenstre: 'Polarvej 43; Jette Bruun; Ahmad', fra: '2021-01', primoSaldo: 0, areal: '' },
+  { id: 'a49', adresse: 'Polarvej 49', navn: 'Anni Karna Bak (fra juli 2023; før: John Visti Bak)', afgift: 2000, moenstre: 'Polarvej 49', fra: '2021-01', primoSaldo: 0, areal: '' },
+  { id: 'a55', adresse: 'Polarvej 55', navn: 'Heidi Jensen', afgift: 2000, moenstre: 'Polarvej 55; Heidi; nr 55', fra: '2021-01', primoSaldo: 0, areal: '' },
+  { id: 'a62', adresse: 'Polarvej 62', navn: 'Muhanad Al Mubare / Amal Mehdi', afgift: 2000, moenstre: 'Polarvej 62; MUBARE; Mehdi', fra: '2021-01', primoSaldo: 0, areal: '' },
+  { id: 'a64', adresse: 'Polarvej 64', navn: 'Lone Møller / Erik Jul Nielsen', afgift: 2000, moenstre: 'Polarvej 64', fra: '2021-01', primoSaldo: 0, areal: '' },
 ];
 
 const mdr = (ym) => { const [y, m] = String(ym).split('-').map(Number); return y * 12 + (m - 1); };

@@ -331,6 +331,17 @@ export function byggeRapport(engine, opts = {}) {
   ];
   if ((S.ejendom || {}).fastholdt) avBlocks.push({ type: 'para', text: 'Ejendommens værdi er fastholdt i henhold til andelsboligforeningslovens § 5, stk. 3 (fastholdt vurdering foretaget før 1. juli 2020).' });
   avBlocks.push({ type: 'para', text: 'Vedtægterne bestemmer (§ 14, stk. 1, litra a), at selvom der lovligt kan vedtages en højere andelsværdi, er det den på generalforsamlingen vedtagne andelsværdi, der er gældende. Andelsværdien må ikke overstige den ovenfor beregnede maksimale værdi.' });
+  // Kvadratmeterpris og værdi pr. bolig
+  const andele = (S.andelshavere || []);
+  const medAreal = andele.filter(a => Number(a.areal) > 0);
+  avBlocks.push({ type: 'table', columns: [{ label: '' }, { label: '' }, { label: 'Beregnet maksimum', num: true }, { label: 'Senest vedtaget', num: true }], rows: [
+    row('line', `Andelsværdi pr. m² boligareal (formue til fordeling / ${fmtInt(engine.get('nk.areal.y0.bolig'))} m², nøgletal K1)`, [N('av.prM2'), N('av.senestPrM2')]),
+  ]});
+  if (medAreal.length) {
+    const rows = medAreal.map(a => row('line', `${a.adresse} (${fmtInt(a.areal)} m²)`, [N(`andel.${a.id}.vaerdiM2`), N(`andel.${a.id}.vaerdiSenestM2`), N('av.prAndel'), N('av.senestPrAndel')]));
+    avBlocks.push({ type: 'table', columns: [{ label: '' }, { label: 'Bolig' }, { label: 'Handelsværdi, kr./m² × areal (maks.)', num: true }, { label: 'Kr./m² × areal (vedtaget)', num: true }, { label: 'Værdi pr. andel efter indskud (maks.)', num: true }, { label: 'Efter indskud (vedtaget)', num: true }], rows });
+  }
+  avBlocks.push({ type: 'para', text: `Foreningen formidler andelsværdien som en kvadratmeterpris: formuen til fordeling divideret med boligernes samlede BBR-areal (nøgletal K1). Handelsværdien af den enkelte andelsbolig opgøres som boligens areal gange kvadratmeterprisen. Efter vedtægternes § 6, stk. 1, og § 14 er den maksimalt lovlige pris for en andel dog værdien pr. andel opgjort efter indskud; de to opgørelser giver samme resultat, når andelene har lige store indskud og arealer. Ejendommens værdi er den offentlige ejendomsvurdering uden nettoprisindeksering (andelsboligforeningslovens § 5, stk. 2, litra d, anvendes ikke).` });
   if ((S.tekster || {}).forbedringer) avBlocks.push({ type: 'para', text: tx('forbedringer') });
   pages.push({ id: 'andelsvaerdi', titel: 'Beregning af andelsværdi', header, blocks: avBlocks });
 
@@ -385,7 +396,7 @@ export function byggeRapport(engine, opts = {}) {
     { type: 'table', columns: [{ label: 'Feltnr.' }, { label: 'Sæt kryds' }, ...FORDELINGSTAL.map(f => ({ label: f.label, center: true }))], rows: nkC },
     { type: 'table', columns: [{ label: 'Feltnr.' }, { label: '' }, { label: 'År', num: true }], rows: nkD },
     { type: 'table', columns: [{ label: 'Feltnr.' }, { label: 'Sæt kryds' }, { label: 'Ja', center: true }, { label: 'Nej', center: true }], rows: nkE },
-    { type: 'table', columns: [{ label: 'Feltnr.' }, { label: 'Sæt kryds' }, ...VURDERINGSPRINCIPPER.map(v => ({ label: v.label, center: true }))], rows: nkF1 },
+    { type: 'table', columns: [{ label: 'Feltnr.' }, { label: 'Sæt kryds' }, ...VURDERINGSPRINCIPPER.map(v => ({ label: v.label, center: true }))], rows: nkF1, note: princip.id === 'offentlig' ? 'Den offentlige ejendomsvurdering anvendes uden nettoprisindeksering; felterne om indekseret vurdering (F1b, F2b, F2c) er derfor ikke relevante.' : undefined },
     { type: 'table', columns: [{ label: 'Feltnr.' }, { label: '' }, { label: 'Anvendt værdi 31/12 ' + y + ' kr.', num: true }, { label: 'Forklaring på udregning' }, { label: '= kr. pr. m²', num: true }], rows: nkF2 },
     { type: 'table', columns: [{ label: 'Feltnr.' }, { label: 'Sæt kryds' }, { label: 'Ja', center: true }, { label: 'Nej', center: true }], rows: nkG },
     { type: 'table', columns: [{ label: 'Feltnr.' }, { label: 'Ultimo måneds indtægt (uden fradrag for tomgang, tab m.v.) × 12 / m² på balancedagen for andelsboliger (B1 + B2)' }, { label: 'Udregning' }, { label: 'kr. pr. m²', num: true }], rows: nkH },

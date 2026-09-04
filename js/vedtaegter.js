@@ -55,6 +55,15 @@ export function vedtaegtstjek(engine, ctx = {}) {
   if (g('av.senest') > g('av.prKrone') + 0.005) add('fejl', '§ 14, stk. 1, litra a', 'Vedtaget andelsværdi overstiger det lovlige maksimum', `Vedtaget ${fmtKr(g('av.senest'))} mod beregnet maksimum ${fmtKr(g('av.prKrone'))} kr. pr. andelskrone. Bestyrelsen skal nedsætte værdien.`);
   else add('ok', '§ 14, stk. 1, litra a og § 30, stk. 2', 'Bestyrelsens forslag til andelsværdi er anført som note', `Beregnet maksimum ${fmtKr(g('av.prKrone'))} kr. pr. andelskrone; senest vedtaget ${fmtKr(g('av.senest'))}. Reserver indgår ikke i beregningen.`);
 
+  // § 6, stk. 1 / § 14: kvadratmeterpris må ikke give en højere pris end værdien efter indskud
+  const medAreal = (S.andelshavere || []).filter(a => Number(a.areal) > 0);
+  if (medAreal.length) {
+    const over = medAreal.filter(a => g(`andel.${a.id}.vaerdiM2`) > g('av.prAndel') * 1.005);
+    const sumAreal = medAreal.reduce((t, a) => t + Number(a.areal), 0);
+    if (over.length) add('advarsel', '§ 6, stk. 1 og § 14, stk. 1', 'Kvadratmeterprisen giver en højere pris end værdien efter indskud', `${over.map(a => a.adresse).join(', ')}: areal × kr./m² overstiger den maksimale værdi pr. andel efter indskud (${fmtKr(g('av.prAndel'), 0)} kr.). Den maksimale pris følger indskuddet; kvadratmeterprisen kan kun bruges til formidling, hvis den ikke overstiger denne.`);
+    else add('ok', '§ 6, stk. 1 og § 14, stk. 1', 'Kvadratmeterprisen giver ikke højere priser end værdien efter indskud', `${medAreal.length} boliger, ${fmtKr(sumAreal, 0)} m² i alt; kvadratmeterpris ${fmtKr(g('av.prM2'), 0)} kr./m².`);
+  }
+
   // § 30, stk. 3: henlæggelsesfond hvert år
   const henl = g('disp.vedligehold') + g('disp.genopretning') + g('disp.andre');
   const budHenl = g('bud.disp.vedligehold');
