@@ -4,6 +4,7 @@
 import { toExcel } from './expr.js';
 import { alleMappings } from './model.js';
 import { downloadBlob } from './storage.js';
+import { sorter, aarAf } from './betalingsplan.js';
 
 const KAP_FRA = 5, KAP_TIL = 1500; // rækkeområde for posteringer i Kasserapport
 const NUMFMT = { kr: '#,##0.00;-#,##0.00', int: '#,##0;-#,##0', dec2: '0.00', pct: '0.0" %"', pct0: '0" %"' };
@@ -29,6 +30,8 @@ export function byggeWorkbook(engine, rapport, kontrol, ExcelJSLib) {
     konto: (nr) => `SUMIF(Kasserapport!$D$${KAP_FRA}:$D$${KAP_TIL},${nr},Kasserapport!$G$${KAP_FRA}:$G$${KAP_TIL})-SUMIF(Kasserapport!$D$${KAP_FRA}:$D$${KAP_TIL},${nr},Kasserapport!$H$${KAP_FRA}:$H$${KAP_TIL})`,
     likvidInd: (id) => `SUMIF(Kasserapport!$I$${KAP_FRA}:$I$${KAP_TIL},"${id}",Kasserapport!$G$${KAP_FRA}:$G$${KAP_TIL})`,
     likvidUd: (id) => `SUMIF(Kasserapport!$I$${KAP_FRA}:$I$${KAP_TIL},"${id}",Kasserapport!$H$${KAP_FRA}:$H$${KAP_TIL})`,
+    plan: (id, aar, felt) => `SUMIFS(Betalingsplan!$${felt === 'rente' ? 'D' : 'E'}$4:$${felt === 'rente' ? 'D' : 'E'}$1000,Betalingsplan!$A$4:$A$1000,"${id}",Betalingsplan!$B$4:$B$1000,${aar})`,
+    planAkk: (id, aar) => `SUMIFS(Betalingsplan!$E$4:$E$1000,Betalingsplan!$A$4:$A$1000,"${id}",Betalingsplan!$B$4:$B$1000,"<="&${aar})`,
   };
   const arkListe = [];
 
@@ -173,6 +176,22 @@ export function byggeWorkbook(engine, rapport, kontrol, ExcelJSLib) {
   (S.kontoplan || []).slice().sort((a, b) => a.nr - b.nr).forEach(k => kp.add([{ c: 1, v: Number(k.nr) }, { c: 2, v: k.navn }, { c: 3, v: mapLabel[k.linje] || '(ikke knyttet)' }, { c: 4, f: xctx.konto(Number(k.nr)), fmt: NUMFMT.kr }]));
   arkListe.push(kp);
 
+  // ---------- Betalingsplan ----------
+  const bp = new Ark('Betalingsplan');
+  bp.widths = [10, 6, 12, 16, 16, 16, 18, 30];
+  bp.add([{ c: 1, v: 'Betalingsplaner for prioritetsgæld (fra kreditforeningens låneafregning/årsopgørelse)', bold: true, size: 14 }]);
+  bp.add([{ c: 1, v: 'Rapportens renter, afdrag, kortfristet del og restgæld hentes med SUMIFS fra dette ark for lån med kilde "betalingsplan".' }]);
+  bp.add(['Lån-id', 'År', 'Termin', 'Rente og bidrag', 'Afdrag', 'Ydelse', 'Restgæld efter termin', 'Lån'].map((v, i) => ({ c: i + 1, v, bold: true, border: 'bottom' })));
+  (S.laan || []).forEach(l => {
+    let rest = Number(l.hovedstol) || 0;
+    sorter(l.betalingsplan || []).forEach(t => {
+      rest -= Number(t.afdrag) || 0;
+      const r = bp.next;
+      bp.add([{ c: 1, v: l.id }, { c: 2, v: aarAf(t.dato) }, { c: 3, v: t.dato ? new Date(t.dato + 'T00:00:00') : null, fmt: 'dd.mm.yyyy' }, { c: 4, v: Number(t.rente) || 0, fmt: NUMFMT.kr, input: true }, { c: 5, v: Number(t.afdrag) || 0, fmt: NUMFMT.kr, input: true }, { c: 6, f: `D${r}+E${r}`, fmt: NUMFMT.kr }, { c: 7, v: Math.round(rest * 100) / 100, fmt: NUMFMT.kr }, { c: 8, v: l.navn }]);
+    });
+  });
+  arkListe.push(bp);
+
   // ---------- Beregninger (noder der ikke vises i rapporten) ----------
   const be = new Ark('Beregninger');
   be.widths = [34, 62, 18];
@@ -191,9 +210,9 @@ export function byggeWorkbook(engine, rapport, kontrol, ExcelJSLib) {
   wb.creator = 'Polarvej Regnskab';
   wb.calcProperties = { fullCalcOnLoad: true };
   // rækkefølge: rapportark først, derefter kilder
-  const order = [...arkListe.filter(a => !['Kasserapport', 'Grunddata', 'Kontrol', 'Kontoplan', 'Beregninger'].includes(a.name)), kt, kap, kp, gd, be];
+  const order = [...arkListe.filter(a => !['Kasserapport', 'Grunddata', 'Kontrol', 'Kontoplan', 'Beregninger', 'Betalingsplan'].includes(a.name)), kt, kap, kp, gd, bp, be];
   order.forEach(ark => {
-    const ws = wb.addWorksheet(ark.name, { views: [{ showGridLines: ark.name === 'Kasserapport' || ark.name === 'Grunddata' || ark.name === 'Kontoplan' }] });
+    const ws = wb.addWorksheet(ark.name, { views: [{ showGridLines: ['Kasserapport', 'Grunddata', 'Kontoplan', 'Betalingsplan'].includes(ark.name) }] });
     if (ark.widths) ark.widths.forEach((w, i) => { ws.getColumn(i + 1).width = w; });
     ark.rows.forEach((row, ri) => {
       const r = ri + 1;

@@ -90,7 +90,9 @@ export function kontroller(engine) {
     const p = `laan.${l.id}`;
     if (engine.has(`${p}.afdragIflg`)) afstem(`laan.${l.id}.afdrag`, `${l.navn}: afdrag stemmer med årsopgørelsen`, `${p}.afdrag`, `${p}.afdragIflg`, 'Beregnet afdrag (betalte ydelser − renter og bidrag) skal svare til afdraget på kreditforeningens årsopgørelse.');
     if (engine.has(`${p}.restgaeldUltimoIflg`)) afstem(`laan.${l.id}.restgaeld`, `${l.navn}: restgæld ultimo stemmer med årsopgørelsen`, `${p}.restgaeldUltimo`, `${p}.restgaeldUltimoIflg`, 'Restgæld primo − årets afdrag skal svare til restgælden på årsopgørelsen.');
+    if (engine.harPlan(l)) afstem(`laan.${l.id}.ydelser`, `${l.navn}: bogførte ydelser stemmer med betalingsplanen for ${y}`, `${p}.ydelser`, `${p}.ydelserIflg`, 'Summen af låneydelser i kasserapporten skal svare til årets terminer (renter + bidrag + afdrag) i kreditforeningens betalingsplan. En difference betyder en manglende, dobbelt eller forkert bogført ydelse – eller at planen er ændret (rentetilpasning, bidragsændring).');
     const d = [];
+    if (!engine.harPlan(l)) d.push('Ingen betalingsplan – renter, kortfristet del og restgæld indtastes manuelt. Indsæt kreditforeningens betalingsplan under "Primo & lån" for automatisk opgørelse og afstemning.');
     if (g(`${p}.ydelser`) === 0) d.push('Der er ikke bogført ydelser på lånet i kasserapporten (kontoen for låneydelser).');
     if (g(`${p}.renter`) > g(`${p}.ydelser`) && g(`${p}.ydelser`) > 0) d.push('Renter og bidrag overstiger de betalte ydelser – afdraget bliver negativt.');
     if (g(`${p}.kortfristet`) > g(`${p}.restgaeldUltimo`)) d.push('Kortfristet del overstiger restgælden.');

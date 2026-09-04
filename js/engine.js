@@ -4,6 +4,7 @@
 import { parse, evaluate, refs, toText } from './expr.js';
 import { NOTER_RESULTAT, ALLE_LINJER, LINJE_BY_ID, VURDERINGSPRINCIPPER } from './model.js';
 import { num } from './format.js';
+import { planSum, planAkk } from './betalingsplan.js';
 
 export class Engine {
   constructor(state) {
@@ -51,6 +52,10 @@ export class Engine {
   }
   likvidInd(id) { let s = 0; for (const p of this.state.posteringer || []) if (p.likvid === id) s += num(p.ind); return s; }
   likvidUd(id) { let s = 0; for (const p of this.state.posteringer || []) if (p.likvid === id) s += num(p.ud); return s; }
+  planFor(id) { const l = (this.state.laan || []).find(x => x.id === id); return l ? (l.betalingsplan || []) : []; }
+  plan(id, aar, felt) { return planSum(this.planFor(id), Number(aar), felt); }
+  planAkk(id, aar) { return planAkk(this.planFor(id), Number(aar), 'afdrag'); }
+  harPlan(l) { return l.kilde === 'plan' && (l.betalingsplan || []).length > 0; }
 
   // Læselig formel
   formelTekst(id) {
@@ -111,22 +116,33 @@ export class Engine {
     (S.laan || []).forEach(l => {
       const p = `laan.${l.id}`;
       const g = 'Lån: ' + l.navn;
+      const plan = this.harPlan(l);
       this.input(`${p}.hovedstol`, `${l.navn}, hovedstol`, l.hovedstol, { group: g });
-      this.input(`${p}.restgaeldPrimo`, `${l.navn}, restgæld primo`, l.restgaeldPrimo, { group: g });
-      this.input(`${p}.kortfristetPrimo`, `${l.navn}, kortfristet del primo (afdrag i ${y})`, l.kortfristetPrimo, { group: g });
+      if (plan) {
+        this.def(`${p}.restgaeldPrimo`, `${l.navn}, restgæld primo iflg. betalingsplan`, `${p}.hovedstol - PLANAFDRAGAKK("${l.id}", ${y - 1})`);
+        this.def(`${p}.kortfristetPrimo`, `${l.navn}, kortfristet del primo (afdrag i ${y} iflg. betalingsplan)`, `PLANAFDRAG("${l.id}", ${y})`);
+        this.def(`${p}.renter`, `${l.navn}, renter og bidrag iflg. betalingsplan`, `PLANRENTE("${l.id}", ${y})`);
+        this.def(`${p}.kortfristet`, `${l.navn}, kortfristet del (afdrag i ${y + 1} iflg. betalingsplan)`, `PLANAFDRAG("${l.id}", ${y + 1})`);
+        this.def(`${p}.afdragIflg`, `${l.navn}, afdrag iflg. betalingsplan`, `PLANAFDRAG("${l.id}", ${y})`);
+        this.def(`${p}.restgaeldUltimoIflg`, `${l.navn}, restgæld ultimo iflg. betalingsplan`, `${p}.hovedstol - PLANAFDRAGAKK("${l.id}", ${y})`);
+        this.def(`${p}.ydelserIflg`, `${l.navn}, ydelser iflg. betalingsplan`, `${p}.renter + ${p}.afdragIflg`);
+      } else {
+        this.input(`${p}.restgaeldPrimo`, `${l.navn}, restgæld primo`, l.restgaeldPrimo, { group: g });
+        this.input(`${p}.kortfristetPrimo`, `${l.navn}, kortfristet del primo (afdrag i ${y})`, l.kortfristetPrimo, { group: g });
+        this.input(`${p}.renter`, `${l.navn}, renter og bidrag iflg. årsopgørelse`, l.renter, { group: g });
+        this.input(`${p}.kortfristet`, `${l.navn}, kortfristet del (afdrag i ${y + 1})`, l.kortfristet, { group: g });
+        if (l.afdragIflg !== null && l.afdragIflg !== undefined && l.afdragIflg !== '')
+          this.input(`${p}.afdragIflg`, `${l.navn}, afdrag iflg. årsopgørelse`, l.afdragIflg, { group: g });
+        if (l.restgaeldUltimoIflg !== null && l.restgaeldUltimoIflg !== undefined && l.restgaeldUltimoIflg !== '')
+          this.input(`${p}.restgaeldUltimoIflg`, `${l.navn}, restgæld ultimo iflg. årsopgørelse`, l.restgaeldUltimoIflg, { group: g });
+      }
       this.def(`${p}.ydelser`, `${l.navn}, betalte ydelser`, `-(${K(kontoSum('laan:' + l.id))})`);
-      this.input(`${p}.renter`, `${l.navn}, renter og bidrag iflg. årsopgørelse`, l.renter, { group: g });
       this.def(`${p}.afdrag`, `${l.navn}, afdrag`, `${p}.ydelser - ${p}.renter`);
       this.def(`${p}.restgaeldUltimo`, `${l.navn}, restgæld ultimo`, `${p}.restgaeldPrimo - ${p}.afdrag`);
       this.def(`${p}.afdragAkk`, `${l.navn}, betalte afdrag i alt`, `${p}.hovedstol - ${p}.restgaeldUltimo`);
-      this.input(`${p}.kortfristet`, `${l.navn}, kortfristet del (afdrag i ${y + 1})`, l.kortfristet, { group: g });
       this.def(`${p}.langfristet`, `${l.navn}, langfristet del`, `${p}.restgaeldUltimo - ${p}.kortfristet`);
       this.def(`${p}.langfristetPrimo`, `${l.navn}, langfristet del primo`, `${p}.restgaeldPrimo - ${p}.kortfristetPrimo`);
       this.input(`${p}.kursvaerdi`, `${l.navn}, kursværdi`, l.kursvaerdi, { group: g });
-      if (l.afdragIflg !== null && l.afdragIflg !== undefined && l.afdragIflg !== '')
-        this.input(`${p}.afdragIflg`, `${l.navn}, afdrag iflg. årsopgørelse`, l.afdragIflg, { group: g });
-      if (l.restgaeldUltimoIflg !== null && l.restgaeldUltimoIflg !== undefined && l.restgaeldUltimoIflg !== '')
-        this.input(`${p}.restgaeldUltimoIflg`, `${l.navn}, restgæld ultimo iflg. årsopgørelse`, l.restgaeldUltimoIflg, { group: g });
     });
     const ll = (S.laan || []).map(l => l.id);
     const lsum = (f) => `SUM(${K(ll.map(i => `laan.${i}.${f}`))})`;

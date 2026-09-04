@@ -7,6 +7,7 @@ import { eksempelPolarvej2025 } from './eksempel.js';
 import { fmtKr, fmtInt, fmtBy, parseTal, num } from './format.js';
 import { gemLokalt, hentLokalt, gemSomFil, laesFil } from './storage.js';
 import { nySamling, migrer, aarListe, erKoblet, engineFor, opretNytAar, PRIMO_STI } from './samling.js';
+import { parseBetalingsplan, planAar, aarAf, sorter, sidsteTermin, restloebetid } from './betalingsplan.js';
 import { eksporterExcel } from './excel.js';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -154,7 +155,7 @@ export class App {
     if (type === 'num' || type === 'int') input = `<input type="text" inputmode="decimal" class="num" id="${id}" data-path="${path}" data-type="${type}" value="${v === null || v === undefined || v === '' ? '' : (type === 'int' ? fmtInt(v) : fmtKr(v))}" ${opts.placeholder ? `placeholder="${esc(opts.placeholder)}"` : ''}>`;
     else if (type === 'bool') input = `<label class="check"><input type="checkbox" id="${id}" data-path="${path}" data-type="bool" ${v ? 'checked' : ''}> ${esc(opts.checkLabel || '')}</label>`;
     else if (type === 'date') input = `<input type="date" id="${id}" data-path="${path}" data-type="text" value="${esc(v || '')}">`;
-    else if (type === 'select') input = `<select id="${id}" data-path="${path}" data-type="${opts.numeric ? 'numsel' : 'text'}">${opts.options.map(o => `<option value="${esc(o.id)}" ${String(o.id) === String(v) ? 'selected' : ''}>${esc(o.label)}</option>`).join('')}</select>`;
+    else if (type === 'select') input = `<select id="${id}" data-path="${path}" data-type="${opts.numeric ? 'numsel' : 'text'}" ${opts.rerender ? 'data-rerender="1"' : ''}>${opts.options.map(o => `<option value="${esc(o.id)}" ${String(o.id) === String(v) ? 'selected' : ''}>${esc(o.label)}</option>`).join('')}</select>`;
     else if (type === 'textarea') input = `<textarea id="${id}" data-path="${path}" data-type="text" rows="${opts.rows || 6}">${esc(v || '')}</textarea>`;
     else input = `<input type="text" id="${id}" data-path="${path}" data-type="text" value="${esc(v ?? '')}" ${opts.placeholder ? `placeholder="${esc(opts.placeholder)}"` : ''}>`;
     return `<div class="felt ${opts.wide ? 'wide' : ''}"><label for="${id}">${esc(label)}</label>${input}${opts.hint ? `<span class="hint">${esc(opts.hint)}</span>` : ''}</div>`;
@@ -187,6 +188,10 @@ export class App {
 
   bind(el) {
     if (this.erKoblet()) el.querySelectorAll('[data-path]').forEach(inp => { if (PRIMO_STI.test(inp.dataset.path)) { inp.disabled = true; inp.title = `Hentes automatisk fra ${this.state.aar - 1}`; } });
+    el.querySelectorAll('[data-path^="laan."]').forEach(inp => {
+      const m = /^laan\.(\d+)\.(restgaeldPrimo|kortfristetPrimo|renter|kortfristet|afdragIflg|restgaeldUltimoIflg)$/.exec(inp.dataset.path);
+      if (m && this.engine && this.engine.harPlan(this.state.laan[Number(m[1])] || {})) { inp.disabled = true; inp.title = 'Hentes fra betalingsplanen'; }
+    });
     el.querySelectorAll('[data-path]').forEach(inp => {
       const type = inp.dataset.type;
       const handler = () => {
@@ -240,7 +245,7 @@ export class App {
       case 'likvidkonti': arr.push({ id: nyId('lk'), navn: '', primo: 0, kontoudtog: '' }); break;
       case 'laan': {
         const id = nyId('l');
-        arr.push({ id, navn: 'Nyt lån', kreditor: '', hovedstol: 0, optagetTekst: '', restgaeldPrimo: 0, kortfristetPrimo: 0, renter: 0, afdragIflg: '', restgaeldUltimoIflg: '', kortfristet: 0, kursvaerdi: 0, kursvaerdiTekst: '', beskrivelse: '' });
+        arr.push({ id, navn: 'Nyt lån', kreditor: '', hovedstol: 0, optagetTekst: '', kilde: 'manuel', betalingsplan: [], restgaeldPrimo: 0, kortfristetPrimo: 0, renter: 0, afdragIflg: '', restgaeldUltimoIflg: '', kortfristet: 0, kursvaerdi: 0, kursvaerdiTekst: '', beskrivelse: '' });
         const brugt = new Set(S.kontoplan.map(k => Number(k.nr)));
         let nr = 120; while (brugt.has(nr)) nr++;
         S.kontoplan.push({ nr, navn: 'Låneydelse, nyt lån', linje: 'laan:' + id });
@@ -252,7 +257,9 @@ export class App {
       case 'reguleringer': arr.push({ id: nyId('r'), tekst: '', beloeb: 0, linje: '', balancepost: '' }); break;
       case 'ledelse.bestyrelse': arr.push({ navn: '', titel: 'Bestyrelsesmedlem' }); break;
       case 'ledelse.bilagskontrolloerer': arr.push({ navn: '' }); break;
-      default: arr.push({});
+      default:
+        if (/^laan\.\d+\.betalingsplan$/.test(basePath)) { const sidste = arr[arr.length - 1]; arr.push({ dato: sidste ? sidste.dato : '', rente: 0, afdrag: 0 }); }
+        else arr.push({});
     }
   }
 
@@ -263,6 +270,25 @@ export class App {
     if (name === 'standard-kontoplan') { if (confirm('Tilføj manglende standardkonti til kontoplanen?')) { const has = new Set(S.kontoplan.map(k => Number(k.nr))); STANDARD_KONTOPLAN.forEach(k => { if (!has.has(k.nr)) S.kontoplan.push({ ...k }); }); S.kontoplan.sort((a, b) => a.nr - b.nr); this.recompute(); this.renderTab(this.tab); } }
     if (name.startsWith('standardtekst:')) { const k = name.slice(14); if (confirm('Gendan standardteksten?')) { S.tekster[k] = STANDARD_TEKSTER[k]; this.recompute(); this.renderTab(this.tab); } }
     if (name === 'kopier-budget') { ALLE_LINJER.forEach(l => { S.budget[l.id] = Math.round(this.engine.get(l.id)); }); this.recompute(); this.renderTab(this.tab); }
+    if (name.startsWith('plan-parse:')) {
+      const i = Number(name.slice(11)); const l = S.laan[i];
+      const ta = document.getElementById('plan-tekst-' + i);
+      const terminer = parseBetalingsplan(ta ? ta.value : '');
+      if (!terminer.length) { alert('Kunne ikke finde terminer i teksten. Hver termin skal bestå af en dato (dd.mm.åååå) efterfulgt af mindst to tal: rente og bidrag, afdrag.'); return; }
+      const eksisterende = l.betalingsplan || [];
+      let ny;
+      if (eksisterende.length) {
+        const foerste = terminer[0].dato;
+        const valg = confirm(`Der findes allerede ${eksisterende.length} terminer. OK = erstat terminer fra ${foerste} og frem med de ${terminer.length} nye (tidligere terminer beholdes). Annuller = erstat hele planen.`);
+        ny = valg ? [...eksisterende.filter(t => t.dato < foerste), ...terminer] : terminer;
+      } else ny = terminer;
+      l.betalingsplan = sorter(ny);
+      l.kilde = 'plan';
+      const adv = terminer.filter(t => t.advarsel).length;
+      this.recompute(); this.renderTab(this.tab);
+      this.toast(`${terminer.length} terminer indlæst${adv ? ` (${adv} med ydelse ≠ rente + afdrag)` : ''}`);
+    }
+    if (name.startsWith('plan-slet:')) { const i = Number(name.slice(10)); if (confirm('Slet betalingsplanen for lånet?')) { S.laan[i].betalingsplan = []; S.laan[i].kilde = 'manuel'; this.recompute(); this.renderTab(this.tab); } }
     if (name === 'slet-aar') this.sletAar();
     if (name === 'nyt-aar') this.nytAar();
     if (name === 'kobling-fra') { if (confirm(`Afbryd koblingen til ${S.aar - 1}? Primotallene beholdes som de er nu, men følger ikke længere med, hvis ${S.aar - 1} rettes.`)) { S.primoKilde = 'manuel'; this.recompute(); this.renderTab(this.tab); } }
@@ -371,26 +397,42 @@ export class App {
     const laanHtml = S.laan.map((l, i) => {
       const p = `laan.${i}`;
       const n = `laan.${l.id}`;
+      const plan = e.harPlan(l);
+      const aarene = [...new Set((l.betalingsplan || []).map(t => aarAf(t.dato)))].filter(Number.isFinite).sort();
+      const planTabel = aarene.length ? `<table class="edit" style="max-width:640px"><thead><tr><th>År</th><th class="num">Terminer</th><th class="num">Rente og bidrag</th><th class="num">Afdrag</th><th class="num">Ydelse</th><th class="num">Restgæld ultimo</th></tr></thead><tbody>${aarene.map(aa => { const pa = planAar(l.betalingsplan, aa); const rest = (Number(l.hovedstol) || 0) - (l.betalingsplan || []).filter(t => aarAf(t.dato) <= aa).reduce((x, t) => x + (Number(t.afdrag) || 0), 0); return `<tr style="${aa === S.aar ? 'font-weight:600;background:#eef2f6' : ''}"><td>${aa}</td><td style="text-align:right">${pa.terminer}</td><td style="text-align:right">${fmtKr(pa.rente)}</td><td style="text-align:right">${fmtKr(pa.afdrag)}</td><td style="text-align:right">${fmtKr(pa.ydelse)}</td><td style="text-align:right">${fmtKr(rest)}</td></tr>`; }).join('')}</tbody></table>` : '';
       return `<div class="panel"><h3>${esc(l.navn || 'Lån')}</h3><div class="grid">
         ${this.felt('Betegnelse (vises i noten)', `${p}.navn`)}
         ${this.felt('Kreditor', `${p}.kreditor`)}
         ${this.felt('Hovedstol', `${p}.hovedstol`, 'num')}
-        ${this.felt('Optaget (tekst, fx "lån hjemtaget juli 2017")', `${p}.optagetTekst`)}
+        ${this.felt('Optaget (tekst, fx "udbetalt 5. juli 2017")', `${p}.optagetTekst`)}
+        ${this.felt('Kilde til renter, afdrag og restgæld', `${p}.kilde`, 'select', { rerender: true, options: [{ id: 'manuel', label: 'Manuel indtastning (fra årsopgørelsen)' }, { id: 'plan', label: 'Kreditforeningens betalingsplan (terminer nedenfor)' }], hint: plan ? 'Renter, kortfristet del og restgæld hentes fra betalingsplanen' : ((l.betalingsplan || []).length ? 'Betalingsplan findes, men bruges ikke' : 'Indsæt en betalingsplan nedenfor for automatisk opgørelse') })}
+        ${this.felt(`Kursværdi af restgæld pr. 31/12 ${S.aar}`, `${p}.kursvaerdi`, 'num', { hint: 'Fra kreditforeningens årsopgørelse – bruges i andelsværdiberegningen' })}
+        ${this.felt('Kursværdi, tekst (fx "pr. 31. december 2025")', `${p}.kursvaerdiTekst`)}
+      </div>
+      <h3 style="margin-top:14px">Manuelle tal ${plan ? '<span class="kontoplan-hint">(låst – hentes fra betalingsplanen)</span>' : ''}</h3><div class="grid">
         ${this.felt(`Restgæld primo (31/12 ${S.aar - 1})`, `${p}.restgaeldPrimo`, 'num')}
         ${this.felt(`Kortfristet del primo (afdrag i ${S.aar} iflg. sidste års regnskab)`, `${p}.kortfristetPrimo`, 'num')}
         ${this.felt(`Renter og bidrag i ${S.aar} iflg. årsopgørelse`, `${p}.renter`, 'num', { hint: 'Afdrag = betalte ydelser − renter og bidrag' })}
         ${this.felt(`Kortfristet del ultimo (afdrag i ${S.aar + 1} iflg. betalingsplan)`, `${p}.kortfristet`, 'num')}
-        ${this.felt(`Kursværdi af restgæld pr. 31/12 ${S.aar}`, `${p}.kursvaerdi`, 'num', { hint: 'Fra kreditforeningens årsopgørelse – bruges i andelsværdiberegningen' })}
-        ${this.felt('Kursværdi, tekst (fx "pr. 31. december 2025")', `${p}.kursvaerdiTekst`)}
         ${this.felt('Afdrag iflg. årsopgørelse (til kontrol, kan udelades)', `${p}.afdragIflg`, 'num')}
         ${this.felt('Restgæld ultimo iflg. årsopgørelse (til kontrol, kan udelades)', `${p}.restgaeldUltimoIflg`, 'num')}
-        ${this.felt('Beskrivelse i noten (lånetype, rente, restløbetid)', `${p}.beskrivelse`, 'textarea', { wide: true, rows: 2 })}
+        ${this.felt('Beskrivelse i noten (lånetype, rente, bidrag)', `${p}.beskrivelse`, 'textarea', { wide: true, rows: 2 })}
       </div>
+      <h3 style="margin-top:14px">Betalingsplan (${(l.betalingsplan || []).length} terminer${aarene.length ? `, ${aarene[0]}–${aarene[aarene.length - 1]}` : ''})</h3>
+      <p class="hjaelp">Kopiér tabellen med terminer fra kreditforeningens låneafregning eller årsopgørelse (dato, rente og bidrag, afdrag, evt. ydelse og restgæld) og indsæt den her. Ved rentetilpasning eller bidragsændring indsættes den nye plan, som erstatter de fremtidige terminer.</p>
+      <textarea id="plan-tekst-${i}" rows="4" placeholder="01.03.2025  3.763,39  11.415,15  15.178,54  615.815,76&#10;01.06.2025  3.694,90  11.457,96  15.152,86  604.357,80"></textarea>
+      <div class="knapper"><button class="knap" data-action="plan-parse:${i}">Indlæs terminer fra teksten</button>${(l.betalingsplan || []).length ? `<button class="knap slet" data-action="plan-slet:${i}">Slet betalingsplan</button>` : ''}</div>
+      ${planTabel}
+      ${(l.betalingsplan || []).length ? `<details><summary style="cursor:pointer;margin:8px 0">Vis/redigér alle terminer</summary>${this.tabel(`${p}.betalingsplan`, [{ key: 'dato', label: 'Termin', type: 'date', width: 'w-dato' }, { key: 'rente', label: 'Rente og bidrag', type: 'num', width: 'w-beloeb' }, { key: 'afdrag', label: 'Afdrag', type: 'num', width: 'w-beloeb' }], { beregnet: [{ label: 'Ydelse', value: (t) => fmtKr((Number(t.rente) || 0) + (Number(t.afdrag) || 0)) }], tilfoejLabel: 'Tilføj termin' })}</details>` : ''}
       <table class="edit" style="max-width:520px;margin-top:8px"><tbody>
         <tr><td>Betalte ydelser iflg. kasserapport</td><td style="text-align:right" data-calc="${n}.ydelser">${fmtKr(e.get(n + '.ydelser'))}</td></tr>
-        <tr><td>Beregnet afdrag</td><td style="text-align:right" data-calc="${n}.afdrag">${fmtKr(e.get(n + '.afdrag'))}</td></tr>
+        ${plan ? `<tr><td>Ydelser iflg. betalingsplan ${S.aar}</td><td style="text-align:right" data-calc="${n}.ydelserIflg">${fmtKr(e.get(n + '.ydelserIflg'))}</td></tr>` : ''}
+        <tr><td>Renter og bidrag</td><td style="text-align:right" data-calc="${n}.renter">${fmtKr(e.get(n + '.renter'))}</td></tr>
+        <tr><td>Beregnet afdrag (ydelser − renter)</td><td style="text-align:right" data-calc="${n}.afdrag">${fmtKr(e.get(n + '.afdrag'))}</td></tr>
         <tr><td>Restgæld ultimo</td><td style="text-align:right;font-weight:600" data-calc="${n}.restgaeldUltimo">${fmtKr(e.get(n + '.restgaeldUltimo'))}</td></tr>
+        <tr><td>Heraf kortfristet (afdrag i ${S.aar + 1})</td><td style="text-align:right" data-calc="${n}.kortfristet">${fmtKr(e.get(n + '.kortfristet'))}</td></tr>
         <tr><td>Heraf langfristet</td><td style="text-align:right" data-calc="${n}.langfristet">${fmtKr(e.get(n + '.langfristet'))}</td></tr>
+        ${plan ? `<tr><td>Restløbetid pr. 31/12 ${S.aar}</td><td style="text-align:right">${fmtKr(restloebetid(l.betalingsplan, S.aar))} år (sidste termin ${esc(sidsteTermin(l.betalingsplan))})</td></tr>` : ''}
       </tbody></table>
       <div class="knapper"><button class="knap lille slet" data-slet="laan" data-index="${i}">Slet lån</button></div></div>`;
     }).join('');
@@ -543,7 +585,7 @@ export class App {
       <li><b>Stamdata</b>: foreningens navn, CVR, bestyrelse, bilagskontrollører og datoer.</li>
       <li><b>Kasserapport</b>: indtast alle årets ind- og udbetalinger med dato, bilagsnummer, tekst, konto og likvid konto. Kontokortet nederst viser posteringerne pr. konto.</li>
       <li><b>Kontoplan</b>: knyt hver konto til en linje i regnskabet. Standardkontoplanen dækker de fleste behov.</li>
-      <li><b>Primo &amp; lån</b>: sidste års balancetal, ejendommens værdi, andele, resultatdisponering, lån (renter fra årsopgørelsen, kortfristet del, kursværdi), anden gæld og reguleringer.</li>
+      <li><b>Primo &amp; lån</b>: sidste års balancetal, ejendommens værdi, andele, resultatdisponering, lån, anden gæld og reguleringer. For lån kan kreditforeningens betalingsplan indsættes (kopieret fra låneafregningen eller årsopgørelsen); så beregnes renter, afdrag, kortfristet del og restgæld automatisk for hvert år, og de bogførte ydelser afstemmes mod planen.</li>
       <li><b>Budget &amp; sidste år</b>: budget for næste år (vises i resultatopgørelsen) og evt. sidste års tal.</li>
       <li><b>Nøgleoplysninger</b>: arealer, fordelingstal, hæftelse, tilskud, december-indtægt og tidligere års nøgletal.</li>
       <li><b>Regnskab</b>: den færdige årsrapport. Slå "Vis formler" til for at se beregningerne, eller klik på et tal for at spore det tilbage til posteringer og indtastninger.</li>

@@ -1,6 +1,7 @@
 // eksempel.js – eksempeldata: Andelsboligforeningen Polarvej I, regnskabsåret 2025.
 // Tallene stammer fra foreningens kasserapport og årsrapport for 2025.
 import { tomState, STANDARD_TEKSTER } from './model.js';
+import { DLR_BETALINGSPLAN } from './data-dlr-betalingsplan.js';
 
 const P = (dato, bilag, tekst, konto, likvid, ind, ud) => ({ id: 'p' + bilag.replace('.', '_'), dato, bilag, tekst, konto, likvid, ind: ind || 0, ud: ud || 0 });
 
@@ -106,19 +107,21 @@ export function eksempelPolarvej2025() {
   s.disponering = { tilVedligehold: 0, tilAndreReserver: 0, tilGenopretning: 0, anvendtVedligehold: 0, anvendtAndreReserver: 0, anvendtGenopretning: 0 };
   s.laan = [{
     id: 'dlr',
-    navn: 'DLR Kredit, kontantlån',
-    kreditor: 'DLR Kredit',
+    navn: 'DLR Kredit, obligationslån (lån nr. 20)',
+    kreditor: 'DLR Kredit A/S',
     hovedstol: 950000,
-    optagetTekst: 'lån hjemtaget juli 2017',
+    optagetTekst: 'udbetalt 5. juli 2017',
+    kilde: 'plan',
+    betalingsplan: DLR_BETALINGSPLAN.map(t => ({ ...t })),
     restgaeldPrimo: 627230.91,
     kortfristetPrimo: 45918.10,
-    renter: 15733.35,
+    renter: 14641.58,
     afdragIflg: '',
     restgaeldUltimoIflg: '',
     kortfristet: 46610.76,
-    kursvaerdi: 846786.53,
-    kursvaerdiTekst: 'pr. 31. december 2018',
-    beskrivelse: 'Lånet er et kontantlån, som er forrentet med 1,5 % p.a. og har en restløbetid på 18,75 år.',
+    kursvaerdi: 0,
+    kursvaerdiTekst: '',
+    beskrivelse: 'Lånet er et konverterbart obligationslån (annuitetslån, 20 år, 81 kvartårlige terminer) med en nominel rente på 1,5 % p.a. og administrationsbidrag på 0,9 % p.a. af obligationsrestgælden. Obligationsserie 42.s.A 2037, fondskode DK000633801-7.',
   }];
   s.andenGaeld = [{ id: 'depositum', tekst: 'Modtaget depositum fra andelshaver der udlejer', primo: 20000 }];
   s.tilgodehavender = [];

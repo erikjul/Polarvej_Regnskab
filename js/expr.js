@@ -12,6 +12,9 @@
 //   LIKVIDIND("id")     = indsat på likvidkonto id
 //   LIKVIDUD("id")      = hævet på likvidkonto id
 //   SAFEDIV(a, b)       = a / b, 0 hvis b = 0
+//   PLANRENTE("lån", år)     = renter og bidrag iflg. betalingsplan i året
+//   PLANAFDRAG("lån", år)    = afdrag iflg. betalingsplan i året
+//   PLANAFDRAGAKK("lån", år) = afdrag iflg. betalingsplan til og med året
 
 export function tokenize(src) {
   const tokens = [];
@@ -130,6 +133,9 @@ export function evaluate(ast, ctx) {
         case 'KONTO': return ctx.konto(evaluate(ast.args[0], ctx));
         case 'LIKVIDIND': return ctx.likvidInd(evaluate(ast.args[0], ctx));
         case 'LIKVIDUD': return ctx.likvidUd(evaluate(ast.args[0], ctx));
+        case 'PLANRENTE': return ctx.plan(evaluate(ast.args[0], ctx), evaluate(ast.args[1], ctx), 'rente');
+        case 'PLANAFDRAG': return ctx.plan(evaluate(ast.args[0], ctx), evaluate(ast.args[1], ctx), 'afdrag');
+        case 'PLANAFDRAGAKK': return ctx.planAkk(evaluate(ast.args[0], ctx), evaluate(ast.args[1], ctx));
       }
       throw new Error('Ukendt funktion ' + ast.fn);
     }
@@ -168,6 +174,9 @@ export function toExcel(ast, xctx) {
           case 'KONTO': return '(' + xctx.konto(n.args[0].v) + ')';
           case 'LIKVIDIND': return '(' + xctx.likvidInd(n.args[0].v) + ')';
           case 'LIKVIDUD': return '(' + xctx.likvidUd(n.args[0].v) + ')';
+          case 'PLANRENTE': return '(' + xctx.plan(n.args[0].v, n.args[1].v, 'rente') + ')';
+          case 'PLANAFDRAG': return '(' + xctx.plan(n.args[0].v, n.args[1].v, 'afdrag') + ')';
+          case 'PLANAFDRAGAKK': return '(' + xctx.planAkk(n.args[0].v, n.args[1].v) + ')';
           case 'IFZERO': return 'IF((' + args[0] + ')=0,' + args[1] + ',' + args[0] + ')';
           case 'SAFEDIV': return 'IF((' + args[1] + ')=0,0,(' + args[0] + ')/(' + args[1] + '))';
           case 'SUM': return 'SUM(' + args.join(',') + ')';
@@ -200,6 +209,9 @@ export function toText(ast, tctx) {
           case 'KONTO': return tctx.konto(n.args[0].v);
           case 'LIKVIDIND': return tctx.likvidInd(n.args[0].v);
           case 'LIKVIDUD': return tctx.likvidUd(n.args[0].v);
+          case 'PLANRENTE': return `Renter og bidrag ${n.args[1].v} iflg. betalingsplan`;
+          case 'PLANAFDRAG': return `Afdrag ${n.args[1].v} iflg. betalingsplan`;
+          case 'PLANAFDRAGAKK': return `Afdrag til og med ${n.args[1].v} iflg. betalingsplan`;
           case 'SUM': return 'SUM(' + args.join('; ') + ')';
           case 'ROUND': return 'AFRUND(' + args.join('; ') + ')';
           case 'SAFEDIV': return args[0] + ' ÷ ' + args[1];

@@ -1,7 +1,8 @@
 // report.js – bygger årsrapportens sider som en datastruktur, der både kan vises som HTML og skrives til Excel.
 // Celler kan være { node: 'id' } (beregnet/indtastet tal fra motoren), { text: '...' } eller { x: true } (kryds).
 import { NOTER_RESULTAT, VURDERINGSPRINCIPPER, FORDELINGSTAL } from './model.js';
-import { fmtKr, fmtInt, fmtDatoLang } from './format.js';
+import { fmtKr, fmtInt, fmtDatoLang, fmtDato } from './format.js';
+import { sidsteTermin, restloebetid } from './betalingsplan.js';
 
 const N = (id) => ({ node: id });
 const T = (text) => ({ text });
@@ -256,6 +257,7 @@ export function byggeRapport(engine) {
     nb.push(row('line', `Heraf kortfristet del (afdrag i ${y + 1})`, [{ node: `${p}.kortfristet`, neg: true }, { node: `${p}.kortfristetPrimo`, neg: true }]));
     nb.push(row('total', 'Langfristet del', [N(`${p}.langfristet`), N(`${p}.langfristetPrimo`)]));
     if (l.beskrivelse) nb.push(row('text', l.beskrivelse));
+    if (engine.harPlan(l)) nb.push(row('text', `Restløbetid pr. 31. december ${y}: ${fmtKr(restloebetid(l.betalingsplan, y))} år (sidste termin ${fmtDato(sidsteTermin(l.betalingsplan))}). Renter, bidrag og afdrag er opgjort efter kreditforeningens betalingsplan.`));
     nb.push(row('text', `Kursværdien af restgælden udgør ${fmtKr(engine.get(`${p}.kursvaerdi`))} kr.${l.kursvaerdiTekst ? ' ' + l.kursvaerdiTekst : ''}`));
     nb.push(row('blank'));
   });

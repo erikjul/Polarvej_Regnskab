@@ -12,6 +12,7 @@ Programmet er en ren webapplikation (HTML/JavaScript) uden server. Det kan køre
 * **Kontrolside**: balance primo/ultimo, kontering af alle posteringer, pengestrømsafstemning, bankafstemning pr. konto, resultatdisponering, egenkapitalbevægelse, lån mod årsopgørelse, andelsværdiens lovlighed, nøgleoplysninger, stamdata og budget. Se [docs/kontroller.md](docs/kontroller.md).
 * **Excel-eksport**: Én projektmappe med et ark pr. side i årsrapporten plus *Kasserapport*, *Kontoplan*, *Grunddata*, *Beregninger* og *Kontrol*. Alle tal i rapportarkene er formler (SUMIF over kasserapporten, referencer til grunddata), så rettelser i Excel slår igennem overalt, og kontrolarket viser OK/FEJL med formler.
 * **PDF**: "Udskriv / PDF" åbner browserens udskrift med A4-sideopsætning og sideskift; vælg "Gem som PDF".
+* **Betalingsplan for lån**: Kreditforeningens betalingsplan (terminer med rente/bidrag og afdrag) indsættes ved at kopiere tabellen fra låneafregningen eller årsopgørelsen. Programmet opgør derefter renter, afdrag, kortfristet del, restgæld primo/ultimo og restløbetid automatisk for hvert regnskabsår og afstemmer de bogførte ydelser mod planen. DLR-lånets fulde plan (2017–2037) er indlagt i eksempeldataene.
 * **Flere regnskabsår**: Programmet rummer alle årene (fx 2025 og 2026) og har en årsvælger i topbjælken. "+ Nyt år" opretter næste år med dette års ultimotal som primotal, sidste års resultat i sammenligningskolonnen og nøgletallene forskudt. Koblingen er levende: rettes 2025, følger 2026's primotal med. Koblingen kan afbrydes, hvis primotal skal indtastes manuelt.
 
 ## Kom i gang
@@ -54,6 +55,8 @@ js/excel.js           – Excel-eksport med formler (ExcelJS)
 js/ui.js, js/app.js   – brugerflade
 js/eksempel.js        – eksempeldata (Polarvej I, 2025)
 js/samling.js         – flere regnskabsår med koblede primotal
+js/betalingsplan.js   – betalingsplan for lån (parser, årssummer, restløbetid)
+js/data-dlr-betalingsplan.js – DLR-lånets terminer 2017–2037 (fra låneafregningen)
 js/storage.js         – autosave og filer
 lib/exceljs.min.js    – ExcelJS 4.4.0 (MIT)
 data/                 – eksempeldata som JSON
@@ -75,9 +78,9 @@ Eksempeldataene er foreningens egne tal for 2025. Resultatopgørelsen svarer kro
 
 1. **Bankafstemning**: kasserapporten giver en ultimosaldo på 214.946,55 kr., men forretningskontoen er angivet til 212.846,55 kr. – en difference på 2.100,00 kr. (en postering mangler eller er forkert).
 2. **Primobalancen (31/12 2024) balancerer ikke**: Balancen for 2024 viser gæld i alt 628.734,34 kr., mens posterne (langfristet 581.312,81 + kortfristet 45.235,74 + anden gæld 20.000,00) giver 646.548,55 kr., og lånenoten viser en restgæld på 627.230,91 kr. Differencen på 18.496,57 kr. er i 2025-rapporten udlignet med en uforklaret post på −19.504,80 kr. i overført resultat.
-3. **Prioritetsafdrag**: 2025-rapporten angiver betalte afdrag 60.969,09 kr. (det er 2024-ydelserne), mens de faktiske ydelser i 2025 er 60.559,68 kr., hvoraf renter og bidrag udgør 15.733,35 kr. og afdrag dermed 44.826,33 kr. Restgælden ultimo 2025 i rapporten (581.312,81 kr.) er lig 2024-tallet.
+3. **Prioritetslånet**: Ifølge DLR's betalingsplan er 2025-tallene: ydelser 60.559,68 kr. = renter og bidrag 14.641,58 kr. + afdrag 45.918,10 kr.; restgæld 627.230,91 kr. primo og 581.312,81 kr. ultimo; afdrag i 2026 (kortfristet del) 46.610,76 kr. 2025-rapporten brugte 2024-tallene for renter (15.733,35 kr.) og afdrag (60.969,09 kr., som reelt er 2024-ydelserne). Med betalingsplanen indlagt beregner programmet lånet korrekt, og årets resultat bliver 52.252,68 kr. Lånet er desuden et obligationslån (kurs 98,30 ved udbetaling), ikke et kontantlån som noten angav, og restløbetiden pr. 31/12 2025 er 11,75 år.
 
-Når primotallene rettes (så sidste års balance balancerer) og bankafstemningen går op, bliver kontrolsiden grøn.
+Når primotallene rettes (så sidste års balance balancerer), bankafstemningen går op, og kursværdien pr. 31/12 indtastes, bliver kontrolsiden grøn.
 
 ## Licens
 

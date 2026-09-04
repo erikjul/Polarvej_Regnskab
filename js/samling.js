@@ -75,7 +75,7 @@ export function opretNytAar(samling, fraAar) {
   n.likvidkonti.forEach(k => { k.kontoudtog = ''; });
   n.ejendom.opskrivningAaret = 0;
   n.disponering = { tilVedligehold: 0, tilAndreReserver: 0, tilGenopretning: 0, anvendtVedligehold: 0, anvendtAndreReserver: 0, anvendtGenopretning: 0 };
-  n.laan.forEach(l => { l.renter = 0; l.kortfristet = 0; l.afdragIflg = ''; l.restgaeldUltimoIflg = ''; l.kursvaerdi = 0; l.kursvaerdiTekst = ''; });
+  n.laan.forEach(l => { if (l.kilde !== 'plan') { l.renter = 0; l.kortfristet = 0; l.afdragIflg = ''; l.restgaeldUltimoIflg = ''; } l.kursvaerdi = 0; l.kursvaerdiTekst = ''; });
   n.andele.senestVedtagetPrKrone = e.get('av.prKrone');
   n.andele.senestVedtagetAar = String(fraAar + 1);
   n.sidsteAar = { vis: true, linjer: {} };

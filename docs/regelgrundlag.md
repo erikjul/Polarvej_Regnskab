@@ -26,7 +26,7 @@ Ordlyden af C3 og E2 bør kontrolleres mod den aktuelle udgave af bilag 1 på re
 ## Regnskabsprincipper i motoren
 
 * **Kasseprincip med periodiseringer**: Alle ind- og udbetalinger indtastes i kasserapporten og konteres. Ikke-likvide posteringer (skyldige/forudbetalte beløb) indtastes som *reguleringer* med modpost i balancen.
-* **Låneydelser** bogføres med det fulde beløb på lånets ydelseskonto. Renter og bidrag tages fra kreditforeningens årsopgørelse; afdraget beregnes som ydelser − renter. Restgæld ultimo = restgæld primo − afdrag. Kortfristet del = næste års afdrag iflg. betalingsplanen.
+* **Låneydelser** bogføres med det fulde beløb på lånets ydelseskonto. Renter og bidrag tages fra kreditforeningens betalingsplan (eller indtastes manuelt fra årsopgørelsen); afdraget beregnes som ydelser − renter. Restgæld ultimo = restgæld primo − afdrag. Kortfristet del = næste års afdrag iflg. betalingsplanen. Bogførte ydelser afstemmes mod planens terminer for året.
 * **Resultatdisponering**: Årets resultat fordeles til generalforsamlingsbestemte reserver, betalte prioritetsafdrag (overføres til overført resultat) og restandel.
 * **Ejendom**: kostpris + opskrivninger (dagsværdi). Opskrivninger føres direkte på egenkapitalen.
 * **Balance**: Aktiver = passiver følger automatisk af, at primobalancen balancerer, og at alle posteringer er konteret. Kontrolsiden viser, hvor en eventuel difference stammer fra.
